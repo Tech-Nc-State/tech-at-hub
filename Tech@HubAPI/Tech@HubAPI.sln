@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31521.260
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tech@HubAPI", "Tech@HubAPI\Tech@HubAPI.csproj", "{83E20DDC-45EB-47EF-917E-152B6EB0DCF7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tech@HubAPITest", "Tech@HubAPITest\Tech@HubAPITest.csproj", "{03FA32E3-B5A0-4789-83C3-A5554EFAC364}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{83E20DDC-45EB-47EF-917E-152B6EB0DCF7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83E20DDC-45EB-47EF-917E-152B6EB0DCF7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{83E20DDC-45EB-47EF-917E-152B6EB0DCF7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{83E20DDC-45EB-47EF-917E-152B6EB0DCF7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{03FA32E3-B5A0-4789-83C3-A5554EFAC364}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{03FA32E3-B5A0-4789-83C3-A5554EFAC364}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{03FA32E3-B5A0-4789-83C3-A5554EFAC364}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{03FA32E3-B5A0-4789-83C3-A5554EFAC364}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D7A5BAF6-A422-43E9-AD4B-FC9A6A05BB62}
+	EndGlobalSection
+EndGlobal
