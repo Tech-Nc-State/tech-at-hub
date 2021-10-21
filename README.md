@@ -9,4 +9,4 @@ Code-hosting website built for fun by students at NC State University
 5. Ziyad Abdelaziz
 6. Aarnav Chhatrala
 7. Jack Maggio
-
+8. Hrishi Batta
