@@ -8,3 +8,5 @@ Code-hosting website built for fun by students at NC State University
 4. Neil Bennett
 5. Ziyad Abdelaziz
 6. Aarnav Chhatrala
+7. Jack Maggio
+
