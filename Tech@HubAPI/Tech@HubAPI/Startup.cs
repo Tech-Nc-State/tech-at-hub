@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -12,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Tech_HubAPI.Models;
 
 namespace Tech_HubAPI
 {
@@ -27,6 +29,12 @@ namespace Tech_HubAPI
 		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services)
 		{
+			string connectionString = "";
+
+			services.AddDbContext<DatabaseContext>(options =>
+			{
+				options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
+			});
 
 			services.AddControllers();
 			services.AddSwaggerGen(c =>
