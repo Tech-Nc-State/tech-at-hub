@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -14,6 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Tech_HubAPI.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Tech_HubAPI
 {
@@ -29,12 +29,14 @@ namespace Tech_HubAPI
 		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services)
 		{
-			string connectionString = "";
+			string connectionString = Configuration.GetConnectionString("MySqlDatabase");
 
 			services.AddDbContext<DatabaseContext>(options =>
 			{
 				options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
 			});
+
+			services.AddSingleton<IConfiguration>(Configuration);
 
 			services.AddControllers();
 			services.AddSwaggerGen(c =>
@@ -69,6 +71,15 @@ namespace Tech_HubAPI
 			{
 				endpoints.MapControllers();
 			});
+
+			// create the database from our provided models
+			if (env.IsDevelopment())
+			{
+				var serviceScopeFactory = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>();
+				using var serviceScope = serviceScopeFactory.CreateScope();
+				var dbContext = serviceScope.ServiceProvider.GetService<DatabaseContext>();
+				dbContext.Database.EnsureCreated();
+			}
 		}
 	}
 }

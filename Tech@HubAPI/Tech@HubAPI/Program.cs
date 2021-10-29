@@ -18,6 +18,10 @@ namespace Tech_HubAPI
 
 		public static IHostBuilder CreateHostBuilder(string[] args) =>
 			Host.CreateDefaultBuilder(args)
+				.ConfigureAppConfiguration((hostContext, config) =>
+				{
+					config.AddJsonFile("developersecrets.json", optional: true, reloadOnChange: true);
+				})
 				.ConfigureWebHostDefaults(webBuilder =>
 				{
 					webBuilder.UseStartup<Startup>();
