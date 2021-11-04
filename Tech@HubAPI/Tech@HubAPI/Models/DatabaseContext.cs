@@ -35,6 +35,13 @@ namespace Tech_HubAPI.Models
 				entity.HasMany(a => a.Books)
 					.WithOne(b => b.Author);
 			});
+
+			modelBuilder.Entity<User>(entity =>
+			{
+				entity.HasKey(e => e.Id);
+				entity.HasIndex(e => e.Username).IsUnique();
+				entity.HasIndex(e => e.Email).IsUnique();
+			});
 		}
 
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
