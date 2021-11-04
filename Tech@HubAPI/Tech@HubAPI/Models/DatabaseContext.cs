@@ -17,6 +17,7 @@ namespace Tech_HubAPI.Models
 
 		public DbSet<Book> Books { get; set; }
 		public DbSet<Author> Authors { get; set; }
+		public DbSet<Repository> Repositories { get; set; }
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
@@ -34,6 +35,12 @@ namespace Tech_HubAPI.Models
 				entity.HasKey(e => e.Id);
 				entity.HasMany(a => a.Books)
 					.WithOne(b => b.Author);
+			});
+
+			modelBuilder.Entity<Repository>(entity =>
+			{
+				entity.HasKey(e => e.Id);
+				//entity.HasOne(e => e.Owner)
 			});
 		}
 
