@@ -4,13 +4,6 @@ namespace Tech_HubAPI.Models
 {
 	public partial class DatabaseContext : DbContext
 	{
-		private string _connectionString;
-
-		public DatabaseContext(string connectionString)
-		{
-			_connectionString = connectionString;
-		}
-
 		public DatabaseContext(DbContextOptions<DatabaseContext> options)
 			: base(options)
 		{ }
@@ -27,6 +20,7 @@ namespace Tech_HubAPI.Models
 				entity.HasKey(e => e.Id);
 				entity.HasOne(e => e.Author)
 					.WithMany(a => a.Books);
+				entity.HasIndex(a => a.Title).IsUnique();
 			});
 
 			modelBuilder.Entity<Author>(entity =>
@@ -35,14 +29,6 @@ namespace Tech_HubAPI.Models
 				entity.HasMany(a => a.Books)
 					.WithOne(b => b.Author);
 			});
-		}
-
-		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-		{
-			if (!optionsBuilder.IsConfigured)
-			{
-				optionsBuilder.UseMySql(_connectionString, ServerVersion.AutoDetect(_connectionString));
-			}
 		}
 	}
 }
