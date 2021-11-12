@@ -43,6 +43,8 @@ namespace Tech_HubAPITest
         {
             var user1 = new User("billybob", null, null, "test2@email.com", "Billy", "Bob", 21, "test", "usr/pics/billybob.png");
             var user2 = new User("billybob", null, null, "test2@email.com", "Billy", "Bob", 21, "test", "usr/pics/billybob.png");
+            user1.Password = new byte[] { 1, 2, 3, 4, 5, 6 };
+            user1.Salt = new byte[] { 6, 5, 4, 3, 2, 1 };
             DbContext.Users.Add(user1);
             DbContext.Users.Add(user2);
 
@@ -50,5 +52,16 @@ namespace Tech_HubAPITest
             save.Should().Throw<DbUpdateException>();
         }
 
+        [Fact]
+        public void TestCreateUsersSameUsername()
+        {
+            var user1 = new User("billybob", null, null, "test2@email.com", "Billy", "Bob", 21, "test", "usr/pics/billybob.png");
+            var user2 = new User("billybob", null, null, "other@email.com", "Billard", "Robertson", 30, "test", "usr/pics/billybob.png");
+            DbContext.Users.Add(user1);
+            DbContext.Users.Add(user2);
+
+            Action save = () => DbContext.SaveChanges();
+            save.Should().Throw<DbUpdateException>();
+        }
     }
 }
