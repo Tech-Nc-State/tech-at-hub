@@ -10,6 +10,7 @@ namespace Tech_HubAPI.Models
 
 		public DbSet<Book> Books { get; set; }
 		public DbSet<Author> Authors { get; set; }
+		public DbSet<User> Users { get; set; }
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
@@ -36,6 +37,7 @@ namespace Tech_HubAPI.Models
 				entity.HasIndex(e => e.Username).IsUnique();
 				entity.HasIndex(e => e.Email).IsUnique();
 			});
+
 		}
 	}
 }

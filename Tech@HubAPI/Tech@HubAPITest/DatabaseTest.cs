@@ -19,6 +19,7 @@ namespace Tech_HubAPITest
 
 			DbContext = new DatabaseContext(options);
 			DbContext.Database.EnsureCreated();
+            
 		}
 
 		protected DatabaseContext DbContext { get; private set;}
