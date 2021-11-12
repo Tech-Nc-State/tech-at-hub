@@ -38,5 +38,17 @@ namespace Tech_HubAPITest
 
         }
 
+        [Fact]
+        public void TestCreateDuplicateUsers()
+        {
+            var user1 = new User("billybob", null, null, "test2@email.com", "Billy", "Bob", 21, "test", "usr/pics/billybob.png");
+            var user2 = new User("billybob", null, null, "test2@email.com", "Billy", "Bob", 21, "test", "usr/pics/billybob.png");
+            DbContext.Users.Add(user1);
+            DbContext.Users.Add(user2);
+
+            Action save = () => DbContext.SaveChanges();
+            save.Should().Throw<DbUpdateException>();
+        }
+
     }
 }
