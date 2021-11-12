@@ -12,6 +12,11 @@ namespace Tech_HubAPI.Models
 		public DbSet<Author> Authors { get; set; }
 		public DbSet<User> Users { get; set; }
 
+		/// <summary>
+		/// The Repository Database set.
+		/// </summary>
+		public DbSet<Repository> Repositories { get; set; }
+
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
 			base.OnModelCreating(modelBuilder);
@@ -37,15 +42,13 @@ namespace Tech_HubAPI.Models
 				entity.HasIndex(e => e.Username).IsUnique();
 				entity.HasIndex(e => e.Email).IsUnique();
 			});
-		}
-
-			modelBuilder.Entity<User>(entity =>
+      
+			// The Repository Database Table
+			modelBuilder.Entity<Repository>(entity =>
 			{
 				entity.HasKey(e => e.Id);
-				entity.HasIndex(e => e.Username).IsUnique();
-				entity.HasIndex(e => e.Email).IsUnique();
+				//entity.HasOne(e => e.Owner)
 			});
-
 		}
 	}
 }
