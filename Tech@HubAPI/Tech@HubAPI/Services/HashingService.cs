@@ -32,9 +32,11 @@ namespace Tech_HubAPI.Services
 		public byte[] HashPassword(string password, byte[] salt)
         {
 			byte[] passwordBytes = Encoding.ASCII.GetBytes(password);
+
 			int passwordLength = passwordBytes.Length;
 			Array.Resize<byte>(ref passwordBytes, passwordLength + 32);
 			Array.Copy(salt, 0, passwordBytes, passwordLength, 32);
+
 			byte[] hash = shaM.ComputeHash(passwordBytes);
 			return hash;
         }
