@@ -37,6 +37,14 @@ namespace Tech_HubAPI.Models
 				entity.HasIndex(e => e.Username).IsUnique();
 				entity.HasIndex(e => e.Email).IsUnique();
 			});
+		}
+
+			modelBuilder.Entity<User>(entity =>
+			{
+				entity.HasKey(e => e.Id);
+				entity.HasIndex(e => e.Username).IsUnique();
+				entity.HasIndex(e => e.Email).IsUnique();
+			});
 
 		}
 	}
