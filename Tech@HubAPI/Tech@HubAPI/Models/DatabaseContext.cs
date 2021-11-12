@@ -10,7 +10,8 @@ namespace Tech_HubAPI.Models
 
 		public DbSet<Book> Books { get; set; }
 		public DbSet<Author> Authors { get; set; }
-		
+		public DbSet<User> Users { get; set; }
+
 		/// <summary>
 		/// The Repository Database set.
 		/// </summary>
@@ -35,6 +36,13 @@ namespace Tech_HubAPI.Models
 					.WithOne(b => b.Author);
 			});
 
+			modelBuilder.Entity<User>(entity =>
+			{
+				entity.HasKey(e => e.Id);
+				entity.HasIndex(e => e.Username).IsUnique();
+				entity.HasIndex(e => e.Email).IsUnique();
+			});
+      
 			// The Repository Database Table
 			modelBuilder.Entity<Repository>(entity =>
 			{
