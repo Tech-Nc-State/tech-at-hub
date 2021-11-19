@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,8 +32,14 @@ namespace Tech_HubAPI.Controllers
             {
                 return BadRequest("Invalid repository");
             }
-            _dbContext.Repositories.Add(repository);
-            _dbContext.SaveChanges();
+            try
+            {
+                _dbContext.Repositories.Add(repository);
+                _dbContext.SaveChanges();
+            } catch (DbUpdateException e)
+            {
+                return BadRequest("Could not save the repository because: " + e.InnerException.Message);
+            }
 
             Console.WriteLine("It worked 2");
             return Ok();

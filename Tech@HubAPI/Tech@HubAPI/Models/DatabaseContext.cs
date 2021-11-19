@@ -39,6 +39,7 @@ namespace Tech_HubAPI.Models
 			modelBuilder.Entity<Repository>(entity =>
 			{
 				entity.HasKey(e => e.Id);
+				entity.HasIndex(e => new { e.OwnerId, e.Title }, "UniqueReposPerOwner").IsUnique();
 				//entity.HasOne(e => e.Owner)
 			});
 		}
