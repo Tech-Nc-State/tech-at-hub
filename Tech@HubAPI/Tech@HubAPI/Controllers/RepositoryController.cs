@@ -9,7 +9,7 @@ namespace Tech_HubAPI.Controllers
 {
 
     [ApiController]
-    [Route("[repository]")]
+    [Route("[controller]")]
     public class RepositoryController : ControllerBase
     {
         private readonly DatabaseContext _dbContext;
@@ -26,12 +26,15 @@ namespace Tech_HubAPI.Controllers
         [HttpPost]
         public ActionResult CreateRepository(Repository repository)
         {
+            Console.WriteLine("It worked 1");
             if (!ModelState.IsValid)
             {
                 return BadRequest("Invalid repository");
             }
             _dbContext.Repositories.Add(repository);
             _dbContext.SaveChanges();
+
+            Console.WriteLine("It worked 2");
             return Ok();
         }
 
