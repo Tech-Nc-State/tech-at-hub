@@ -41,7 +41,7 @@ namespace Tech_HubAPITest
         [Fact]
         public void TestEchoCommandPartialString()
         {
-            string output = Execute.ExecuteCommand("echo", "hi");
+            string output = Execute.ExecuteProcess("echo", "hi");
             output.Should().Contain("hi");
 
         }
