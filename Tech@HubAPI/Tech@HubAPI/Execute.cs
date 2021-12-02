@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using System.ComponentModel;
+using System.IO;
 
 namespace Tech_HubAPI
 {
@@ -16,13 +17,16 @@ namespace Tech_HubAPI
             // setup arguments to single string
             string argsString = "";
             int maxArgsIndex = args.Length - 1;
-            for (int i = 0; i < maxArgsIndex; i++)
+            if (args.Length != 0)
             {
-                // add spaces
-                argsString += args[i] + " ";
+                for (int i = 0; i < maxArgsIndex; i++)
+                {
+                    // add spaces
+                    argsString += args[i] + " ";
+                }
+                // last one is unspaced
+                argsString += args[maxArgsIndex];
             }
-            // last one is unspaced
-            argsString += args[maxArgsIndex];
 
             // yoinked from MS Docs
             try
@@ -31,8 +35,10 @@ namespace Tech_HubAPI
                 {
                     //myProcess.StartInfo.UseShellExecute = false;
                     // You can start any process, HelloWorld is a do-nothing example.
+
                     myProcess.StartInfo.FileName = programName;
                     myProcess.StartInfo.Arguments = argsString;
+                    myProcess.StartInfo.RedirectStandardOutput = true;
 
                     myProcess.Start();
 
@@ -43,6 +49,7 @@ namespace Tech_HubAPI
             catch (Exception e)
             {
                 // might as well print the error i guess.
+                // actually this turned out to be very useful for unit tests so yeah.
                 output = e.Message;
             }
             // end yoink
@@ -50,7 +57,6 @@ namespace Tech_HubAPI
             return output;
         }
 
-
-
     }
 }
+
