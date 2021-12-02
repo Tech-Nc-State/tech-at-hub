@@ -33,7 +33,7 @@ namespace Tech_HubAPITest
         [Fact]
         public void TestEchoCommand()
         {
-            string output = Execute.ExecuteProcess("echo", "hi");
+            string output = Execute.ExecuteCommand("echo", "hi");
             output.Should().Be("hi");
 
         }
@@ -41,7 +41,7 @@ namespace Tech_HubAPITest
         [Fact]
         public void TestEchoCommandPartialString()
         {
-            string output = Execute.ExecuteProcess("echo", "hi");
+            string output = Execute.ExecuteCommand("echo", "hi");
             output.Should().Contain("hi");
 
         }
@@ -59,7 +59,7 @@ namespace Tech_HubAPITest
             // The purpose of this test was to see if the process was failing because echo is an "internal command" without a stored exe.
             // The .bat file just calls "echo Hello World!". 
             string output = Execute.ExecuteProcess("C:\\Users\\neil8\\OneDrive\\Documents\\TechAtState\\tech-at-hub\\Tech@HubAPI\\Tech@HubAPITest\\testExecute.bat");
-            output.Should().Contain("Hello World!");
+            output.Should().Be("Hello World!");
         }
 
         [Fact]
@@ -71,6 +71,18 @@ namespace Tech_HubAPITest
             output.Should().Contain("Hello World!");
         }
 
-        
+
+        [Fact]
+        public void TestBatchFileMultiArg()
+        {
+            // The purpose of this test was to see if the process was failing because echo is an "internal command" without a stored exe.
+            // The .bat file just calls "echo Hello World!". 
+            string output = Execute.ExecuteProcess("C:\\Users\\neil8\\OneDrive\\Documents\\TechAtState\\tech-at-hub\\Tech@HubAPI\\Tech@HubAPITest\\testParam.bat",
+                                                    "funny", "words");
+            output.Should().Be("Your first arg was funny\r\nAll your args were: funny words");
+        }
+
+
+
     }
 }
