@@ -33,7 +33,7 @@ namespace Tech_HubAPITest
         [Fact]
         public void TestEchoCommand()
         {
-            string output = Execute.ExecuteCommand("echo", "hi");
+            string output = Execute.ExecuteProcess("echo", "hi");
             output.Should().Be("hi");
 
         }
