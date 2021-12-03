@@ -8,17 +8,22 @@ using System.IO;
 
 namespace Tech_HubAPI.Services
 {
-    public class Execute
+    public class ExecuteService
     {
         private const bool Windows = true;
 
-        private const string PathPrefix = Windows
+        public string PathPrefix { get; set; } = Windows
             ? "C:\\Program Files\\Git\\usr\\bin\\"
             : "";
 
         private const string PathPostfix = Windows
             ? ".exe"
             : "";
+
+        /// <summary>
+        /// The working directory for this execute service.
+        /// </summary>
+        public string WorkingDirectory { get; set; }
 
         public string ExecuteProcess(string programName, params string[] args)
         {
@@ -54,6 +59,7 @@ namespace Tech_HubAPI.Services
                 myProcess.StartInfo.Arguments = argsString;
                 myProcess.StartInfo.RedirectStandardOutput = true;
                 myProcess.StartInfo.CreateNoWindow = false;
+                myProcess.StartInfo.WorkingDirectory = WorkingDirectory;
 
                 myProcess.Start();
 

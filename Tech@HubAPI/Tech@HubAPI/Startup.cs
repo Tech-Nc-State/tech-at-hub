@@ -31,7 +31,8 @@ namespace Tech_HubAPI
 			});
 
 			services.AddSingleton(Configuration);
-			services.AddSingleton(new Execute());
+			services.AddScoped<ExecuteService>();
+			services.AddSingleton(new GitService(new ExecuteService()));
 
 			services.AddControllers();
 			services.AddSwaggerGen(c =>

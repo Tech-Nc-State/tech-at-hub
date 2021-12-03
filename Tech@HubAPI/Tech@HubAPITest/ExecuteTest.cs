@@ -14,11 +14,11 @@ namespace Tech_HubAPITest
 {
     public class ExecuteTest
     {
-        private readonly Execute executeService;
+        private readonly ExecuteService executeService;
 
         public ExecuteTest()
         {
-            executeService = new Execute();
+            executeService = new ExecuteService();
         }
 
         [Fact]
