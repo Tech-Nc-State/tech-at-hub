@@ -7,49 +7,31 @@ using System.Text;
 using System.Threading.Tasks;
 using Tech_HubAPI.Models;
 using Xunit;
-using Tech_HubAPI; // This lets me call Execute.cs (same namespace)
-
+using Tech_HubAPI.Services; // This lets me call Execute.cs (same namespace)
+using System.IO;
 
 namespace Tech_HubAPITest
 {
     public class ExecuteTest
     {
-        [Fact]
-        public void TestEchoFullPathPartialString()
+        private readonly Execute executeService;
+
+        public ExecuteTest()
         {
-            string output = Execute.ExecuteProcess("C:\\Program Files\\Git\\usr\\bin\\echo.exe", "hi");
-            output.Should().Contain("hi");
-
-        }
-
-        [Fact]
-        public void TestEchoFullPathExactString()
-        {
-            string output = Execute.ExecuteProcess("C:\\Program Files\\Git\\usr\\bin\\echo.exe", "hi");
-            output.Should().Be("hi");
-
+            executeService = new Execute();
         }
 
         [Fact]
         public void TestEchoCommand()
         {
-            string output = Execute.ExecuteProcess("echo", "hi");
+            string output = executeService.ExecuteProcess("echo", "hi");
             output.Should().Be("hi");
-
-        }
-
-        [Fact]
-        public void TestEchoCommandPartialString()
-        {
-            string output = Execute.ExecuteProcess("echo", "hi");
-            output.Should().Contain("hi");
-
         }
 
         [Fact]
         public void TestNonexistantProgram()
         {
-            string output = Execute.ExecuteProcess("jhgetrhb", "bad_argument");
+            string output = executeService.ExecuteProcess("jhgetrhb", "bad_argument");
             output.Should().Be("The system cannot find the file specified.");
         }
 
@@ -58,31 +40,30 @@ namespace Tech_HubAPITest
         {
             // The purpose of this test was to see if the process was failing because echo is an "internal command" without a stored exe.
             // The .bat file just calls "echo Hello World!". 
-            string output = Execute.ExecuteProcess("C:\\Users\\neil8\\OneDrive\\Documents\\TechAtState\\tech-at-hub\\Tech@HubAPI\\Tech@HubAPITest\\testExecute.bat");
+            string output = executeService.ExecuteProcess(
+                Directory.GetParent(
+                    Environment.CurrentDirectory)
+                .Parent
+                .Parent
+                .FullName + "\\testExecute.bat");
+
             output.Should().Be("Hello World!");
         }
-
-        [Fact]
-        public void TestFullPathBatchFilePartialString()
-        {
-            // The difference between this test and the above is that the above doesn't account for whitespace
-            // whereas this one just ignores the whitespace. IDK where the whitespace comes from.
-            string output = Execute.ExecuteProcess("C:\\Users\\neil8\\OneDrive\\Documents\\TechAtState\\tech-at-hub\\Tech@HubAPI\\Tech@HubAPITest\\testExecute.bat");
-            output.Should().Contain("Hello World!");
-        }
-
 
         [Fact]
         public void TestBatchFileMultiArg()
         {
             // The purpose of this test was to see if the process was failing because echo is an "internal command" without a stored exe.
             // The .bat file just calls "echo Hello World!". 
-            string output = Execute.ExecuteProcess("C:\\Users\\neil8\\OneDrive\\Documents\\TechAtState\\tech-at-hub\\Tech@HubAPI\\Tech@HubAPITest\\testParam.bat",
-                                                    "funny", "words");
+            string output = executeService.ExecuteProcess(
+                Directory.GetParent(
+                    Environment.CurrentDirectory)
+                .Parent
+                .Parent
+                .FullName + "\\testParam.bat",
+                "funny",
+                "words");
             output.Should().Be("Your first arg was funny\r\nAll your args were: funny words");
         }
-
-
-
     }
 }

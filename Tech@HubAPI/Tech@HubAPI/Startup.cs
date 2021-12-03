@@ -7,6 +7,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Tech_HubAPI.Models;
 using Microsoft.EntityFrameworkCore;
+using Tech_HubAPI.Services;
 
 namespace Tech_HubAPI
 {
@@ -30,6 +31,7 @@ namespace Tech_HubAPI
 			});
 
 			services.AddSingleton(Configuration);
+			services.AddSingleton(new Execute());
 
 			services.AddControllers();
 			services.AddSwaggerGen(c =>
