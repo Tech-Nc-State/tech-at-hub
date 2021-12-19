@@ -9,10 +9,6 @@ using Tech_HubAPI.Models;
 using Microsoft.EntityFrameworkCore;
 using Tech_HubAPI.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using static System.Net.Mime.MediaTypeNames;
-using System.Net;
-using System.Reflection.Metadata;
-using Ubiety.Dns.Core;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
@@ -38,7 +34,11 @@ namespace Tech_HubAPI
 			});
 
 			services.AddSingleton(Configuration);
+<<<<<<< HEAD
 			services.AddSingleton(new Execute());
+=======
+			services.AddSingleton(new JwtService(Configuration));
+>>>>>>> d05b2ad (Implemented JWT token generation and service)
 
 			services.AddControllers();
 			services.AddSwaggerGen(c =>
@@ -66,23 +66,21 @@ namespace Tech_HubAPI
 						}
 					}
 					,new string[] {}
-				}});
-
-				services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+				}});	
+			});
+			
+			services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 					.AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
 					{
 						options.SaveToken = true;
 						options.RequireHttpsMetadata = false;
 						options.TokenValidationParameters = new TokenValidationParameters()
 						{
-							ValidateIssuer = true,
-							ValidateAudience = true,
-							ValidAudience = Configuration["JWT: ValidAudience"],
-							ValidIssuer = Configuration["JWT: ValidIssuer"],
-							IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWT: SecretKey"]))
+							ValidateIssuer = false,
+							ValidateAudience = false,
+							IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWT:SecretKey"]))
 						};
 					});
-			});
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
