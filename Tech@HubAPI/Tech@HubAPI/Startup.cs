@@ -32,6 +32,7 @@ namespace Tech_HubAPI
 
 			services.AddSingleton(Configuration);
 			services.AddSingleton(new HashingService());
+			services.AddSingleton(new Execute());
 
 			services.AddControllers();
 			services.AddSwaggerGen(c =>
