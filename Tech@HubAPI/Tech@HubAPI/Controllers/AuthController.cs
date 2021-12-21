@@ -47,7 +47,9 @@ namespace GitTest.Controllers
 
 			var token = _jwt.GenerateToken(new List<Claim>
 			{
-				new Claim(ClaimTypes.Name, user.Username),
+				new Claim("Username", user.Username),
+				new Claim("FullName", user.FirstName + " " + user.LastName),
+				new Claim("Id", user.Id.ToString()),
 			});
 
 			return Ok(new

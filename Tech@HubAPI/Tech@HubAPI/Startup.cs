@@ -34,11 +34,8 @@ namespace Tech_HubAPI
 			});
 
 			services.AddSingleton(Configuration);
-<<<<<<< HEAD
 			services.AddSingleton(new Execute());
-=======
 			services.AddSingleton(new JwtService(Configuration));
->>>>>>> d05b2ad (Implemented JWT token generation and service)
 
 			services.AddControllers();
 			services.AddSwaggerGen(c =>
