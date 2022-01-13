@@ -1,12 +1,18 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Tech_HubAPI.Models;
+using Tech_HubAPI.Services;
 
 namespace GitTest.Controllers
 {
@@ -15,13 +21,46 @@ namespace GitTest.Controllers
 	public class AuthController : ControllerBase
 	{
 		private readonly ILogger<AuthController> _logger;
+		private readonly JwtService _jwt;
+		private readonly DatabaseContext _dbContext;
 
-		public AuthController(ILogger<AuthController> logger)
+		public AuthController(DatabaseContext dbContext, JwtService jwt, ILogger<AuthController> logger)
 		{
+			_jwt = jwt;
+			_dbContext = dbContext;
 			_logger = logger;
 		}
 
+		[HttpPost]
+		[Route("login")]
+		public IActionResult Login([FromBody] Credentials credentials)
+		{
+			// https://delushaandelu.medium.com/jwt-auth-in-asp-net-core-353595b9b7c4
+			var user = _dbContext.Users.Where(u => u.Username == credentials.Username).FirstOrDefault();
+
+			if (user == null)
+			{
+				return NotFound();
+			}
+
+			// Check password here
+
+			var token = _jwt.GenerateToken(new List<Claim>
+			{
+				new Claim("Username", user.Username),
+				new Claim("FullName", user.FirstName + " " + user.LastName),
+				new Claim("Id", user.Id.ToString()),
+			});
+
+			return Ok(new
+			{
+				token = _jwt.SerializeToken(token),
+				expiration = token.ValidTo
+			});
+		}
+
 		[HttpGet]
+		[Route("gitclient")]
 		public ActionResult Get()
 		{
 			// Manual implementation of HTTP Basic authentication
