@@ -22,11 +22,13 @@ namespace GitTest.Controllers
 	{
 		private readonly ILogger<AuthController> _logger;
 		private readonly JwtService _jwt;
+		private readonly HashingService _hashing;
 		private readonly DatabaseContext _dbContext;
 
-		public AuthController(DatabaseContext dbContext, JwtService jwt, ILogger<AuthController> logger)
+		public AuthController(DatabaseContext dbContext, JwtService jwt, HashingService hashing, ILogger<AuthController> logger)
 		{
 			_jwt = jwt;
+			_hashing = hashing;
 			_dbContext = dbContext;
 			_logger = logger;
 		}
@@ -43,7 +45,11 @@ namespace GitTest.Controllers
 				return NotFound();
 			}
 
-			// Check password here
+			byte[] hashedPasswordAttempt = _hashing.HashPassword(credentials.Password, user.Salt);
+			if (hashedPasswordAttempt != user.Password)
+            {
+				return Unauthorized();
+            }
 
 			var token = _jwt.GenerateToken(new List<Claim>
 			{
