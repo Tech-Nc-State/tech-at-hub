@@ -37,6 +37,26 @@ namespace Tech_HubAPI.Services
         {
             // Given a username and repoName, list all stored branch names.
 
+            // Check if user directory exists
+            string userDirectory = _baseGitFolder + username + "/";
+            if (!Directory.Exists(userDirectory))
+            {
+                // not sure if we want to return something besides null to indicate that the
+                // error occured for the reason "no user"? 
+                return null;
+            }
+
+            // Check if repo directory exists
+            string repoDirectory = userDirectory + repoName + "/";
+            if (!Directory.Exists(repoDirectory))
+            {
+                // repo no exist
+                return null;
+            }
+
+            // TODO: Check .git/refs/heads and return the names of those tiles
+            // TODO: Also open each file, copy the SHA hash, and attach that to the string
+            // reutrn those strings in an array.
 
             return null; // TODO: Replace
         }
