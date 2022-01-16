@@ -28,6 +28,19 @@ namespace Tech_HubAPI.Services
             _gitBinPath = configuration["Environment:GitPath"].Replace("\\", "/");
         }
 
+        // TODO:
+        // GetBranches(string username, string repoName)
+        // Direcetory structure: username/reponame.git // inside git folder
+        // Directory and File classes
+
+        public string[] GetBranches(string username, string repoName)
+        {
+            // Given a username and repoName, list all stored branch names.
+
+
+            return null; // TODO: Replace
+        }
+
         public void CreateNewRepository(string name, string username)
         {
             // User Directory
