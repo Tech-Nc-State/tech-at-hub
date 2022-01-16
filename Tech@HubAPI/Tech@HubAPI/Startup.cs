@@ -114,9 +114,8 @@ namespace Tech_HubAPI
 			{
 				var serviceScopeFactory = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>();
 				using var serviceScope = serviceScopeFactory.CreateScope();
-				// TODO: We need to like actually run the database at some point lol
-				//var dbContext = serviceScope.ServiceProvider.GetService<DatabaseContext>();
-				//dbContext.Database.EnsureCreated();
+				var dbContext = serviceScope.ServiceProvider.GetService<DatabaseContext>();
+				dbContext.Database.EnsureCreated();
 			}
 		}
 	}
