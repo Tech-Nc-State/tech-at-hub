@@ -8,18 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="developersecrets.json" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="developersecrets.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="FluentAssertions" Version="6.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="5.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.11" />
@@ -43,4 +31,13 @@
     <ProjectReference Include="..\Tech@HubAPI\Tech@HubAPI.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="developersecrets.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="developersecrets.json" Condition="'$(ExcludeConfigFilesFromBuildOutput)'=='true'">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
 </Project>
