@@ -22,7 +22,7 @@ namespace Tech_HubAPI.Services
         /// <param name="configuration">Configuration this class will make use of.</param>
         public GitService(ExecuteService executeService, IConfiguration configuration)
         {
-            _executeService = executeService;
+            _executeService = new ExecuteService(configuration);
             _windows = configuration["Environment:Platform"] == "Windows";
             _baseGitFolder = executeService.WorkingDirectory.Replace("\\", "/") + "git/";
             _gitBinPath = configuration["Environment:GitPath"].Replace("\\", "/");
@@ -55,6 +55,8 @@ namespace Tech_HubAPI.Services
             }
 
             // TODO: Check .git/refs/heads and return the names of those tiles
+            // string branchDirectory = repoDirectory + 
+
             // TODO: Also open each file, copy the SHA hash, and attach that to the string
             // reutrn those strings in an array.
 
