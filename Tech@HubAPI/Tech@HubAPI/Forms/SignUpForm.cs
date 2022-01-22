@@ -2,18 +2,23 @@
 
 public class SignUpForm
 {
+    public SignUpForm(string firstName, string lastName, string username, string password, string email, string birthDate, uint age)
+    {
+        this.FirstName = firstName;
+        this.LastName = lastName;
+        this.Username = username;
+        this.Password = password;
+        this.Email = email;
+        this.BirthDate = birthDate;
+        this.Age = age;
+    }
 
-	public SignUpForm(String username, String password, String email, String birthDate, String firstName, String lastName, int age)
-	{
-		
-	}
-
-	public String firstName { get; set; }
-	public String lastName { get; set; }
-	public String username { get; set; }
-	public String password { get; set; }
-	public String email { get; set; }
-	public String birthDate { get; set; }
-	public uint age { get; set; }
+    public string FirstName { get; set; }
+	public string LastName { get; set; }
+	public string Username { get; set; }
+	public string Password { get; set; }
+	public string Email { get; set; }
+	public string BirthDate { get; set; }
+	public uint Age { get; set; }
 
 }

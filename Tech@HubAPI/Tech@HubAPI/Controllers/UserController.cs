@@ -21,16 +21,20 @@ namespace Tech_HubAPI.Controllers
 		}
 
 		[HttpPost]
-		public User SignUp(SignUpForm form)
+		public ActionResult<User> SignUp([FromBody] SignUpForm form)
         {
-			IQueryable query = _dbContext.Users.Where(u => u.Username == form.username);
-			if (query != null)
+			User existingUser = _dbContext.Users.Where(u => u.Username == form.Username).FirstOrDefault();
+			if (existingUser != null)
             {
-				throw new Exception();
+				return BadRequest();
             }
 			byte[] salt = _hashingService.GetSalt();
-			byte[] hashedPassword = _hashingService.HashPassword(form.password, salt);
-			return new User(form.username, hashedPassword, salt, form.email, form.firstName, form.lastName, form.age, null, null);
+			byte[] hashedPassword = _hashingService.HashPassword(form.Password, salt);
+			User user = new User(form.Username, hashedPassword, salt, form.Email, form.FirstName, form.LastName, form.Age, null, null);
+			_dbContext.Users.Add(user);
+			_dbContext.SaveChanges();
+			user.Password = null;
+			return user;
         }
 	}
 }
