@@ -28,9 +28,18 @@ namespace Tech_HubAPI.Controllers
             {
 				return BadRequest();
             }
+
 			byte[] salt = _hashingService.GetSalt();
 			byte[] hashedPassword = _hashingService.HashPassword(form.Password, salt);
-			User user = new User(form.Username, hashedPassword, salt, form.Email, form.FirstName, form.LastName, form.Age, null, null);
+			DateTime birthDate;
+			if (!DateTime.TryParse(form.BirthDate, out birthDate))
+			{
+				return BadRequest();
+			}
+
+			birthDate = DateTime.Parse(form.BirthDate);
+			User user = new User(form.Username, hashedPassword, salt, form.Email, form.FirstName, form.LastName, form.Age, null, null, birthDate);
+			
 			_dbContext.Users.Add(user);
 			_dbContext.SaveChanges();
 			user.Password = null;
