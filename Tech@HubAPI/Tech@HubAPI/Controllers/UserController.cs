@@ -38,8 +38,16 @@ namespace Tech_HubAPI.Controllers
 			}
 
 			birthDate = DateTime.Parse(form.BirthDate);
-			User user = new User(form.Username, hashedPassword, salt, form.Email, form.FirstName, form.LastName, form.Age, null, null, birthDate);
-			
+			User user = null;
+			try
+            {
+				user = new User(form.Username, hashedPassword, salt, form.Email, form.FirstName,
+					form.LastName, form.Age, null, null, birthDate);
+            }
+			catch (ArgumentException)
+            {
+				return BadRequest();
+            }
 			_dbContext.Users.Add(user);
 			_dbContext.SaveChanges();
 			user.Password = null;

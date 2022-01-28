@@ -19,7 +19,7 @@ namespace Tech_HubAPI.Models
             Age = age;
             Description = description;
             ProfilePicturePath = profilePicturePath;
-            birthDate = birthDate;
+            BirthDate = birthDate;
         }
 
         public int Id { get; set; }
@@ -30,7 +30,19 @@ namespace Tech_HubAPI.Models
 
         public byte[] Salt { get; set; }
 
-        public string Email { get; set; }
+        public string Email {
+            get
+            {
+                return this.Email;
+            }
+            set
+            {
+                if (!Email.Contains('@') || !Email.Contains('.') || Email.IndexOf('@') > Email.IndexOf('.'))
+                {
+                    throw new ArgumentException("Invalid email.");
+                }
+            }
+        }
 
         public string FirstName { get; set; }
 
