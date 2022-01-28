@@ -55,7 +55,9 @@ namespace Tech_HubAPI.Services
             }
 
             // TODO: Check .git/refs/heads and return the names of those tiles
-            // string branchDirectory = repoDirectory + 
+            string branchDirectory = repoDirectory + ".git/refs/heads";
+
+            string[] branches = Directory.GetFiles(branchDirectory);
 
             // TODO: Also open each file, copy the SHA hash, and attach that to the string
             // reutrn those strings in an array.

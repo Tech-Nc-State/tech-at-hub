@@ -32,5 +32,16 @@ namespace Tech_HubAPITest
             Directory.Exists(_fileSystem.RootDirectory + "git/mkmcary/MyRepository.git").Should().BeTrue();
             File.Exists(_fileSystem.RootDirectory + "git/mkmcary/MyRepository.git/README.md").Should().BeTrue();
         }
+
+        [Fact]
+        public void TestGetBranches()
+        {
+            string[] branches = _gitService.GetBranches("joey", "test");
+            // TODO: See if these branches match
+            for (int i = 0; i < branches.Length; i++) {
+                Console.WriteLine(branches[i]);
+            }
+            true.Should().BeFalse(); // Fail lol
+        }
     }
 }
