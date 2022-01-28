@@ -19,7 +19,7 @@ namespace Tech_HubAPI.Controllers
 		
 		[HttpGet]
 		[Route("get/{ID}")]
-		public User GetUser(int ID) 
+		public ActionResult<User> GetUserById(int ID) 
         {
 			var user = _dbContext.Users.Where(u => u.Id == ID).FirstOrDefault();
 
@@ -30,12 +30,24 @@ namespace Tech_HubAPI.Controllers
 
             if (user == null)
             {
-				return NotFound();
+				return NotFound("A user with that ID does not exist.");
             }
 			else
             {
 				return user;
             }
         }
+
+		[HttpGet]
+		[Route("me")]
+		public User GetSelf()
+        {
+			var user = this.GetUser(_dbContext);
+
+			user.Password = null;
+			user.Salt = null;
+
+			return user;
+		}
 	}
 }
