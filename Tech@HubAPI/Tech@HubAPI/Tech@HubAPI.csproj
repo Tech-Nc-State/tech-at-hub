@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <RootNamespace>Tech_HubAPI</RootNamespace>
     <UserSecretsId>08370ae2-1549-4608-844d-bffc3f10c60a</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
