@@ -37,6 +37,7 @@ namespace Tech_HubAPI.Controllers
             {
 				return BadRequest(e.Message);
             }
+
 			byte[] salt = _hashingService.GetSalt();
 			byte[] hashedPassword = _hashingService.HashPassword(form.Password, salt);
 			DateTime birthDate;

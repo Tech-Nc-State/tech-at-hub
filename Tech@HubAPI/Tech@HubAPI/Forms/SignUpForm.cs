@@ -3,24 +3,24 @@ using System.Text.RegularExpressions;
 
 public class SignUpForm
 {
-    public SignUpForm(string firstName, string lastName, string username, string password, string email, string birthDate, uint age)
+    public SignUpForm(string firstName, string lastName, string username, string password, string confirmPassword, string email, string birthDate)
     {
         this.FirstName = firstName;
         this.LastName = lastName;
         this.Username = username;
         this.Password = password;
+        this.ConfirmPassword = confirmPassword;
         this.Email = email;
         this.BirthDate = birthDate;
-        this.Age = age;
     }
 
     public string FirstName { get; set; }
 	public string LastName { get; set; }
 	public string Username { get; set; }
 	public string Password { get; set; }
+    public string ConfirmPassword { get; set; }
 	public string Email { get; set; }
 	public string BirthDate { get; set; }
-	public uint Age { get; set; }
 
     public void Validate()
     {
@@ -29,6 +29,10 @@ public class SignUpForm
         if (!emailMatch.Success)
         {
             throw new ArgumentException("Invalid Email.");
+        }
+        if (this.Password != this.ConfirmPassword)
+        {
+            throw new ArgumentException("Passwords do not match.");
         }
     }
 }
