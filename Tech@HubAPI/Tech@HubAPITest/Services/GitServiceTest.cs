@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Tech_HubAPI.Models.Git;
 using Tech_HubAPI.Services;
 using Tech_HubAPITest.Fixtures;
 using Xunit;
@@ -31,6 +32,15 @@ namespace Tech_HubAPITest
             _gitService.CreateNewRepository("MyRepository", "mkmcary");
             Directory.Exists(_fileSystem.RootDirectory + "git/mkmcary/MyRepository.git").Should().BeTrue();
             File.Exists(_fileSystem.RootDirectory + "git/mkmcary/MyRepository.git/README.md").Should().BeTrue();
+        }
+
+        [Fact]
+        public void TestGitDirectoryListing()
+        {
+            _fileSystem.ImportFolder("./SampleGitRepos/testDir");
+            List<DirectoryEntry> result;
+            result = _gitService.GetDirectoryListing("", "testDir", "", "master");
+            System.Console.Write(result);
         }
     }
 }

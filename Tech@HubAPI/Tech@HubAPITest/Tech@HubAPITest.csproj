@@ -33,11 +33,17 @@
 
   <ItemGroup>
     <None Remove="developersecrets.json" />
+    <None Remove="SampleGitRepos\" />
+    <None Remove="SampleGitRepos\testDir\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="developersecrets.json" Condition="'$(ExcludeConfigFilesFromBuildOutput)'=='true'">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="SampleGitRepos\" />
+    <Folder Include="SampleGitRepos\testDir\" />
   </ItemGroup>
 </Project>
