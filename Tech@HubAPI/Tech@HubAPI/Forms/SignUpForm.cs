@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 
 public class SignUpForm
 {
@@ -21,4 +22,13 @@ public class SignUpForm
 	public string BirthDate { get; set; }
 	public uint Age { get; set; }
 
+    public void Validate()
+    {
+        string pattern = @"([A-Za-z0-9.]+)@([A-Za-z]+).(com|edu)";
+        Match emailMatch = Regex.Match(this.Email, pattern);
+        if (!emailMatch.Success)
+        {
+            throw new ArgumentException("Invalid Email.");
+        }
+    }
 }

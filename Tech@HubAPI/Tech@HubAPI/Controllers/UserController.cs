@@ -29,6 +29,14 @@ namespace Tech_HubAPI.Controllers
 				return BadRequest();
             }
 
+			try
+            {
+				form.Validate();
+            }
+			catch (ArgumentException e)
+            {
+				return BadRequest(e.Message);
+            }
 			byte[] salt = _hashingService.GetSalt();
 			byte[] hashedPassword = _hashingService.HashPassword(form.Password, salt);
 			DateTime birthDate;
@@ -37,20 +45,13 @@ namespace Tech_HubAPI.Controllers
 				return BadRequest();
 			}
 
-			birthDate = DateTime.Parse(form.BirthDate);
 			User user = null;
-			try
-            {
-				user = new User(form.Username, hashedPassword, salt, form.Email, form.FirstName,
-					form.LastName, form.Age, null, null, birthDate);
-            }
-			catch (ArgumentException)
-            {
-				return BadRequest();
-            }
+			user = new User(form.Username, hashedPassword, salt, form.Email, form.FirstName,
+					form.LastName, null, null, birthDate);
 			_dbContext.Users.Add(user);
 			_dbContext.SaveChanges();
 			user.Password = null;
+			user.Salt = null;
 			return user;
         }
 	}

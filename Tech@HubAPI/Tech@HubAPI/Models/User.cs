@@ -7,8 +7,8 @@ namespace Tech_HubAPI.Models
 {
     public class User
     {
-        public User(string username, byte[] password, byte[] salt, string email, string firstName, string lastName, 
-            uint age, string description, string profilePicturePath, DateTime birthDate)
+        public User(string username, byte[] password, byte[] salt, string email, string firstName, 
+            string lastName, string description, string profilePicturePath, DateTime birthDate)
         {
             Username = username;
             Password = password;
@@ -16,7 +16,6 @@ namespace Tech_HubAPI.Models
             Email = email;
             FirstName = firstName;
             LastName = lastName;
-            Age = age;
             Description = description;
             ProfilePicturePath = profilePicturePath;
             BirthDate = birthDate;
@@ -30,25 +29,11 @@ namespace Tech_HubAPI.Models
 
         public byte[] Salt { get; set; }
 
-        public string Email {
-            get
-            {
-                return this.Email;
-            }
-            set
-            {
-                if (!Email.Contains('@') || !Email.Contains('.') || Email.IndexOf('@') > Email.IndexOf('.'))
-                {
-                    throw new ArgumentException("Invalid email.");
-                }
-            }
-        }
+        public string Email { get; set; }
 
         public string FirstName { get; set; }
 
         public string LastName { get; set; }
-
-        public uint Age { get; set; }
 
         public string Description { get; set; }
 
