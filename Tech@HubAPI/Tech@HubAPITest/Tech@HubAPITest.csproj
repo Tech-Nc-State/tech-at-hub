@@ -33,8 +33,6 @@
 
   <ItemGroup>
     <None Remove="developersecrets.json" />
-    <None Remove="SampleGitRepos\" />
-    <None Remove="SampleGitRepos\testDir\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="developersecrets.json" Condition="'$(ExcludeConfigFilesFromBuildOutput)'=='true'">
