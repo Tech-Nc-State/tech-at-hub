@@ -7,7 +7,8 @@ namespace Tech_HubAPI.Models
 {
     public class User
     {
-        public User(string username, byte[] password, byte[] salt, string email, string firstName, string lastName, uint age, string description, string profilePicturePath)
+        public User(string username, byte[] password, byte[] salt, string email, string firstName, 
+            string lastName, string description, string profilePicturePath, DateTime birthDate)
         {
             Username = username;
             Password = password;
@@ -15,9 +16,9 @@ namespace Tech_HubAPI.Models
             Email = email;
             FirstName = firstName;
             LastName = lastName;
-            Age = age;
             Description = description;
             ProfilePicturePath = profilePicturePath;
+            BirthDate = birthDate;
         }
 
         public int Id { get; set; }
@@ -34,10 +35,10 @@ namespace Tech_HubAPI.Models
 
         public string LastName { get; set; }
 
-        public uint Age { get; set; }
-
         public string Description { get; set; }
 
         public string ProfilePicturePath { get; set; }
+
+        public DateTime BirthDate { get; set; }
     }
 }
