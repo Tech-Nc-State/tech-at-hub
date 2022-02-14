@@ -24,7 +24,7 @@ namespace Tech_HubAPI.Services
         {
             _executeService = new ExecuteService(configuration);
             _windows = configuration["Environment:Platform"] == "Windows";
-            _baseGitFolder = executeService.WorkingDirectory.Replace("\\", "/") + "git/";
+            _baseGitFolder = executeService.WorkingDirectory.Replace("\\", "/") + "git/";  // TODO: Why is this pointing to wrong place in debug?
             _gitBinPath = configuration["Environment:GitPath"].Replace("\\", "/");
         }
 
@@ -58,6 +58,12 @@ namespace Tech_HubAPI.Services
             string branchDirectory = repoDirectory + ".git/refs/heads";
 
             string[] branches = Directory.GetFiles(branchDirectory);
+
+            // temp print out names
+            foreach(string branch in branches)
+            {
+                Console.WriteLine(branch);
+            }
 
             // TODO: Also open each file, copy the SHA hash, and attach that to the string
             // reutrn those strings in an array.

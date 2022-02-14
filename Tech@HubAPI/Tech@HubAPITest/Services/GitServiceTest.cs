@@ -38,10 +38,12 @@ namespace Tech_HubAPITest
         {
             string[] branches = _gitService.GetBranches("joey", "test");
             // TODO: See if these branches match
-            for (int i = 0; i < branches.Length; i++) {
-                Console.WriteLine(branches[i]);
+            if (branches != null) {
+                for (int i = 0; i < branches.Length; i++) {
+                    Console.WriteLine(branches[i]);
+                }
             }
-            true.Should().BeFalse(); // Fail lol
+            true.Should().BeFalse("purposeful fail: not implemented."); // Fail lol
         }
     }
 }
