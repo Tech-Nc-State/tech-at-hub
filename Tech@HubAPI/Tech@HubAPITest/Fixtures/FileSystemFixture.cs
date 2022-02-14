@@ -33,9 +33,9 @@ namespace Tech_HubAPITest.Fixtures
             Directory.Delete(RootDirectory, true);
         }
 
-        public void ImportFolder(string name)
+        public void ImportFolder(string name, string destName = "")
         {
-            CopyDirectory(name, RootDirectory, true);
+            CopyDirectory(name, RootDirectory + "/" + destName, true);
         }
 
         //Taken from https://docs.microsoft.com/en-us/dotnet/standard/io/how-to-copy-directories

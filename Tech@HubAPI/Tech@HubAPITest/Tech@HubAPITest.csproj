@@ -43,5 +43,6 @@
   <ItemGroup>
     <Folder Include="SampleGitRepos\" />
     <Folder Include="SampleGitRepos\testDir\" />
+    <Folder Include="SampleGitRepos\testBranches.git\" />
   </ItemGroup>
 </Project>

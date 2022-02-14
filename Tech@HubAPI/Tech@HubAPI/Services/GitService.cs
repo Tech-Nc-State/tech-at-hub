@@ -29,6 +29,8 @@ namespace Tech_HubAPI.Services
             _gitBinPath = configuration["Environment:GitPath"].Replace("\\", "/");
         }
 
+        public bool UseTestGitFolder { get; set; }
+
         // TODO:
         // GetBranches(string username, string repoName)
         // Direcetory structure: username/reponame.git // inside git folder
@@ -48,7 +50,7 @@ namespace Tech_HubAPI.Services
             }
 
             // Check if repo directory exists
-            string repoDirectory = userDirectory + repoName + "/";
+            string repoDirectory = userDirectory + repoName + ".git/";
             if (!Directory.Exists(repoDirectory))
             {
                 // repo no exist
@@ -56,7 +58,10 @@ namespace Tech_HubAPI.Services
             }
 
             // TODO: Check .git/refs/heads and return the names of those tiles
-            string branchDirectory = repoDirectory + ".git/refs/heads";
+            
+            string branchDirectory = repoDirectory 
+                + (UseTestGitFolder ? "" : ".")
+                + "git/refs/heads";
 
             string[] branches = Directory.GetFiles(branchDirectory);
 
