@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Tech_HubAPI.Models.Git;
 using Tech_HubAPI.Services;
 using Tech_HubAPITest.Fixtures;
 using Xunit;
@@ -38,10 +39,20 @@ namespace Tech_HubAPITest
         {
             string[] branches = _gitService.GetBranches("joey", "test");
             // TODO: See if these branches match
-            for (int i = 0; i < branches.Length; i++) {
+            for (int i = 0; i < branches.Length; i++)
+            {
                 Console.WriteLine(branches[i]);
             }
             true.Should().BeFalse(); // Fail lol
+
+        }
+
+        public void TestGitDirectoryListing()
+        {
+            _fileSystem.ImportFolder("./SampleGitRepos/testDir");
+            List<DirectoryEntry> result;
+            result = _gitService.GetDirectoryListing("", "testDir", "", "master");
+            System.Console.Write(result);
         }
     }
 }
