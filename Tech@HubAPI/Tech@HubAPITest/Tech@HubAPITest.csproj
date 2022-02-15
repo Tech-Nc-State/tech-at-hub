@@ -30,10 +30,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Tech@HubAPI\Tech@HubAPI.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <None Remove="developersecrets.json" />
-  </ItemGroup>
   <ItemGroup>
     <Content Include="developersecrets.json" Condition="'$(ExcludeConfigFilesFromBuildOutput)'=='true'">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
@@ -41,8 +37,8 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="SampleGitRepos\" />
-    <Folder Include="SampleGitRepos\testDir\" />
-    <Folder Include="SampleGitRepos\testBranches.git\" />
+	  <Content Include="SampleGitRepos\**">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
   </ItemGroup>
 </Project>

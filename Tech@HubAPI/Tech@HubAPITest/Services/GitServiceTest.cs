@@ -38,16 +38,15 @@ namespace Tech_HubAPITest
         [Fact]
         public void TestGetBranches()
         {
-            _fileSystem.ImportFolder("./SampleGitRepos/testBranches.git", "testUser");
+            _fileSystem.ImportFolder("./SampleGitRepos/testBranches.git", "git/testUser/testBranches.git");
 
             string[] branches = _gitService.GetBranches("testUser", "testBranches");
-            // TODO: See if these branches match
-            for (int i = 0; i < branches.Length; i++)
-            {
-                Console.WriteLine(branches[i]);
-            }
-            true.Should().BeFalse(); // Fail lol
-
+            branches.Length.Should().Be(5);
+            branches.Should().Contain("master");
+            branches.Should().Contain("branch1");
+            branches.Should().Contain("branch2");
+            branches.Should().Contain("branch3");
+            branches.Should().Contain("branch4");
         }
 
         public void TestGitDirectoryListing()

@@ -16,7 +16,7 @@ namespace Tech_HubAPITest.Fixtures
         public FileSystemFixture(IConfiguration configuration)
         {
             // ensure generated directory names are unique because tests may be run in parallel
-            RootDirectory = configuration["Environment:DefaultWorkingDirectory"] + "test-files-" + new Random().Next() + "\\";
+            RootDirectory = "test-files-" + new Random().Next() + "\\";
             RootDirectory = RootDirectory.Replace("\\", "/");
 
             Directory.CreateDirectory(RootDirectory);

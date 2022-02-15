@@ -60,15 +60,18 @@ namespace Tech_HubAPI.Services
             // TODO: Check .git/refs/heads and return the names of those tiles
             
             string branchDirectory = repoDirectory 
-                + (UseTestGitFolder ? "" : ".")
-                + "git/refs/heads";
+                + (UseTestGitFolder ? "git_folder" : ".git")
+                + "/refs/heads";
 
-            string[] branches = Directory.GetFiles(branchDirectory);
+            string[] branches = new DirectoryInfo(branchDirectory)
+                .GetFiles()
+                .Select(f => f.Name)
+                .ToArray();
 
             // TODO: Also open each file, copy the SHA hash, and attach that to the string
             // reutrn those strings in an array.
 
-            return null; // TODO: Replace
+            return branches; // TODO: Replace
         }
 
         public void CreateNewRepository(string name, string username)
