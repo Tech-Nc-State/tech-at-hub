@@ -8,6 +8,9 @@ using Microsoft.OpenApi.Models;
 using Tech_HubAPI.Models;
 using Microsoft.EntityFrameworkCore;
 using Tech_HubAPI.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace Tech_HubAPI
 {
@@ -33,12 +36,50 @@ namespace Tech_HubAPI
 			services.AddSingleton(Configuration);
 			services.AddScoped<ExecuteService>();
 			services.AddScoped<GitService>();
+			services.AddSingleton(new HashingService());
+			services.AddSingleton(new JwtService(Configuration));
 
 			services.AddControllers();
 			services.AddSwaggerGen(c =>
 			{
 				c.SwaggerDoc("v1", new OpenApiInfo { Title = "Tech_HubAPI", Version = "v1" });
+
+				c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
+				{
+					Name = "Authorization",
+					Type = SecuritySchemeType.ApiKey,
+					Scheme = "Bearer",
+					BearerFormat = "JWT",
+					In = ParameterLocation.Header,
+					Description = "Enter 'Bearer' [space] and then your valid token in the text input below.\r\n\r\nExample: \"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9\"",
+				});
+
+				c.AddSecurityRequirement(new OpenApiSecurityRequirement
+				{{
+					new OpenApiSecurityScheme
+					{
+						Reference = new OpenApiReference
+						{
+							Type = ReferenceType.SecurityScheme,
+							Id = "Bearer"
+						}
+					}
+					,new string[] {}
+				}});	
 			});
+			
+			services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+					.AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
+					{
+						options.SaveToken = true;
+						options.RequireHttpsMetadata = false;
+						options.TokenValidationParameters = new TokenValidationParameters()
+						{
+							ValidateIssuer = false,
+							ValidateAudience = false,
+							IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWT:SecretKey"]))
+						};
+					});
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -60,7 +101,7 @@ namespace Tech_HubAPI
 			//app.UseHttpsRedirection();
 
 			app.UseRouting();
-
+			app.UseAuthentication();
 			app.UseAuthorization();
 
 			app.UseEndpoints(endpoints =>
@@ -73,9 +114,8 @@ namespace Tech_HubAPI
 			{
 				var serviceScopeFactory = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>();
 				using var serviceScope = serviceScopeFactory.CreateScope();
-				// TODO: We need to like actually run the database at some point lol
-				//var dbContext = serviceScope.ServiceProvider.GetService<DatabaseContext>();
-				//dbContext.Database.EnsureCreated();
+				var dbContext = serviceScope.ServiceProvider.GetService<DatabaseContext>();
+				dbContext.Database.EnsureCreated();
 			}
 		}
 	}
