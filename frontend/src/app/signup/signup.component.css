@@ -1,0 +1,93 @@
+
+
+
+.ftco-section {
+
+  margin: 50px auto;
+  width: 330px;
+
+  justify-self: center;
+  font-family: "Poppins", sans-serif;
+
+  
+}
+
+/* .card {
+    display: flex;
+    flex-wrap: wrap;
+    height: 500px;
+    width: 300px;
+    background-color:bisque;
+} */
+
+
+.login-wrap {
+  text-align: center;
+  position: relative;
+  background: #fff;
+  border-radius: 8px ;
+  -webkit-box-shadow: 0px 10px 34px -15px rgba(0, 0, 0, 0.24);
+  -moz-box-shadow: 0px 10px 34px -15px rgba(0, 0, 0, 0.24);
+  box-shadow: 0px 10px 34px -15px rgba(0, 0, 0, 0.24);
+  z-index: 0;
+  padding: 30px 30px 30px 30px;
+  background: #fff;
+
+}
+
+.form {
+  border-radius: 5px;
+  padding-bottom: 5px;
+  text-align: center;
+  align-items: center;
+}
+
+h3.text {
+  color: rgb(0, 0, 0);
+  margin: 0 0 10px 0;
+  font-size: xx-large;
+
+}
+
+.form-control {
+  border-radius: 10px;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid;
+  border-color: rgb(247, 247, 247);
+  background-color: rgba(220, 211, 211, 0.273);
+  width: 95%;
+}
+
+button {
+    overflow: hidden;
+    width: 55%;
+    height: 3em;
+    color: rgb(255, 249, 249);
+    background:linear-gradient(45deg, #64b3f4, #7bbfdf, #acdab0, #c2e59c);
+    background-size: 500% 500%;
+    animation: move 5s alternate infinite;
+    border-radius: 7px;
+    border: 0px;
+    transition: ease-out 0.3s;
+    font-size: 1em;
+}
+
+button:hover {
+    transform: scale(1.24);
+    transition: ease-in-out 0.3s;
+}
+.btn-div {
+    padding-top: 10px;
+}
+
+
+@keyframes move {
+    from {
+          background-position: 0%;
+    } 
+    to {
+          background-position: 100% 100%
+    }
+    
+    }

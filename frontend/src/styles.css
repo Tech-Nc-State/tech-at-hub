@@ -1,1 +1,47 @@
 /* You can add global styles to this file, and also import other style files */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+
+  min-height: 100vh;
+
+  /* -webkit-animation: AnimationName 14s ease infinite; 
+      -moz-animation: AnimationName 14s ease infinite;  */
+      /* animation: AnimationName 14s ease infinite;   */
+  background: linear-gradient(45deg, #64b3f4, #7bbfdf, #acdab0, #c2e59c);
+  animation: change 5s alternate infinite;
+  
+  background-size: 500% 500%;
+
+
+
+}
+
+/* @-webkit-keyframes AnimationName {
+      0%{background-color: #64b3f4}
+      50%{background-color:#c2e59c}
+      100%{background-color: #64b3f4}
+   }
+   @-moz-keyframes AnimationName {
+      0%{background-color: #64b3f4}
+      50%{background-color:#c2e59c}
+      100%{background-color: #64b3f4}  
+   }*/
+   /* @keyframes AnimationName { 
+      0%{background-color: #64b3f4}
+      50%{background-color:#c2e59c}
+      100%{background-color: #64b3f4} 
+   }  */
+
+@keyframes change {
+from {
+      background-position: 0%;
+} 
+to {
+      background-position: 100% 100%
+}
+
+}
