@@ -27,7 +27,6 @@ namespace Tech_HubAPI.Controllers
 			var user = _dbContext.Users.Where(u => u.Id == ID).FirstOrDefault();
 
             user.Password = null;
-			user.Age = 0;
 			user.Email = null;
 			user.Salt = null;
 
@@ -76,11 +75,15 @@ namespace Tech_HubAPI.Controllers
 
 			DateTime.TryParse(form.BirthDate, out DateTime birthDate);
 
-			User user = null;
-			user = new User(form.Username, hashedPassword, salt, form.Email, form.FirstName,
+			var user = new User(form.Username, hashedPassword, salt, form.Email, form.FirstName,
 					form.LastName, null, null, birthDate);
 			_dbContext.Users.Add(user);
 			_dbContext.SaveChanges();
-}
+
+			user.Password = null;
+			user.Salt = null;
+
+			return user;
+		}
 	}
 }

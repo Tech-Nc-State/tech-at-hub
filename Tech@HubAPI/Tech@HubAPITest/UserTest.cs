@@ -16,7 +16,7 @@ namespace Tech_HubAPITest
         [Fact]
         public void TestCreateAndRetrieveUser()
         {
-            var user = new User("joe", null, null, "test@email.com", "Joe", "Mama", 18, "test", "usr/pics/joe.png");
+            var user = new User("joe", null, null, "test@email.com", "Joe", "Mama", "test", "usr/pics/joe.png", DateTime.Now);
             user.Password = new byte[]{ 1, 2, 3, 4, 5, 6 };
             user.Salt = new byte[]{ 6, 5, 4, 3, 2, 1 };
             DbContext.Users.Add(user);
@@ -32,7 +32,6 @@ namespace Tech_HubAPITest
             user.Email.Should().Be("test@email.com");
             user.FirstName.Should().Be("Joe");
             user.LastName.Should().Be("Mama");
-            user.Age.Should().Be(18);
             user.Description.Should().Be("test");
             user.ProfilePicturePath.Should().Be("usr/pics/joe.png");
 
@@ -41,8 +40,8 @@ namespace Tech_HubAPITest
         [Fact]
         public void TestCreateDuplicateUsers()
         {
-            var user1 = new User("billybob", null, null, "test2@email.com", "Billy", "Bob", 21, "test", "usr/pics/billybob.png");
-            var user2 = new User("billybob", null, null, "test2@email.com", "Billy", "Bob", 21, "test", "usr/pics/billybob.png");
+            var user1 = new User("billybob", null, null, "test2@email.com", "Billy", "Bob", "test", "usr/pics/billybob.png", DateTime.Now);
+            var user2 = new User("billybob", null, null, "test2@email.com", "Billy", "Bob", "test", "usr/pics/billybob.png", DateTime.Now);
             user1.Password = new byte[] { 1, 2, 3, 4, 5, 6 };
             user1.Salt = new byte[] { 6, 5, 4, 3, 2, 1 };
             DbContext.Users.Add(user1);
@@ -55,8 +54,8 @@ namespace Tech_HubAPITest
         [Fact]
         public void TestCreateUsersSameUsername()
         {
-            var user1 = new User("billybob", null, null, "test2@email.com", "Billy", "Bob", 21, "test", "usr/pics/billybob.png");
-            var user2 = new User("billybob", null, null, "other@email.com", "Billard", "Robertson", 30, "test", "usr/pics/billybob.png");
+            var user1 = new User("billybob", null, null, "test2@email.com", "Billy", "Bob", "test", "usr/pics/billybob.png", DateTime.Now);
+            var user2 = new User("billybob", null, null, "other@email.com", "Billard", "Robertson", "test", "usr/pics/billybob.png", DateTime.Now);
             DbContext.Users.Add(user1);
             DbContext.Users.Add(user2);
 
