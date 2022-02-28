@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Tech_HubAPI.Models.Git;
 using Tech_HubAPI.Services;
 using Tech_HubAPITest.Fixtures;
 using Xunit;
@@ -23,6 +24,7 @@ namespace Tech_HubAPITest
             executeService.WorkingDirectory = fileSystem.RootDirectory;
             _gitService = new GitService(executeService, configuration);
             _fileSystem = fileSystem;
+            _gitService.UseTestGitFolder = true;
         }
 
         [Fact]
@@ -31,6 +33,39 @@ namespace Tech_HubAPITest
             _gitService.CreateNewRepository("MyRepository", "mkmcary");
             Directory.Exists(_fileSystem.RootDirectory + "git/mkmcary/MyRepository.git").Should().BeTrue();
             File.Exists(_fileSystem.RootDirectory + "git/mkmcary/MyRepository.git/README.md").Should().BeTrue();
+        }
+
+        [Fact]
+        public void TestGetBranches()
+        {
+<<<<<<< HEAD
+            string[] branches = _gitService.GetBranches("joey", "test");
+            // TODO: See if these branches match
+            if (branches != null) {
+                for (int i = 0; i < branches.Length; i++) {
+                    Console.WriteLine(branches[i]);
+                }
+            }
+            true.Should().BeFalse("purposeful fail: not implemented."); // Fail lol
+=======
+            _fileSystem.ImportFolder("./SampleGitRepos/testBranches.git", "git/testUser/testBranches.git");
+
+            string[] branches = _gitService.GetBranches("testUser", "testBranches");
+            branches.Length.Should().Be(5);
+            branches.Should().Contain("master");
+            branches.Should().Contain("branch1");
+            branches.Should().Contain("branch2");
+            branches.Should().Contain("branch3");
+            branches.Should().Contain("branch4");
+        }
+
+        public void TestGitDirectoryListing()
+        {
+            _fileSystem.ImportFolder("./SampleGitRepos/testDir");
+            List<DirectoryEntry> result;
+            result = _gitService.GetDirectoryListing("", "testDir", "", "master");
+            System.Console.Write(result);
+>>>>>>> 3965946b609abc1c2c8887bf2614d436828de5ff
         }
     }
 }

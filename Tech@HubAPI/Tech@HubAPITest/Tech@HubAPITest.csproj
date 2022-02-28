@@ -30,14 +30,15 @@
   <ItemGroup>
     <ProjectReference Include="..\Tech@HubAPI\Tech@HubAPI.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <None Remove="developersecrets.json" />
-  </ItemGroup>
   <ItemGroup>
     <Content Include="developersecrets.json" Condition="'$(ExcludeConfigFilesFromBuildOutput)'=='true'">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+	  <Content Include="SampleGitRepos\**">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </Content>
   </ItemGroup>
 </Project>
