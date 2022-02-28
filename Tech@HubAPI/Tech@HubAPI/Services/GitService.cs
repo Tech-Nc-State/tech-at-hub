@@ -1,10 +1,11 @@
-﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Tech_HubAPI.Models;
 using Tech_HubAPI.Models.Git;
 using Tech_HubAPI.Models.GitModels;
 
@@ -221,6 +222,80 @@ namespace Tech_HubAPI.Services
             }
 
             return directoryListing;
+        }
+
+        public FileContent GetFileContents(string username, string repositoryName, string branchName, string filePath)
+        {
+            // Find the Head file
+            string headfile = _baseGitFolder + username + "/" + repositoryName + ".git/refs/heads/" + branchName;
+            if (!File.Exists(headfile))
+            {
+                throw new FileNotFoundException("Could not find headfile for " + headfile);
+            }
+
+            // Get the commit hash
+            string commitHash = File.ReadAllText(headfile);
+
+            // Set up the execute service
+            _executeService.ExecutableDirectory = _gitBinPath;
+            string repoDirectory = _baseGitFolder + username + "/" + repositoryName + ".git/";
+            _executeService.WorkingDirectory = repoDirectory;
+
+            // Run git cat-file
+            string rawCommitData = _executeService.ExecuteProcess("git", "cat-file", "-p", commitHash);
+            Match treeMatch = Regex.Match(rawCommitData, "tree (.+)\n");
+
+            // We will need to go through the entire file path structure
+            string currentHash = treeMatch.Groups[0].Value;
+            string[] pathArray = filePath.Split('/');
+            string currentContents = "";
+
+            // For each directory in the file path
+            foreach (string dirName in pathArray)
+            {
+                // Run git-catfile
+                bool matchedDir = false;
+                currentContents = _executeService.ExecuteProcess("git", "cat-file", "-p", currentHash);
+
+                // If it was the final one, just exit
+                if (dirName.Equals(pathArray[pathArray.Length]))
+                {
+                    break;
+                }
+
+                // Go through output and find the appropriate tree to explore.
+                string[] currentContentLines = currentContents.Split('\n');
+                foreach (string currentContentLine in currentContentLines)
+                {
+                    string[] lineData = currentContentLine.Split(new char[] { ' ', '\t' });
+                    if (lineData[1].Equals("tree") && lineData[3].Equals(dirName))
+                    {
+                        currentHash = lineData[2];
+                        matchedDir = true;
+                        break;
+                    }
+                }
+
+                if (!matchedDir)
+                {
+                    // we didnt find the folder at some point. Exception?
+                    return null;
+                }
+            }
+
+            // currentContents now contains the contents of the file
+            FileContent fc = new FileContent();
+            fc.Name = pathArray[pathArray.Length];
+
+            // Get the location of the file on disk
+            string diskFilePath = repoDirectory + filePath;
+            fc.Size = (new FileInfo(diskFilePath)).Length;
+
+            // Assign the contents
+            fc.Contents = currentContents;
+
+            // Return the filecontent
+            return fc;
         }
     }
 }
