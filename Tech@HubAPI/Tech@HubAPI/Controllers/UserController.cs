@@ -26,7 +26,7 @@ namespace Tech_HubAPI.Controllers
 			User existingUser = _dbContext.Users.Where(u => u.Username == form.Username).FirstOrDefault();
 			if (existingUser != null)
             {
-				return BadRequest();
+				return BadRequest("That username already exists.");
             }
 
 			try
@@ -40,19 +40,18 @@ namespace Tech_HubAPI.Controllers
 
 			byte[] salt = _hashingService.GetSalt();
 			byte[] hashedPassword = _hashingService.HashPassword(form.Password, salt);
-			DateTime birthDate;
-			if (!DateTime.TryParse(form.BirthDate, out birthDate))
-			{
-				return BadRequest();
-			}
+
+			DateTime.TryParse(form.BirthDate, out DateTime birthDate);
 
 			User user = null;
 			user = new User(form.Username, hashedPassword, salt, form.Email, form.FirstName,
 					form.LastName, null, null, birthDate);
 			_dbContext.Users.Add(user);
 			_dbContext.SaveChanges();
+
 			user.Password = null;
 			user.Salt = null;
+
 			return user;
         }
 	}

@@ -3,23 +3,27 @@ using System.Text.RegularExpressions;
 
 public class SignUpForm
 {
-    public SignUpForm(string firstName, string lastName, string username, string password, string confirmPassword, string email, string birthDate)
+    public SignUpForm(string firstName, string lastName, string username, string password, string email, string birthDate)
     {
         this.FirstName = firstName;
         this.LastName = lastName;
         this.Username = username;
         this.Password = password;
-        this.ConfirmPassword = confirmPassword;
         this.Email = email;
         this.BirthDate = birthDate;
     }
 
     public string FirstName { get; set; }
+
 	public string LastName { get; set; }
+
 	public string Username { get; set; }
+
 	public string Password { get; set; }
     public string ConfirmPassword { get; set; }
+
 	public string Email { get; set; }
+
 	public string BirthDate { get; set; }
 
     public void Validate()
@@ -33,6 +37,15 @@ public class SignUpForm
         if (this.Password != this.ConfirmPassword)
         {
             throw new ArgumentException("Passwords do not match.");
+
+        if (!DateTime.TryParse(this.BirthDate, out DateTime birthDate))
+        {
+            throw new ArgumentException("Invalid birth data.");
+        }
+
+        if (Password.Length < 8)
+        {
+            throw new ArgumentException("Password must be at least 8 characters.");
         }
     }
 }
