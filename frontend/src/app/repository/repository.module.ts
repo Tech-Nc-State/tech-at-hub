@@ -3,21 +3,21 @@ import { CommonModule } from '@angular/common';
 import { RepositoryRoutingModule } from './repository-routing.module';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatIconModule } from '@angular/material/icon';
-import { MatTableModule } from '@angular/material/table';
 import { MainComponent } from './main/main.component';
 import { HttpClientModule } from '@angular/common/http';
+import { ExplorerComponent } from './explorer/explorer.component';
 
 @NgModule({
   declarations: [
-    MainComponent
+    MainComponent,
+    ExplorerComponent
   ],
   imports: [
     CommonModule,
     HttpClientModule,
     RepositoryRoutingModule,
     MatTabsModule,
-    MatIconModule,
-    MatTableModule
+    MatIconModule
   ],
   exports: [
     MainComponent

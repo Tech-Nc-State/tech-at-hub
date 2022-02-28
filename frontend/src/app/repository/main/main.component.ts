@@ -1,45 +1,36 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { DataService, Repository } from '../data.service';
-
-export interface File {
-  name: string;
-  commit: string;
-}
-
-const ELEMENT_DATA: File[] = [
-  { name: 'Hydrogen', commit: 'Commit 1' },
-  { name: 'Hydrogen', commit: 'Commit 1' },
-  { name: 'Hydrogen', commit: 'Commit 1' },
-  { name: 'Hydrogen', commit: 'Commit 1' },
-  { name: 'Hydrogen', commit: 'Commit 1' },
-  { name: 'Hydrogen', commit: 'Commit 1' },
-  { name: 'Hydrogen', commit: 'Commit 1' },
-];
 
 @Component({
   selector: 'repository-main',
   templateUrl: './main.component.html',
   styleUrls: ['./main.component.scss']
 })
-export class MainComponent implements OnInit {
-  displayedColumns: string[] = ['name', 'commit'];
-  dataSource = ELEMENT_DATA;
-  id?: number;
-  data$?: Observable<Repository | undefined>;
+export class MainComponent implements OnInit, OnDestroy {
+  repo?: Repository;
+  private data?: Subscription;
 
   constructor(private dataService: DataService,
     private route: ActivatedRoute,
     private router: Router) { }
 
   ngOnInit() {
-    const idstr = this.route.snapshot.paramMap.get('repoId');
-    const id = Number(idstr);
-    if (isNaN(id)) {
-      this.router.navigate(['404']);
-    }
+    const id = Number(this.route.snapshot.paramMap.get('repoId'));
+    this.data = this.dataService.getById(id).subscribe({
+      next: repo => {
+        if (repo == null) {
+          this.router.navigate(['404']);
+        } else {
+          this.repo = repo;
+        }
+      },
+      error: () => this.router.navigate(['404'])
+    });
+  }
 
-    this.data$ = this.dataService.getById(id);
+  ngOnDestroy() {
+    this.data?.unsubscribe();
   }
 }

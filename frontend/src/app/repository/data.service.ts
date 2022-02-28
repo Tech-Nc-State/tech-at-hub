@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { find, from, retry, switchMap } from 'rxjs';
+import { find, from, map, retry, switchMap } from 'rxjs';
 
 export interface File {
   id: number;
@@ -23,9 +23,10 @@ export class DataService {
   getById(id: number) {
     return this.http.get<Repository[]>('/assets/data.json')
       .pipe(
-        retry(3), 
-        switchMap(array => from(array)), 
-        find(r => r.id === id)
+        retry(3),
+        switchMap(array => from(array)),
+        find(r => r.id === id),
+        map(r => r ? r : null)
       );
   }
 }

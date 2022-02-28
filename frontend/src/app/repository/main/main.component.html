@@ -1,5 +1,5 @@
-<div class="main-container" *ngIf="data$ | async as data; else loading">
-  <h1>{{ data.name }}</h1>
+<div class="main-container" *ngIf="repo; else loading">
+  <h1>{{ repo.name }}</h1>
   <!-- template for tabs below comes from: 
     https://material.angular.io/components/tabs/examples#tab-group-custom-label -->
   <mat-tab-group>
@@ -8,18 +8,7 @@
         <mat-icon class="example-tab-icon">code</mat-icon>
         Code
       </ng-template>
-      <table mat-table [dataSource]="dataSource">
-        <ng-container matColumnDef="name">
-          <th mat-header-cell *matHeaderCellDef>Name</th>
-          <td mat-cell *matCellDef="let element">{{element.name}}</td>
-        </ng-container>
-        <ng-container matColumnDef="commit">
-          <th mat-header-cell *matHeaderCellDef>Commit</th>
-          <td mat-cell *matCellDef="let element">{{element.commit}}</td>
-        </ng-container>
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-      </table>
+      <router-outlet></router-outlet>
     </mat-tab>
     <mat-tab>
       <ng-template mat-tab-label>
