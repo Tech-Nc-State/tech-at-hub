@@ -19,6 +19,39 @@ namespace Tech_HubAPI.Controllers
 			_dbContext = dbContext;
 			_hashingService = hashingService;
 		}
+		
+		[HttpGet]
+		[Route("get/{ID}")]
+		public ActionResult<User> GetUserById(int ID) 
+        {
+			var user = _dbContext.Users.Where(u => u.Id == ID).FirstOrDefault();
+
+            user.Password = null;
+			user.Age = 0;
+			user.Email = null;
+			user.Salt = null;
+
+            if (user == null)
+            {
+				return NotFound("A user with that ID does not exist.");
+            }
+			else
+            {
+				return user;
+            }
+        }
+
+		[HttpGet]
+		[Route("me")]
+		public User GetSelf()
+        {
+			var user = this.GetUser(_dbContext);
+      
+      user.Password = null;
+			user.Salt = null;
+
+			return user;
+      }
 
 		[HttpPost]
 		public ActionResult<User> SignUp([FromBody] SignUpForm form)
@@ -48,11 +81,6 @@ namespace Tech_HubAPI.Controllers
 					form.LastName, null, null, birthDate);
 			_dbContext.Users.Add(user);
 			_dbContext.SaveChanges();
-
-			user.Password = null;
-			user.Salt = null;
-
-			return user;
-        }
+}
 	}
 }
