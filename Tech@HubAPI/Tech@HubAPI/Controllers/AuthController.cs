@@ -105,7 +105,7 @@ namespace GitTest.Controllers
 
 		private bool IsAuthorized(string username, string password, string resource)
 		{
-			if (username == "a" && password == "b" && resource == "test")
+			if (username == "a" && password == "b" && resource == "joey/test")
 			{
 				return true;
 			}
