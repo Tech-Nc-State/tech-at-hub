@@ -4,6 +4,8 @@ using System;
 using System.Linq;
 using Tech_HubAPI.Services;
 using Tech_HubAPI.Models;
+using System.Security.Claims;
+using System.Collections.Generic;
 
 namespace Tech_HubAPI.Controllers
 {
@@ -13,9 +15,11 @@ namespace Tech_HubAPI.Controllers
 	{
 		private readonly DatabaseContext _dbContext;
 		private readonly HashingService _hashingService;
+		private readonly JwtService _jwt;
 
-		public UserController(DatabaseContext dbContext, HashingService hashingService)
+		public UserController(DatabaseContext dbContext, HashingService hashingService, JwtService jwt)
 		{
+			_jwt = jwt;
 			_dbContext = dbContext;
 			_hashingService = hashingService;
 		}
@@ -36,5 +40,37 @@ namespace Tech_HubAPI.Controllers
 			user.Password = null;
 			return user;
         }
+
+		[HttpPost]
+        [Authorize]
+		[Route("change")]
+		public IActionResult PasswordChange([FromBody] ChangePasswordForm passwordForm)
+		{
+			User currUser = _dbContext.Users.Where(u => u.Username == passwordForm.UserName).FirstOrDefault();
+			if (currUser == null)
+			{
+				return NotFound();
+			}
+
+			
+			byte[] currSalt = currUser.Salt;
+			byte[] oldHashedPassword = _hashingService.HashPassword(passwordForm.OldPassword, currSalt);
+			if( _hashingService.ByteCheck(currUser.Password,oldHashedPassword))
+            {
+				if(passwordForm.checkNewPassword(passwordForm.NewPassword, passwordForm.NewPasswordRetyped))
+                {
+					byte[] newHashedPassword = _hashingService.HashPassword(passwordForm.NewPassword, currSalt);
+					currUser.Password = newHashedPassword;
+					_dbContext.Users.Update(currUser);
+					_dbContext.SaveChanges();
+					currUser = _dbContext.Users.Where(u => u.Username == passwordForm.UserName).FirstOrDefault();
+					return Ok();
+				}
+
+            }
+			return Conflict();
+		}
+
+
 	}
 }
