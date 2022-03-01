@@ -11,6 +11,7 @@ using Xunit;
 
 namespace Tech_HubAPITest
 {
+    [Collection("DatabaseCollection")]
     public class UserTest : DatabaseTest
     {
         [Fact]

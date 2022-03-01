@@ -13,6 +13,7 @@ using Xunit;
 
 namespace Tech_HubAPITest
 {
+    [Collection("FileSystemCollection")]
     public class GitServiceTest : IClassFixture<FileSystemFixture>
     {
         private readonly GitService _gitService;

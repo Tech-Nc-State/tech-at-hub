@@ -10,6 +10,7 @@ using Xunit;
 
 namespace Tech_HubAPITest
 {
+	[Collection("DatabaseCollection")]
 	public class TestBookAndAuthor : DatabaseTest
 	{
 		[Fact]
