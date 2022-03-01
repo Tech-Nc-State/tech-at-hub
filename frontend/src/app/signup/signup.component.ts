@@ -13,8 +13,22 @@ export class SignupComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  userModel = new User('user', 'password', 'user@test.com', '00/00/0000');
+  userModel = new User('', '', '', '');
   
+  submit(){
+
+
+     this.userModel.username = (document.getElementById("name") as HTMLInputElement).value
+
+     this.userModel.password = (document.getElementById("password-field") as HTMLInputElement).value
+
+     this.userModel.email = (document.getElementById("email") as HTMLInputElement).value
+
+     this.userModel.dob = (document.getElementById("dob") as HTMLInputElement).value
+
+    console.log(this.userModel)
+
+  }
   
 
 }
