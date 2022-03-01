@@ -227,7 +227,9 @@ namespace Tech_HubAPI.Services
         public FileContent GetFileContents(string username, string repositoryName, string branchName, string filePath)
         {
             // Find the Head file
-            string headfile = _baseGitFolder + username + "/" + repositoryName + ".git/refs/heads/" + branchName;
+            string headfile = _baseGitFolder + username + "/" + repositoryName + ".git/"
+                + (UseTestGitFolder ? "git_folder" : ".git")
+                + "/refs/heads/" + branchName;
             if (!File.Exists(headfile))
             {
                 throw new FileNotFoundException("Could not find headfile for " + headfile);
