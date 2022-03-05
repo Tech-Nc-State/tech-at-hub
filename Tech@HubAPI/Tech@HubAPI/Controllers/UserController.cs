@@ -26,36 +26,40 @@ namespace Tech_HubAPI.Controllers
         {
 			var user = _dbContext.Users.Where(u => u.Id == ID).FirstOrDefault();
 
-            user.Password = null;
-			user.Email = null;
-			user.Salt = null;
-
             if (user == null)
             {
 				return NotFound("A user with that ID does not exist.");
             }
 			else
             {
+				user.Password = null;
+				user.Email = null;
+				user.Salt = null;
+				user.BirthDate = DateTime.MinValue;
+
 				return user;
             }
         }
 
 		[HttpGet]
 		[Route("me")]
-		public User GetSelf()
+		public ActionResult<User?> GetSelf()
         {
 			var user = this.GetUser(_dbContext);
-      
-      user.Password = null;
-			user.Salt = null;
+
+			if (user != null)
+            {
+				user.Password = null;
+				user.Salt = null;
+            }
 
 			return user;
-      }
+		}
 
 		[HttpPost]
 		public ActionResult<User> SignUp([FromBody] SignUpForm form)
         {
-			User existingUser = _dbContext.Users.Where(u => u.Username == form.Username).FirstOrDefault();
+			User? existingUser = _dbContext.Users.Where(u => u.Username == form.Username).FirstOrDefault();
 			if (existingUser != null)
             {
 				return BadRequest("That username already exists.");
@@ -76,7 +80,7 @@ namespace Tech_HubAPI.Controllers
 			DateTime.TryParse(form.BirthDate, out DateTime birthDate);
 
 			var user = new User(form.Username, hashedPassword, salt, form.Email, form.FirstName,
-					form.LastName, null, null, birthDate);
+					form.LastName, "", null, birthDate);
 			_dbContext.Users.Add(user);
 			_dbContext.SaveChanges();
 
