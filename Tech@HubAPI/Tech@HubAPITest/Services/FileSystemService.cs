@@ -6,17 +6,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Tech_HubAPITest.Fixtures
+namespace Tech_HubAPITest.Services
 {
     /// <summary>
     /// Provides an abstraction of a clean file system to each test.
     /// </summary>
-    public class FileSystemFixture : IDisposable
+    public class FileSystemService : IDisposable
     {
-        public FileSystemFixture(IConfiguration configuration)
+        public FileSystemService()
         {
-            // ensure generated directory names are unique because tests may be run in parallel
-            RootDirectory = "test-files-" + new Random().Next() + "\\";
+            RootDirectory = "test-files\\";
             RootDirectory = RootDirectory.Replace("\\", "/");
 
             Directory.CreateDirectory(RootDirectory);
