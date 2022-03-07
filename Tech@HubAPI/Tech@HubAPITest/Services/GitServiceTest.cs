@@ -41,13 +41,13 @@ namespace Tech_HubAPITest
             _fileSystem.ImportFolder("./SampleGitRepos/testBranches.git", "git/testUser/testBranches.git");
 
             Branch[] branches = _gitService.GetBranches("testUser", "testBranches");
-            string[] branchNames = branches.Select(f->f.Name);
+
             branches.Length.Should().Be(5);
-            branches.Should().Contain("master");
-            branches.Should().Contain("branch1");
-            branches.Should().Contain("branch2");
-            branches.Should().Contain("branch3");
-            branches.Should().Contain("branch4");
+            branches[0].Should().Be("master");
+            branches[1].Should().Be("branch1");
+            branches[2].Should().Be("branch2");
+            branches[3].Should().Be("branch3");
+            branches[4].Should().Be("branch4");
         }
     }
 }
