@@ -10,17 +10,18 @@ using Xunit;
 using Tech_HubAPI.Services; // This lets me call Execute.cs (same namespace)
 using System.IO;
 using Microsoft.Extensions.Configuration;
-using Tech_HubAPITest.Fixtures;
 using System.ComponentModel;
+using Tech_HubAPITest.Services;
 
 namespace Tech_HubAPITest
 {
-    public class ExecuteServiceTest : IClassFixture<FileSystemFixture>
+    [Collection("FileSystemCollection")]
+    public class ExecuteServiceTest
     {
         private readonly ExecuteService _executeService;
-        private readonly FileSystemFixture _fileSystem;
+        private readonly FileSystemService _fileSystem;
 
-        public ExecuteServiceTest(IConfiguration configuration, FileSystemFixture fileSystem)
+        public ExecuteServiceTest(IConfiguration configuration, FileSystemService fileSystem)
         {
             _executeService = new ExecuteService(configuration);
             _fileSystem = fileSystem;

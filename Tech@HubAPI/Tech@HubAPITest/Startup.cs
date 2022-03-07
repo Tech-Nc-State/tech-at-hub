@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Tech_HubAPITest.Services;
 using Xunit;
 using Xunit.Abstractions;
 using Xunit.DependencyInjection;
@@ -19,6 +20,8 @@ namespace Tech_HubAPITest
                 .AddJsonFile("developersecrets.json")
                 .Build();
             services.AddSingleton<IConfiguration>(config);
+            services.AddScoped<FileSystemService>();
+            services.AddScoped<DatabaseService>();
         }
     }
 }

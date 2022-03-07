@@ -8,17 +8,18 @@ using System.Text;
 using System.Threading.Tasks;
 using Tech_HubAPI.Models.Git;
 using Tech_HubAPI.Services;
-using Tech_HubAPITest.Fixtures;
+using Tech_HubAPITest.Services;
 using Xunit;
 
 namespace Tech_HubAPITest
 {
-    public class GitServiceTest : IClassFixture<FileSystemFixture>
+    [Collection("FileSystemCollection")]
+    public class GitServiceTest
     {
         private readonly GitService _gitService;
-        private readonly FileSystemFixture _fileSystem;
+        private readonly FileSystemService _fileSystem;
 
-        public GitServiceTest(IConfiguration configuration, FileSystemFixture fileSystem)
+        public GitServiceTest(IConfiguration configuration, FileSystemService fileSystem)
         {
             var executeService = new ExecuteService(configuration);
             executeService.WorkingDirectory = fileSystem.RootDirectory;
