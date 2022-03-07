@@ -1,0 +1,19 @@
+@use '@angular/material' as mat;
+
+$primary: mat.define-palette(mat.$indigo_palette);
+
+.main-container {
+  margin: 2rem 5rem;
+}
+
+.main-container h1 {
+  color: mat.get-color-from-palette($primary, 500);
+}
+
+.main-container mat-icon {
+  margin-right: 7.5px;
+}
+
+.main-container table {
+  width: 100%;
+}

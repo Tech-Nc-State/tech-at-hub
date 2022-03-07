@@ -23,6 +23,38 @@ namespace Tech_HubAPI.Controllers
 			_dbContext = dbContext;
 			_hashingService = hashingService;
 		}
+		
+		[HttpGet]
+		[Route("get/{ID}")]
+		public ActionResult<User> GetUserById(int ID) 
+        {
+			var user = _dbContext.Users.Where(u => u.Id == ID).FirstOrDefault();
+
+            user.Password = null;
+			user.Email = null;
+			user.Salt = null;
+
+            if (user == null)
+            {
+				return NotFound("A user with that ID does not exist.");
+            }
+			else
+            {
+				return user;
+            }
+        }
+
+		[HttpGet]
+		[Route("me")]
+		public User GetSelf()
+        {
+			var user = this.GetUser(_dbContext);
+      
+      user.Password = null;
+			user.Salt = null;
+
+			return user;
+      }
 
 		[HttpPost]
 		public ActionResult<User> SignUp([FromBody] SignUpForm form)
@@ -30,19 +62,36 @@ namespace Tech_HubAPI.Controllers
 			User existingUser = _dbContext.Users.Where(u => u.Username == form.Username).FirstOrDefault();
 			if (existingUser != null)
             {
-				return BadRequest();
+				return BadRequest("That username already exists.");
             }
+
+			try
+            {
+				form.Validate();
+            }
+			catch (ArgumentException e)
+            {
+				return BadRequest(e.Message);
+            }
+
 			byte[] salt = _hashingService.GetSalt();
 			byte[] hashedPassword = _hashingService.HashPassword(form.Password, salt);
-			User user = new User(form.Username, hashedPassword, salt, form.Email, form.FirstName, form.LastName, form.Age, null, null);
+
+			DateTime.TryParse(form.BirthDate, out DateTime birthDate);
+
+			var user = new User(form.Username, hashedPassword, salt, form.Email, form.FirstName,
+					form.LastName, null, null, birthDate);
 			_dbContext.Users.Add(user);
 			_dbContext.SaveChanges();
+
 			user.Password = null;
+			user.Salt = null;
+
 			return user;
         }
 
 		[HttpPost]
-        //[Authorize]
+        [Authorize]
 		[Route("change")]
 		public IActionResult PasswordChange([FromBody] ChangePasswordForm passwordForm)
 		{
@@ -76,7 +125,5 @@ namespace Tech_HubAPI.Controllers
             }
 			return Conflict("Incorrect password.");
 		}
-
-
 	}
 }

@@ -34,8 +34,9 @@ namespace Tech_HubAPI
 			});
 
 			services.AddSingleton(Configuration);
+			services.AddScoped<ExecuteService>();
+			services.AddScoped<GitService>();
 			services.AddSingleton(new HashingService());
-			services.AddSingleton(new Execute());
 			services.AddSingleton(new JwtService(Configuration));
 
 			services.AddControllers();
