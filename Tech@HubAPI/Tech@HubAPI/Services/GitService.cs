@@ -37,6 +37,12 @@ namespace Tech_HubAPI.Services
         // Direcetory structure: username/reponame.git // inside git folder
         // Directory and File classes
 
+        /// <summary>
+        /// Gets a list of <c>Branch</c>es in the given user/repo name.
+        /// </summary>
+        /// <param name="username">the username</param>
+        /// <param name="repoName">name of the repository</param>
+        /// <returns>list of Bracnhes if they exist, null otherwise.</returns>
         public Branch[] GetBranches(string username, string repoName)
         {
             // Given a username and repoName, list all stored branch names.
@@ -69,20 +75,25 @@ namespace Tech_HubAPI.Services
                 .Select(f => f.Name)
                 .ToArray();
 
-            // temp print out names
+            Branch[] branches = new Branch[branchNames.Length];
+
+            // temp write names to console
             foreach(string name in branchNames)
             {
                 Console.WriteLine(name);
             }
 
-            // Return an array of Branches containing the branch name and hash.
-
-            for (string branch in branchNames)
+            // assign names
+            for (int i = 0; i < branchNames.Length; i++)
             {
-
+                branches[i] = new Branch();
+                string name = branchNames[i];
+                branches[i].Name = name;
+                string contents = File.ReadAllText(branchDirectory + "/" + name);
+                branches[i].Hash = contents; // TODO: Does this work?
             }
 
-            return branches; // TODO: Replace
+            return branches; 
         }
 
         public void CreateNewRepository(string name, string username)

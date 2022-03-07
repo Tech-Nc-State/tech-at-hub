@@ -6,7 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Tech_HubAPI.Models.Git;
+using Tech_HubAPI.Models.GitModels;
 using Tech_HubAPI.Services;
 using Tech_HubAPITest.Fixtures;
 using Xunit;
@@ -40,7 +40,8 @@ namespace Tech_HubAPITest
         {
             _fileSystem.ImportFolder("./SampleGitRepos/testBranches.git", "git/testUser/testBranches.git");
 
-            string[] branches = _gitService.GetBranches("testUser", "testBranches");
+            Branch[] branches = _gitService.GetBranches("testUser", "testBranches");
+            string[] branchNames = branches.Select(f->f.Name);
             branches.Length.Should().Be(5);
             branches.Should().Contain("master");
             branches.Should().Contain("branch1");
