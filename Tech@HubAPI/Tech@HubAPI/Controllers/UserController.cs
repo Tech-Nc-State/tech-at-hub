@@ -46,7 +46,7 @@ namespace Tech_HubAPI.Controllers
         {
 			var user = this.GetUser(_dbContext);
       
-      user.Password = null;
+			user.Password = null;
 			user.Salt = null;
 
 			return user;

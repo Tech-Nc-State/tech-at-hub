@@ -14,7 +14,7 @@ namespace Tech_HubAPI.Controllers
 		private readonly GitService _gitService;
 
 		[HttpPost]
-		public ActionResult<Branch> GetBranches([FromBody] GetBranchesForm form)
+		public ActionResult<Branch[]> GetBranches([FromBody] GetBranchesForm form)
 		{
 			/*User existingUser = _dbContext.Users.Where(u => u.Username == form.Username).FirstOrDefault();
 			if (existingUser != null)
@@ -46,6 +46,7 @@ namespace Tech_HubAPI.Controllers
 
 			Branch[] branches = _gitService.GetBranches(form.Username, form.RepoName);
 
+			// Do we need errorchecking on empty branches?
 
 			return branches;
 		}

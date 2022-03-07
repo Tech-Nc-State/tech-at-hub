@@ -83,7 +83,7 @@ namespace Tech_HubAPI.Services
                 Console.WriteLine(name);
             }
 
-            // assign names
+            // assign info to branches
             for (int i = 0; i < branchNames.Length; i++)
             {
                 branches[i] = new Branch();

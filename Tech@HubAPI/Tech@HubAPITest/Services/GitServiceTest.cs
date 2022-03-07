@@ -43,11 +43,12 @@ namespace Tech_HubAPITest
             Branch[] branches = _gitService.GetBranches("testUser", "testBranches");
 
             branches.Length.Should().Be(5);
-            branches[0].Should().Be("master");
-            branches[1].Should().Be("branch1");
-            branches[2].Should().Be("branch2");
-            branches[3].Should().Be("branch3");
-            branches[4].Should().Be("branch4");
+            //branches[0].Name.Should().Be("master");
+            branches[0].Name.Should().Be("branch1");
+            branches[1].Name.Should().Be("branch2");
+            branches[2].Name.Should().Be("branch3");
+            branches[3].Name.Should().Be("branch4");
+            branches[4].Name.Should().Be("branch5");
         }
     }
 }
