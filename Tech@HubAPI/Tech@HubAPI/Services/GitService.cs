@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Tech_HubAPI.Models.Git;
+using Tech_HubAPI.Models.GitModels;
 
 namespace Tech_HubAPI.Services
 {
@@ -36,7 +37,7 @@ namespace Tech_HubAPI.Services
         // Direcetory structure: username/reponame.git // inside git folder
         // Directory and File classes
 
-        public string[] GetBranches(string username, string repoName)
+        public Branch[] GetBranches(string username, string repoName)
         {
             // Given a username and repoName, list all stored branch names.
 
@@ -63,19 +64,23 @@ namespace Tech_HubAPI.Services
                 + (UseTestGitFolder ? "git_folder" : ".git")
                 + "/refs/heads";
 
-            string[] branches = new DirectoryInfo(branchDirectory)
+            string[] branchNames = new DirectoryInfo(branchDirectory)
                 .GetFiles()
                 .Select(f => f.Name)
                 .ToArray();
 
             // temp print out names
-            foreach(string branch in branches)
+            foreach(string name in branchNames)
             {
-                Console.WriteLine(branch);
+                Console.WriteLine(name);
             }
 
-            // TODO: Also open each file, copy the SHA hash, and attach that to the string
-            // reutrn those strings in an array.
+            // Return an array of Branches containing the branch name and hash.
+
+            for (string branch in branchNames)
+            {
+
+            }
 
             return branches; // TODO: Replace
         }
@@ -119,7 +124,7 @@ namespace Tech_HubAPI.Services
             File.Create(repoDirectory + "README.md")
                 .Close();
         }
-
+        
         public List<DirectoryEntry> GetDirectoryListing(
             string username, string repository, string path, string branch)
         {
