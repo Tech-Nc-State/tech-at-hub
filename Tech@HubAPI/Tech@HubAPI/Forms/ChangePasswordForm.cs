@@ -20,13 +20,13 @@ public class ChangePasswordForm
         public string NewPassword { get; set; }
         public string NewPasswordRetyped { get; set; }
 
-        public Boolean checkNewPassword(string newPassword, string newPasswordRe )
+        public void Validate()
         {
-            if(newPassword.CompareTo(newPasswordRe) == 0)
+            if(NewPassword.CompareTo(NewPasswordRetyped) != 0)
             {
-                return true;
+            throw new ArgumentException("The retyped password does not match the initial new password!");
             }
-            return false;
+           
         }
 
         

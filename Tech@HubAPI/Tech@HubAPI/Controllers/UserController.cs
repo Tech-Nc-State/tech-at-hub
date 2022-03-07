@@ -42,7 +42,7 @@ namespace Tech_HubAPI.Controllers
         }
 
 		[HttpPost]
-        [Authorize]
+        //[Authorize]
 		[Route("change")]
 		public IActionResult PasswordChange([FromBody] ChangePasswordForm passwordForm)
 		{
@@ -57,15 +57,21 @@ namespace Tech_HubAPI.Controllers
 			byte[] oldHashedPassword = _hashingService.HashPassword(passwordForm.OldPassword, currSalt);
 			if( _hashingService.ByteCheck(currUser.Password,oldHashedPassword))
             {
-				if(passwordForm.checkNewPassword(passwordForm.NewPassword, passwordForm.NewPasswordRetyped))
+
+                try
                 {
+					passwordForm.Validate();
 					byte[] newHashedPassword = _hashingService.HashPassword(passwordForm.NewPassword, currSalt);
 					currUser.Password = newHashedPassword;
 					_dbContext.Users.Update(currUser);
 					_dbContext.SaveChanges();
 					currUser = _dbContext.Users.Where(u => u.Username == passwordForm.UserName).FirstOrDefault();
 					return Ok();
-				}
+                }
+                catch(ArgumentException ex)
+                {
+					return Conflict(ex.Message);
+                }
 
             }
 			return Conflict();
