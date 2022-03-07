@@ -44,11 +44,12 @@ namespace Tech_HubAPITest
 
             branches.Length.Should().Be(5);
             //branches[0].Name.Should().Be("master");
-            branches[0].Name.Should().Be("branch1");
-            branches[1].Name.Should().Be("branch2");
-            branches[2].Name.Should().Be("branch3");
-            branches[3].Name.Should().Be("branch4");
-            branches[4].Name.Should().Be("branch5");
+            string[] branchNames = branches.Select(branch => branch.Name).ToArray();
+            branchNames.Should().Contain("master");
+            branchNames.Should().Contain("branch1");
+            branchNames.Should().Contain("branch2");
+            branchNames.Should().Contain("branch3");
+            branchNames.Should().Contain("branch4");
         }
     }
 }
