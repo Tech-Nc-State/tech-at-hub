@@ -40,5 +40,21 @@ namespace Tech_HubAPI.Services
 			byte[] hash = shaM.ComputeHash(passwordBytes);
 			return hash;
         }
+
+		public bool ByteCheck(byte[] dbPass, byte[] value)
+        {
+			if(dbPass.Length != value.Length)
+            {
+				return false;
+            }
+			for(int i = 0; i < dbPass.Length; i++)
+            {
+				if(!dbPass[i].Equals(value[i]))
+                {
+					return false;
+                }
+            }
+			return true;
+        }
 	}
 }
