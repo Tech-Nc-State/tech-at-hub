@@ -46,7 +46,7 @@ namespace GitTest.Controllers
 			}
 
 			byte[] hashedPasswordAttempt = _hashing.HashPassword(credentials.Password, user.Salt);
-			if (hashedPasswordAttempt != user.Password)
+			if (!_hashing.ByteCheck(hashedPasswordAttempt, user.Password))
             {
 				return Unauthorized();
             }
