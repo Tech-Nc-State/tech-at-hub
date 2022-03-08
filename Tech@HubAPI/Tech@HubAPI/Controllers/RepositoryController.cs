@@ -11,7 +11,7 @@ namespace Tech_HubAPI.Controllers
 {
 	[Route("[controller]")]
 	[ApiController]
-	public class RepositoryController
+	public class RepositoryController : ControllerBase
     {
 		private readonly GitService _gitService;
 
@@ -23,10 +23,20 @@ namespace Tech_HubAPI.Controllers
         [HttpPost]
 		public ActionResult<Branch[]> GetBranches([FromBody] GetBranchesForm form)
 		{
+			Branch[] branches = null;
+			try
+			{
+				branches = _gitService.GetBranches(form.Username, form.RepoName);
+			}
+			catch (Exception ex)
+            {
+				return NotFound("Error reading files: " + ex.Message);
+            }
+			if (branches == null)
+            {
+				return NotFound("Branches not found for requested repository.");
+            }
 
-			Branch[] branches = _gitService.GetBranches(form.Username, form.RepoName);
-
-			// Do we need errorchecking on empty branches?
 
 			return branches;
 		}
