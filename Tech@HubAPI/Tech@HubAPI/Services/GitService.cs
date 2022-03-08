@@ -236,19 +236,20 @@ namespace Tech_HubAPI.Services
             }
 
             // Get the commit hash
-            string commitHash = File.ReadAllText(headfile);
+            string commitHash = File.ReadAllText(headfile).Trim();
 
             // Set up the execute service
             _executeService.ExecutableDirectory = _gitBinPath;
             string repoDirectory = _baseGitFolder + username + "/" + repositoryName + ".git/";
-            _executeService.WorkingDirectory = repoDirectory;
+            _executeService.WorkingDirectory = repoDirectory + (UseTestGitFolder ? "git_folder" : ".git")
+                + "/refs/heads/";
 
             // Run git cat-file
             string rawCommitData = _executeService.ExecuteProcess("git", "cat-file", "-p", commitHash);
             Match treeMatch = Regex.Match(rawCommitData, "tree (.+)\n");
 
             // We will need to go through the entire file path structure
-            string currentHash = treeMatch.Groups[0].Value;
+            string currentHash = treeMatch.Groups[0].Value.Substring(5).Trim();
             string[] pathArray = filePath.Split('/');
             string currentContents = "";
 
@@ -260,10 +261,10 @@ namespace Tech_HubAPI.Services
                 currentContents = _executeService.ExecuteProcess("git", "cat-file", "-p", currentHash);
 
                 // If it was the final one, just exit
-                if (dirName.Equals(pathArray[pathArray.Length]))
-                {
-                    break;
-                }
+                //if (dirName.Equals(pathArray[pathArray.Length - 1]))
+                //{
+                //    break;
+                //}
 
                 // Go through output and find the appropriate tree to explore.
                 string[] currentContentLines = currentContents.Split('\n');
