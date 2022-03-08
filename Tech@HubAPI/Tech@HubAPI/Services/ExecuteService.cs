@@ -73,6 +73,7 @@ namespace Tech_HubAPI.Services
             myProcess.StartInfo.FileName = ExecutableDirectory + programName;
             myProcess.StartInfo.Arguments = argsString;
             myProcess.StartInfo.RedirectStandardOutput = true;
+            myProcess.StartInfo.RedirectStandardError = true;
             myProcess.StartInfo.CreateNoWindow = false;
             myProcess.StartInfo.WorkingDirectory = WorkingDirectory;
 
