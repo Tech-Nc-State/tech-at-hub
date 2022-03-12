@@ -1,0 +1,38 @@
+{
+    "id": 1,
+    "name": "Sample Repository 1",
+    "files": [
+        {
+            "id": 1,
+            "name": "README.md"
+        },
+        {
+            "id": 2,
+            "name": "src",
+            "files": [
+                {
+                    "id": 3,
+                    "name": "index.html"
+                },
+                {
+                    "id": 4,
+                    "name": "style.css"
+                },
+                {
+                    "id": 5,
+                    "name": "app.js"
+                }
+            ]
+        },
+        {
+            "id": 6,
+            "name": "test",
+            "files": [
+                {
+                    "id": 7,
+                    "name": "test.js"
+                }
+            ]
+        }
+    ]
+}

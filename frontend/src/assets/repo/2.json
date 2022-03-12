@@ -1,0 +1,20 @@
+{
+    "id": 1,
+    "name": "Sample Repository 2",
+    "files": [
+        {
+            "id": 1,
+            "name": "README.md"
+        },
+        {
+            "id": 2,
+            "name": "src",
+            "files": [
+                {
+                    "id": 3,
+                    "name": "index.js"
+                }
+            ]
+        }
+    ]
+}
