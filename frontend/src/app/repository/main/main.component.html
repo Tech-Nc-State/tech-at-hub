@@ -1,30 +1,17 @@
-<div class="main-container" *ngIf="repo; else loading">
+<div class="main-container" *ngIf="data$ | async as repo; else loading">
   <h1>{{ repo.name }}</h1>
-  <!-- template for tabs below comes from: 
-    https://material.angular.io/components/tabs/examples#tab-group-custom-label -->
-  <mat-tab-group>
-    <mat-tab>
-      <ng-template mat-tab-label>
-        <mat-icon class="example-tab-icon">code</mat-icon>
-        Code
-      </ng-template>
-      <router-outlet></router-outlet>
-    </mat-tab>
-    <mat-tab>
-      <ng-template mat-tab-label>
-        <mat-icon class="example-tab-icon">bug_report</mat-icon>
-        Issues
-      </ng-template>
-      Content 2
-    </mat-tab>
-    <mat-tab>
-      <ng-template mat-tab-label>
-        <mat-icon class="example-tab-icon">call_merge</mat-icon>
-        Pull Requests
-      </ng-template>
-      Content 3
-    </mat-tab>
-  </mat-tab-group>
+  <nav mat-tab-nav-bar [tabPanel]="panel">
+    <a mat-tab-link *ngFor="let tab of tabs" 
+      (click)="active = tab" 
+      [active]="active == tab"
+      [routerLink]="tab.path">
+      <mat-icon class="example-tab-icon">{{ tab.icon }}</mat-icon>
+      {{ tab.name }}
+    </a>
+  </nav>
+  <mat-tab-nav-panel #panel>
+    <router-outlet></router-outlet>
+  </mat-tab-nav-panel>
 </div>
 <ng-template #loading>
   <h1>Loading...</h1>
