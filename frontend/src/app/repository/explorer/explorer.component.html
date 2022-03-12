@@ -1,5 +1,16 @@
-<div *ngIf="paths">
-  <div *ngFor="let path of paths">
-    <div>{{ path }}</div>
+<div *ngIf="file">
+  <div *ngIf="file.files; else source">
+    <table mat-table [dataSource]="file.files">
+      <mat-text-column name="name"></mat-text-column>
+      <tr mat-header-row *matHeaderRowDef="cols"></tr>
+      <tr mat-row
+        [routerLink]="(file.id == 0 ? './' : '../') + f.id" 
+        *matRowDef="let f; columns: cols;">
+        <!-- <mat-icon class="example-tab-icon">{{ f.files ? 'folder' : 'description' }}</mat-icon> -->
+      </tr>
+    </table>
   </div>
+  <ng-template #source>
+    {{ file.name }} source text
+  </ng-template>
 </div>
