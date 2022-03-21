@@ -67,7 +67,7 @@ namespace Tech_HubAPI.Services
             // TODO: Check .git/refs/heads and return the names of those tiles
             
             string branchDirectory = repoDirectory 
-                + (UseTestGitFolder ? "git_folder" : ".git")
+                + (UseTestGitFolder ? "git_folder" : "") // ".git"
                 + "/refs/heads";
 
             string[] branchNames = new DirectoryInfo(branchDirectory)
