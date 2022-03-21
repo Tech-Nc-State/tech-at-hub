@@ -13,16 +13,16 @@ using Xunit;
 
 namespace Tech_HubAPITest
 {
-    public class WeatherForecastControllerTests : IClassFixture<WebApplicationFactory<Api>>
+    public class WeatherForecastControllerTests : IClassFixture<WebApplicationFactory<Tech_HubAPI.Startup>>
     {
         readonly HttpClient _client;
 
-        //[Setup]
-        public WeatherForecastControllerTests(WebApplicationFactory<Api> application)
+        public WeatherForecastControllerTests(WebApplicationFactory<Tech_HubAPI.Startup> application)
         {
             _client = application.CreateClient();
         }
 
+        [Fact]
         public async Task WeatherForecastGet()
         {
             var response = await _client.GetAsync("/weatherforecast");
