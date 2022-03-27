@@ -73,6 +73,7 @@ namespace Tech_HubAPI.Services
             myProcess.StartInfo.FileName = ExecutableDirectory + programName;
             myProcess.StartInfo.Arguments = argsString;
             myProcess.StartInfo.RedirectStandardOutput = true;
+            //myProcess.StartInfo.RedirectStandardError = true;
             myProcess.StartInfo.CreateNoWindow = false;
             myProcess.StartInfo.WorkingDirectory = WorkingDirectory;
 
@@ -84,9 +85,9 @@ namespace Tech_HubAPI.Services
                 
             if (myProcess.ExitCode != 0)
             {
-                throw new Exception("Process exited with a status code of " 
-                    + myProcess.ExitCode + ". " 
-                    + myProcess.StandardError.ReadToEnd());
+                throw new Exception("Process exited with a status code of "
+                    + myProcess.ExitCode + ". ");
+                    //+ myProcess.StandardError.ReadToEnd());
             }
             // end yoink
 
