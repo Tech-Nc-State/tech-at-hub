@@ -11,6 +11,7 @@ using Tech_HubAPI.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Microsoft.AspNetCore.Mvc.Formatters;
 
 namespace Tech_HubAPI
 {
@@ -39,7 +40,13 @@ namespace Tech_HubAPI
 			services.AddSingleton(new HashingService());
 			services.AddSingleton(new JwtService(Configuration));
 
-			services.AddControllers();
+			services.AddControllers(opt =>
+			{
+				// remove formatter that turns nulls into 204 - No Content responses
+				// this formatter breaks Angular's Http response JSON parsing
+				opt.OutputFormatters.RemoveType<HttpNoContentOutputFormatter>();
+			});
+
 			services.AddSwaggerGen(c =>
 			{
 				c.SwaggerDoc("v1", new OpenApiInfo { Title = "Tech_HubAPI", Version = "v1" });
