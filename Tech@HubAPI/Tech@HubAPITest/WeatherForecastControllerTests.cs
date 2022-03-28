@@ -10,23 +10,32 @@ using System.Text;
 using System.Threading.Tasks;
 using Tech_HubAPI.Controllers;
 using Xunit;
+using Tech_HubAPITest.Fixtures;
+using System.Text.Json;
+using System.Net.Http.Json;
 
 namespace Tech_HubAPITest
 {
-    public class WeatherForecastControllerTests : IClassFixture<WebApplicationFactory<Tech_HubAPI.Startup>>
+    [Collection("DatabaseCollection")]
+    public class WeatherForecastControllerTests : IClassFixture<ApiFixture>
     {
-        readonly HttpClient _client;
+        private readonly ApiFixture _api;
+        private readonly DatabaseService _db;
 
-        public WeatherForecastControllerTests(WebApplicationFactory<Tech_HubAPI.Startup> application)
+        public WeatherForecastControllerTests(ApiFixture api, DatabaseService db)
         {
-            _client = application.CreateClient();
+            _api = api;
+            _db = db;
         }
 
         [Fact]
         public async Task WeatherForecastGet()
         {
-            var response = await _client.GetAsync("/weatherforecast");
-            response.StatusCode.Should().Be(HttpStatusCode.OK);
+            // create a test user in the db
+            var form = new SignUpForm("Bob", "Bobby", "bob", "passwordyy", "a@b.com", "1/1/1");
+            var content = JsonContent.Create(form, typeof(SignUpForm));
+            var resp = await _api.Client.PostAsync("/user", content);
+            resp.StatusCode.Should().Be(HttpStatusCode.OK);
         }
     }
 }
