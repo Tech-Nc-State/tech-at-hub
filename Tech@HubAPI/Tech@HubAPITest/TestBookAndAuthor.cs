@@ -10,16 +10,24 @@ using Xunit;
 
 namespace Tech_HubAPITest
 {
-	public class TestBookAndAuthor : DatabaseTest
+	[Collection("DatabaseCollection")]
+	public class TestBookAndAuthor
 	{
+		private readonly DatabaseService _db;
+
+		public TestBookAndAuthor(DatabaseService db)
+        {
+			_db = db;
+        }
+
 		[Fact]
 		public void TestCreateAndRetrieveAuthor()
 		{
 			var author = new Author("Ken");
-			DbContext.Authors.Add(author);
-			DbContext.SaveChanges();
+			_db.DbContext.Authors.Add(author);
+			_db.DbContext.SaveChanges();
 
-			author = DbContext.Authors
+			author = _db.DbContext.Authors
 				.Where(a => a.Name == "Ken")
 				.First();
 
@@ -30,16 +38,16 @@ namespace Tech_HubAPITest
 		public void TestCreateAndRetrieveBook()
 		{
 			var author = new Author("Ken");
-			DbContext.Authors.Add(author);
-			DbContext.SaveChanges();
+			_db.DbContext.Authors.Add(author);
+			_db.DbContext.SaveChanges();
 
 			var book1 = new Book("Harry Potter", DateTime.Now, author.Id);
 			var book2 = new Book("Star Wars", DateTime.Now, author.Id);
-			DbContext.Books.Add(book1);
-			DbContext.Books.Add(book2);
-			DbContext.SaveChanges();
+			_db.DbContext.Books.Add(book1);
+			_db.DbContext.Books.Add(book2);
+			_db.DbContext.SaveChanges();
 
-			author = DbContext.Authors
+			author = _db.DbContext.Authors
 				.Where(a => a.Name == "Ken")
 				.First();
 
@@ -52,15 +60,15 @@ namespace Tech_HubAPITest
 		public void TestDuplicateBookName()
 		{
 			var author = new Author("Ken");
-			DbContext.Authors.Add(author);
-			DbContext.SaveChanges();
+			_db.DbContext.Authors.Add(author);
+			_db.DbContext.SaveChanges();
 
 			var book1 = new Book("Harry Potter", DateTime.Now, author.Id);
 			var book2 = new Book("Harry Potter", DateTime.Now, author.Id);
-			DbContext.Books.Add(book1);
-			DbContext.Books.Add(book2);
+			_db.DbContext.Books.Add(book1);
+			_db.DbContext.Books.Add(book2);
 			
-			Action save = () => DbContext.SaveChanges();
+			Action save = () => _db.DbContext.SaveChanges();
 			save.Should().Throw<DbUpdateException>();
 		}
 	}

@@ -108,8 +108,8 @@ namespace Tech_HubAPI.Services
             {
                 // Permission commands
                 _executeService.WorkingDirectory = oldExeDirectory;
-                _executeService.ExecuteProcess("chown", "-R", "www-data:www-data", ".");
-                _executeService.ExecuteProcess("chmod", "-R", "755", ".");
+               // _executeService.ExecuteProcess("chown", "-R", "www-data:www-data", ".");
+                //_executeService.ExecuteProcess("chmod", "-R", "755", ".");
             }
 
             // create the repository README

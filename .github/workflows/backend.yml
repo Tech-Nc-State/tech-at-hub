@@ -1,0 +1,42 @@
+name: Backend
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:latest
+        env:
+          MYSQL_DATABASE: tech-at-hub
+          MYSQL_ROOT_PASSWORD: dbpass
+          MYSQL_USER: gituser
+          MYSQL_PASSWORD: dbpass
+        ports:
+          - 3306:3306
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.x
+    - name: Restore dependencies
+      run: dotnet restore Tech@HubAPI
+    - name: Build
+      run: dotnet build --no-restore Tech@HubAPI
+    - name: Wait for MySQL to Start
+      run: |
+        while ! mysqladmin ping -uroot -ppassword -h"127.0.0.1" -P3306; do
+          sleep 1
+        done
+    - name: Create Working Directory
+      run: sudo mkdir /app
+    - name: Test
+      run: dotnet test --no-build --verbosity normal Tech@HubAPI/Tech@HubAPITest

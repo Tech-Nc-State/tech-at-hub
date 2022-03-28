@@ -17,7 +17,7 @@ namespace Tech_HubAPI.Controllers
         /// <returns>User who made the current request.</returns>
         /// <exception cref="Exception">If there was an error parsing the users identifier from
         /// the JWT token.</exception>
-        public static User GetUser(this ControllerBase controller, DatabaseContext dbContext)
+        public static User? GetUser(this ControllerBase controller, DatabaseContext dbContext)
         {
             if (controller.User == null)
             {
@@ -26,7 +26,13 @@ namespace Tech_HubAPI.Controllers
 
             try
             {
-                int userId = int.Parse(controller.User.FindFirst("Id").Value);
+                string? userIdString = controller.User?.FindFirst("Id")?.Value;
+                if (userIdString == null)
+                {
+                    return null;
+                }
+
+                int userId = int.Parse(userIdString);
                 var user = dbContext.Users.Find(userId);
 
                 if (user == null)
