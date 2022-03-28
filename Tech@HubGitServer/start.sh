@@ -7,7 +7,7 @@ service fcgiwrap start
 chmod 666 /var/run/fcgiwrap.socket
 
 # create a server side git repository
-cd /git
+cd /app/git
 mkdir joey
 cd joey
 mkdir test.git
