@@ -68,12 +68,6 @@ namespace Tech_HubAPI.Services
                 .Select(f => f.Name)
                 .ToArray();
 
-            // temp print out names
-            foreach(string branch in branches)
-            {
-                Console.WriteLine(branch);
-            }
-
             // TODO: Also open each file, copy the SHA hash, and attach that to the string
             // reutrn those strings in an array.
 
@@ -111,8 +105,8 @@ namespace Tech_HubAPI.Services
             {
                 // Permission commands
                 _executeService.WorkingDirectory = oldExeDirectory;
-                _executeService.ExecuteProcess("chown", "-R", "www-data:www-data", ".");
-                _executeService.ExecuteProcess("chmod", "-R", "755", ".");
+               // _executeService.ExecuteProcess("chown", "-R", "www-data:www-data", ".");
+                //_executeService.ExecuteProcess("chmod", "-R", "755", ".");
             }
 
             // create the repository README

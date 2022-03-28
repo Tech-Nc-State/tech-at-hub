@@ -1,5 +1,7 @@
 services:
   backend:
+    depends_on:
+      - mysql
     build:
       context: ./Tech@HubAPI/
       dockerfile: Tech@HubAPI/Dockerfile
@@ -21,5 +23,18 @@ services:
         source: file-store
         target: /app/git
 
+  mysql:
+    image: mysql:5.7
+    volumes:
+      - database
+    environment:
+      MYSQL_ROOT_PASSWORD: dbpass
+      MYSQL_DATABASE: tech-at-hub
+      MYSQL_USER: gituser
+      MYSQL_PASSWORD: dbpass
+    ports:
+      - 3306:3306
+
 volumes:
   file-store:
+  database:
