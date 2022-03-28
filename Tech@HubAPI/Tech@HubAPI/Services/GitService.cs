@@ -61,7 +61,7 @@ namespace Tech_HubAPI.Services
             }
             
             string branchDirectory = repoDirectory 
-                + (UseTestGitFolder ? "git_folder" : "") // ".git"
+                + (UseTestGitFolder ? "git_folder" : ".git")
                 + "/refs/heads";
 
             string[] branchNames = new DirectoryInfo(branchDirectory)
