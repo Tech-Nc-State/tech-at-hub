@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Tech_HubAPI.Models.Git;
+using Tech_HubAPI.Models.GitModels;
 
 namespace Tech_HubAPI.Services
 {
@@ -31,12 +32,14 @@ namespace Tech_HubAPI.Services
 
         public bool UseTestGitFolder { get; set; }
 
-        // TODO:
-        // GetBranches(string username, string repoName)
-        // Direcetory structure: username/reponame.git // inside git folder
-        // Directory and File classes
 
-        public string[] GetBranches(string username, string repoName)
+        /// <summary>
+        /// Gets a list of <c>Branch</c>es in the given user/repo name.
+        /// </summary>
+        /// <param name="username">the username</param>
+        /// <param name="repoName">name of the repository</param>
+        /// <returns>list of Bracnhes if they exist, null otherwise.</returns>
+        public List<Branch> GetBranches(string username, string repoName)
         {
             // Given a username and repoName, list all stored branch names.
 
@@ -46,7 +49,7 @@ namespace Tech_HubAPI.Services
             {
                 // not sure if we want to return something besides null to indicate that the
                 // error occured for the reason "no user"? 
-                return null;
+                throw new DirectoryNotFoundException();
             }
 
             // Check if repo directory exists
@@ -54,24 +57,24 @@ namespace Tech_HubAPI.Services
             if (!Directory.Exists(repoDirectory))
             {
                 // repo no exist
-                return null;
+                throw new DirectoryNotFoundException();
             }
-
-            // TODO: Check .git/refs/heads and return the names of those tiles
             
             string branchDirectory = repoDirectory 
                 + (UseTestGitFolder ? "git_folder" : ".git")
                 + "/refs/heads";
 
-            string[] branches = new DirectoryInfo(branchDirectory)
+            string[] branchNames = new DirectoryInfo(branchDirectory)
                 .GetFiles()
                 .Select(f => f.Name)
                 .ToArray();
 
-            // TODO: Also open each file, copy the SHA hash, and attach that to the string
-            // reutrn those strings in an array.
+            // assign info to branches
+            List<Branch> branches = branchNames
+                .Select(name => new Branch(name, File.ReadAllText(branchDirectory + "/" + name).Trim()))
+                .ToList();
 
-            return branches; // TODO: Replace
+            return branches; 
         }
 
         public void CreateNewRepository(string name, string username)
@@ -113,7 +116,7 @@ namespace Tech_HubAPI.Services
             File.Create(repoDirectory + "README.md")
                 .Close();
         }
-
+        
         public List<DirectoryEntry> GetDirectoryListing(
             string username, string repository, string path, string branch)
         {

@@ -6,7 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Tech_HubAPI.Models.Git;
+using Tech_HubAPI.Models.GitModels;
 using Tech_HubAPI.Services;
 using Tech_HubAPITest.Services;
 using Xunit;
@@ -41,13 +41,23 @@ namespace Tech_HubAPITest
         {
             _fileSystem.ImportFolder("./SampleGitRepos/testBranches.git", "git/testUser/testBranches.git");
 
-            string[] branches = _gitService.GetBranches("testUser", "testBranches");
-            branches.Length.Should().Be(5);
-            branches.Should().Contain("master");
-            branches.Should().Contain("branch1");
-            branches.Should().Contain("branch2");
-            branches.Should().Contain("branch3");
-            branches.Should().Contain("branch4");
+            List<Branch> branches = _gitService.GetBranches("testUser", "testBranches");
+
+            branches.Count.Should().Be(5);
+            //branches[0].Name.Should().Be("master");
+            string[] branchNames = branches.Select(branch => branch.Name).ToArray();
+            branchNames.Should().Contain("master");
+            branchNames.Should().Contain("branch1");
+            branchNames.Should().Contain("branch2");
+            branchNames.Should().Contain("branch3");
+            branchNames.Should().Contain("branch4");
+        }
+
+        [Fact]
+        public void TestGetBranchesNotExisting()
+        {
+            Action run = () => _gitService.GetBranches("testUser", "testBranches");
+            run.Should().Throw<DirectoryNotFoundException>();
         }
     }
 }
