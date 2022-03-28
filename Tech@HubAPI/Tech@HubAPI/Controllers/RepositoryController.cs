@@ -6,6 +6,8 @@ using Tech_HubAPI.Services;
 using Tech_HubAPI.Models;
 using Tech_HubAPI.Forms;
 using Tech_HubAPI.Models.GitModels;
+using System.Collections.Generic;
+using System.IO;
 
 namespace Tech_HubAPI.Controllers
 {
@@ -21,20 +23,17 @@ namespace Tech_HubAPI.Controllers
         }
 
         [HttpPost]
-		public ActionResult<Branch[]> GetBranches([FromBody] GetBranchesForm form)
+		[Route("getbranches")]
+		public ActionResult<List<Branch>> GetBranches([FromBody] GetBranchesForm form)
 		{
-			Branch[] branches = null;
+			List<Branch> branches = null;
 			try
 			{
 				branches = _gitService.GetBranches(form.Username, form.RepoName);
 			}
-			catch (Exception ex)
+			catch (DirectoryNotFoundException ex)
             {
-				return NotFound("Error reading files: " + ex.Message);
-            }
-			if (branches == null)
-            {
-				return NotFound("Branches not found for requested repository.");
+				return NotFound("Repo not found.");
             }
 
 

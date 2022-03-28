@@ -40,9 +40,9 @@ namespace Tech_HubAPITest
         {
             _fileSystem.ImportFolder("./SampleGitRepos/testBranches.git", "git/testUser/testBranches.git");
 
-            Branch[] branches = _gitService.GetBranches("testUser", "testBranches");
+            List<Branch> branches = _gitService.GetBranches("testUser", "testBranches");
 
-            branches.Length.Should().Be(5);
+            branches.Count.Should().Be(5);
             //branches[0].Name.Should().Be("master");
             string[] branchNames = branches.Select(branch => branch.Name).ToArray();
             branchNames.Should().Contain("master");
@@ -50,6 +50,13 @@ namespace Tech_HubAPITest
             branchNames.Should().Contain("branch2");
             branchNames.Should().Contain("branch3");
             branchNames.Should().Contain("branch4");
+        }
+
+        [Fact]
+        public void TestGetBranchesNotExisting()
+        {
+            Action run = () => _gitService.GetBranches("testUser", "testBranches");
+            run.Should().Throw<DirectoryNotFoundException>();
         }
     }
 }
