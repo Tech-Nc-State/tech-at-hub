@@ -71,7 +71,7 @@ namespace Tech_HubAPI.Services
 
             // assign info to branches
             List<Branch> branches = branchNames
-                .Select(name => new Branch(name, File.ReadAllText(branchDirectory + "/" + name)))
+                .Select(name => new Branch(name, File.ReadAllText(branchDirectory + "/" + name).Trim()))
                 .ToList();
 
             return branches; 
