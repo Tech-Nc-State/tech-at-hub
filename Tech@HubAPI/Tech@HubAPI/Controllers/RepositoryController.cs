@@ -11,11 +11,11 @@ using System.IO;
 
 namespace Tech_HubAPI.Controllers
 {
-	[Route("[controller]")]
-	[ApiController]
-	public class RepositoryController : ControllerBase
+    [Route("[controller]")]
+    [ApiController]
+    public class RepositoryController : ControllerBase
     {
-		private readonly GitService _gitService;
+        private readonly GitService _gitService;
 
         public RepositoryController(GitService gitService)
         {
@@ -23,21 +23,21 @@ namespace Tech_HubAPI.Controllers
         }
 
         [HttpPost]
-		[Route("getbranches")]
-		public ActionResult<List<Branch>> GetBranches([FromBody] GetBranchesForm form)
-		{
-			List<Branch> branches = null;
-			try
-			{
-				branches = _gitService.GetBranches(form.Username, form.RepoName);
-			}
-			catch (DirectoryNotFoundException ex)
+        [Route("getbranches")]
+        public ActionResult<List<Branch>> GetBranches([FromBody] GetBranchesForm form)
+        {
+            List<Branch>? branches = null;
+            try
             {
-				return NotFound("Repo not found.");
+                branches = _gitService.GetBranches(form.Username, form.RepoName);
+            }
+            catch (DirectoryNotFoundException)
+            {
+                return NotFound("Repo not found.");
             }
 
 
-			return branches;
-		}
-	}
+            return branches;
+        }
+    }
 }

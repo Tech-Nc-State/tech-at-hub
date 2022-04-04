@@ -11,14 +11,12 @@ repos:
 -   repo: https://github.com/Lucas-C/pre-commit-hooks
     rev: v1.1.13
     hooks:
-    -   id: forbid-crlf
     -   id: remove-crlf
-    -   id: forbid-tabs
     -   id: remove-tabs
 -   repo: local
     hooks:
     -   id: dotnet-format
         name: dotnet-format
         language: system
-        entry: dotnet format --include
+        entry: dotnet format Tech@HubAPI --include
         types_or: ["c#"]

@@ -48,7 +48,7 @@ namespace Tech_HubAPI.Services
             if (!Directory.Exists(userDirectory))
             {
                 // not sure if we want to return something besides null to indicate that the
-                // error occured for the reason "no user"? 
+                // error occured for the reason "no user"?
                 throw new DirectoryNotFoundException();
             }
 
@@ -59,8 +59,8 @@ namespace Tech_HubAPI.Services
                 // repo no exist
                 throw new DirectoryNotFoundException();
             }
-            
-            string branchDirectory = repoDirectory 
+
+            string branchDirectory = repoDirectory
                 + (UseTestGitFolder ? "git_folder" : ".git")
                 + "/refs/heads";
 
@@ -74,7 +74,7 @@ namespace Tech_HubAPI.Services
                 .Select(name => new Branch(name, File.ReadAllText(branchDirectory + "/" + name).Trim()))
                 .ToList();
 
-            return branches; 
+            return branches;
         }
 
         public void CreateNewRepository(string name, string username)
@@ -88,7 +88,7 @@ namespace Tech_HubAPI.Services
 
             // Create a new folder for the git repo
             string repoDirectory = userDirectory + name + ".git" + "/";
-            if(Directory.Exists(repoDirectory))
+            if (Directory.Exists(repoDirectory))
             {
                 throw new Exception("Repository " + repoDirectory + " already exists.");
             }
@@ -108,7 +108,7 @@ namespace Tech_HubAPI.Services
             {
                 // Permission commands
                 _executeService.WorkingDirectory = oldExeDirectory;
-               // _executeService.ExecuteProcess("chown", "-R", "www-data:www-data", ".");
+                // _executeService.ExecuteProcess("chown", "-R", "www-data:www-data", ".");
                 //_executeService.ExecuteProcess("chmod", "-R", "755", ".");
             }
 
@@ -116,15 +116,15 @@ namespace Tech_HubAPI.Services
             File.Create(repoDirectory + "README.md")
                 .Close();
         }
-        
-        public List<DirectoryEntry> GetDirectoryListing(
+
+        public List<DirectoryEntry>? GetDirectoryListing(
             string username, string repository, string path, string branch)
         {
             string userDirectory = _baseGitFolder + username + "/";
 
             if (!Directory.Exists(userDirectory))
                 return null;
-            
+
 
             string repoDirectory = userDirectory + repository + ".git" + "/";
 
