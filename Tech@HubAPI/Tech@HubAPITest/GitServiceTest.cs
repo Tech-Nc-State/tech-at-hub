@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Tech_HubAPI.Models.Git;
 using Tech_HubAPI.Models.GitModels;
 using Tech_HubAPI.Services;
 using Tech_HubAPITest.Services;
@@ -58,6 +59,60 @@ namespace Tech_HubAPITest
         {
             Action run = () => _gitService.GetBranches("testUser", "testBranches");
             run.Should().Throw<DirectoryNotFoundException>();
+        }
+
+        [Fact]
+        public void TestGetDirectoryListing() {
+            _fileSystem.ImportFolder("./SampleGitRepos/listDirectoryTest.git", "git/testUser/listDirectoryTest.git");
+            List<DirectoryEntry> result;
+            string[] entries;
+
+            result = _gitService.GetDirectoryListing("testUser", "listDirectoryTest", "", "master");
+            result.Should().NotBeNull();
+            entries = result.Select(e => e.Name).ToArray();
+            entries.Should().Contain("rootDir");
+            entries.Should().Contain("rootFile.txt");
+            entries.Should().Contain("anotherRootFile.txt");
+
+
+            result = _gitService.GetDirectoryListing("testUser", "listDirectoryTest", "rootDir", "master");
+            result.Should().NotBeNull();
+            entries = result.Select(e => e.Name).ToArray();
+            entries.Should().Contain("nestedDir");
+            entries.Should().Contain("nestedFile.txt");
+            entries.Should().Contain("anotherNestedFile.txt");
+
+
+            result = _gitService.GetDirectoryListing("testUser", "listDirectoryTest", "rootDir/nestedDir", "master");
+            result.Should().NotBeNull();
+            entries = result.Select(e => e.Name).ToArray();
+            entries.Should().Contain("doublyNestedFile.txt");
+            entries.Should().Contain("anotherDoublyNestedFile.txt");
+
+            result = _gitService.GetDirectoryListing("testUser", "listDirectoryTest", "", "alternate-branch");
+            result.Should().NotBeNull();
+            entries = result.Select(e => e.Name).ToArray();
+            entries.Should().Contain("rootDir");
+            entries.Should().Contain("altRootDir");
+            entries.Should().Contain("rootFile.txt");
+            entries.Should().Contain("anotherRootFile.txt");
+
+            result = _gitService.GetDirectoryListing("testUser", "listDirectoryTest", "altRootDir", "alternate-branch");
+            result.Should().NotBeNull();
+            entries = result.Select(e => e.Name).ToArray();
+            entries.Should().Contain("altNestedFile.txt");
+
+            Action action = () => _gitService.GetDirectoryListing("fakeUser", "listDirectoryTest", "", "master");
+            action.Should().Throw<Exception>();
+
+            result = _gitService.GetDirectoryListing("testUser", "fakeRepo", "", "master");
+            result.Should().BeNull();
+
+            result = _gitService.GetDirectoryListing("testUser", "listDirectoryTest", "", "fake-branch");
+            result.Should().BeNull();
+
+            result = _gitService.GetDirectoryListing("testUser", "listDirectoryTest", "fakePath", "master");
+            result.Should().BeNull();
         }
     }
 }
