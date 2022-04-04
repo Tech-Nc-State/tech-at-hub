@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Security.Cryptography;
 using System.Text;
+using System.IO;
 
 namespace Tech_HubAPI.Services
 {
@@ -38,6 +39,20 @@ namespace Tech_HubAPI.Services
 			Array.Copy(salt, 0, passwordBytes, passwordLength, 32);
 
 			byte[] hash = shaM.ComputeHash(passwordBytes);
+			return hash;
+        }
+
+		public byte[] HashFile(Microsoft.AspNetCore.Http.IFormFile file)
+        {
+			var stream = file.OpenReadStream();
+
+			var streamReader = new StreamReader(stream);
+
+			string fileContents = streamReader.ReadToEnd();
+
+			byte[] fileBytes = Encoding.ASCII.GetBytes(fileContents);
+
+			byte[] hash = shaM.ComputeHash(fileBytes);
 			return hash;
         }
 	}
