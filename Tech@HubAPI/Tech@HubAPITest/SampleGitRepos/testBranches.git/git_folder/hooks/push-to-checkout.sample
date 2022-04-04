@@ -23,8 +23,8 @@ commit=$1
 # It can exit with a non-zero status to refuse the push (when it does
 # so, it must not modify the index or the working tree).
 die () {
-	echo >&2 "$*"
-	exit 1
+    echo >&2 "$*"
+    exit 1
 }
 
 # Or it can make any necessary changes to the working tree and to the
@@ -49,12 +49,12 @@ die () {
 
 if ! git update-index -q --ignore-submodules --refresh
 then
-	die "Up-to-date check failed"
+    die "Up-to-date check failed"
 fi
 
 if ! git diff-files --quiet --ignore-submodules --
 then
-	die "Working directory has unstaged changes"
+    die "Working directory has unstaged changes"
 fi
 
 # This is a rough translation of:
@@ -62,17 +62,17 @@ fi
 #   head_has_history() ? "HEAD" : EMPTY_TREE_SHA1_HEX
 if git cat-file -e HEAD 2>/dev/null
 then
-	head=HEAD
+    head=HEAD
 else
-	head=$(git hash-object -t tree --stdin </dev/null)
+    head=$(git hash-object -t tree --stdin </dev/null)
 fi
 
 if ! git diff-index --quiet --cached --ignore-submodules $head --
 then
-	die "Working directory has staged changes"
+    die "Working directory has staged changes"
 fi
 
 if ! git read-tree -u -m "$commit"
 then
-	die "Could not update working tree to new HEAD"
+    die "Could not update working tree to new HEAD"
 fi

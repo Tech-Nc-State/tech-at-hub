@@ -7,54 +7,54 @@ using System.Text;
 
 namespace Tech_HubAPI.Services
 {
-	public class HashingService
-	{
-		private RNGCryptoServiceProvider rngP = new RNGCryptoServiceProvider();
-		private SHA512 shaM = new SHA512Managed();
+    public class HashingService
+    {
+        private RNGCryptoServiceProvider rngP = new RNGCryptoServiceProvider();
+        private SHA512 shaM = new SHA512Managed();
 
-		/// <summary>
-		/// Get a randomized 32 byte salt
-		/// </summary>
-		/// <returns>The salt byte array</returns>
-		public byte[] GetSalt()
+        /// <summary>
+        /// Get a randomized 32 byte salt
+        /// </summary>
+        /// <returns>The salt byte array</returns>
+        public byte[] GetSalt()
         {
-			byte[] salt = new byte[32];
-			rngP.GetBytes(salt);
-			return salt;
+            byte[] salt = new byte[32];
+            rngP.GetBytes(salt);
+            return salt;
         }
 
-		/// <summary>
+        /// <summary>
         /// Get a hash from a plain text password and a byte[] salt.
         /// </summary>
         /// <param name="password">the password</param>
         /// <param name="salt">the salt</param>
         /// <returns>The hash</returns>
-		public byte[] HashPassword(string password, byte[] salt)
+        public byte[] HashPassword(string password, byte[] salt)
         {
-			byte[] passwordBytes = Encoding.ASCII.GetBytes(password);
+            byte[] passwordBytes = Encoding.ASCII.GetBytes(password);
 
-			int passwordLength = passwordBytes.Length;
-			Array.Resize<byte>(ref passwordBytes, passwordLength + 32);
-			Array.Copy(salt, 0, passwordBytes, passwordLength, 32);
+            int passwordLength = passwordBytes.Length;
+            Array.Resize<byte>(ref passwordBytes, passwordLength + 32);
+            Array.Copy(salt, 0, passwordBytes, passwordLength, 32);
 
-			byte[] hash = shaM.ComputeHash(passwordBytes);
-			return hash;
+            byte[] hash = shaM.ComputeHash(passwordBytes);
+            return hash;
         }
 
-		public bool ByteCheck(byte[] dbPass, byte[] value)
+        public bool ByteCheck(byte[] dbPass, byte[] value)
         {
-			if(dbPass.Length != value.Length)
+            if (dbPass.Length != value.Length)
             {
-				return false;
+                return false;
             }
-			for(int i = 0; i < dbPass.Length; i++)
+            for (int i = 0; i < dbPass.Length; i++)
             {
-				if(!dbPass[i].Equals(value[i]))
+                if (!dbPass[i].Equals(value[i]))
                 {
-					return false;
+                    return false;
                 }
             }
-			return true;
+            return true;
         }
-	}
+    }
 }

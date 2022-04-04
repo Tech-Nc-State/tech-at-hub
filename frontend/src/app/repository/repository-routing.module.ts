@@ -4,9 +4,9 @@ import { ExplorerComponent } from './explorer/explorer.component';
 import { MainComponent } from './main/main.component';
 
 const routes: Routes = [
-  { 
-    path: ':repoId', 
-    component: MainComponent, 
+  {
+    path: ':repoId',
+    component: MainComponent,
     children: [
       { path: '**', component: ExplorerComponent }
     ]

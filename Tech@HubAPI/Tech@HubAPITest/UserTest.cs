@@ -25,8 +25,8 @@ namespace Tech_HubAPITest
         public void TestCreateAndRetrieveUser()
         {
             var user = new User("joe", null, null, "test@email.com", "Joe", "Mama", "test", "usr/pics/joe.png", DateTime.Now);
-            user.Password = new byte[]{ 1, 2, 3, 4, 5, 6 };
-            user.Salt = new byte[]{ 6, 5, 4, 3, 2, 1 };
+            user.Password = new byte[] { 1, 2, 3, 4, 5, 6 };
+            user.Salt = new byte[] { 6, 5, 4, 3, 2, 1 };
             _db.DbContext.Users.Add(user);
             _db.DbContext.SaveChanges();
 

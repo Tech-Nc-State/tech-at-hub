@@ -7,7 +7,7 @@ namespace Tech_HubAPI.Models
 {
     public class User
     {
-        public User(string username, byte[] password, byte[] salt, string email, string firstName, 
+        public User(string username, byte[] password, byte[] salt, string email, string firstName,
             string lastName, string description, string? profilePicturePath, DateTime birthDate)
         {
             Username = username;

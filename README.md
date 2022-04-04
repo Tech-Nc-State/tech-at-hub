@@ -6,18 +6,18 @@ Code-hosting website built for fun by students at NC State University
 
 ```
 {
-	"ConnectionStrings": {
-		"MySqlDatabase": "server=localhost; port=3306; uid=root; password=dbpass; database=tech-at-hub;"
-	},
-	"JWT": {
-		"SecretKey": "blahblahblahblah"
-	},
-	"Environment": {
-		"Platform": "Windows",
-		"GitPath": "C:\\Program Files\\Git\\bin\\",
-		"BinPath": "C:\\Program Files\\Git\\usr\\bin\\",
-		"DefaultWorkingDirectory": "C:\\Users\\jpbre\\Documents\\NCSU\\tech-at-hub\\"
-	}
+    "ConnectionStrings": {
+        "MySqlDatabase": "server=localhost; port=3306; uid=root; password=dbpass; database=tech-at-hub;"
+    },
+    "JWT": {
+        "SecretKey": "blahblahblahblah"
+    },
+    "Environment": {
+        "Platform": "Windows",
+        "GitPath": "C:\\Program Files\\Git\\bin\\",
+        "BinPath": "C:\\Program Files\\Git\\usr\\bin\\",
+        "DefaultWorkingDirectory": "C:\\Users\\jpbre\\Documents\\NCSU\\tech-at-hub\\"
+    }
 }
 ```
 

@@ -5,25 +5,25 @@ using Tech_HubAPI.Models;
 
 namespace Tech_HubAPITest
 {
-	public class DatabaseService : IDisposable
-	{
-		public DatabaseService(IConfiguration configuration)
-		{
-			string connectionString = configuration.GetConnectionString("MySqlDatabase");
+    public class DatabaseService : IDisposable
+    {
+        public DatabaseService(IConfiguration configuration)
+        {
+            string connectionString = configuration.GetConnectionString("MySqlDatabase");
 
-			var options = new DbContextOptionsBuilder<DatabaseContext>()
-				.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))
-				.Options;
+            var options = new DbContextOptionsBuilder<DatabaseContext>()
+                .UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))
+                .Options;
 
-			DbContext = new DatabaseContext(options);
-			DbContext.Database.EnsureCreated();
-		}
+            DbContext = new DatabaseContext(options);
+            DbContext.Database.EnsureCreated();
+        }
 
-		public DatabaseContext DbContext { get; private set;}
+        public DatabaseContext DbContext { get; private set; }
 
-		public void Dispose()
-		{
-			DbContext.Database.EnsureDeleted();
-		}
-	}
+        public void Dispose()
+        {
+            DbContext.Database.EnsureDeleted();
+        }
+    }
 }

@@ -82,7 +82,7 @@ namespace Tech_HubAPI.Services
             // read all the output, store to output.
             output = myProcess.StandardOutput.ReadToEnd();
             myProcess.WaitForExit();
-                
+
             if (myProcess.ExitCode != 0)
             {
                 throw new Exception("Process exited with a status code of "
@@ -95,4 +95,3 @@ namespace Tech_HubAPI.Services
         }
     }
 }
-
