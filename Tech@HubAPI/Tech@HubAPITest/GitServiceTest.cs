@@ -62,7 +62,8 @@ namespace Tech_HubAPITest
         }
 
         [Fact]
-        public void TestGetDirectoryListing() {
+        public void TestGitDirectoryListing()
+        {
             _fileSystem.ImportFolder("./SampleGitRepos/listDirectoryTest.git", "git/testUser/listDirectoryTest.git");
             List<DirectoryEntry> result;
             string[] entries;
@@ -105,14 +106,14 @@ namespace Tech_HubAPITest
             Action action = () => _gitService.GetDirectoryListing("fakeUser", "listDirectoryTest", "", "master");
             action.Should().Throw<Exception>();
 
-            result = _gitService.GetDirectoryListing("testUser", "fakeRepo", "", "master");
-            result.Should().BeNull();
+            action = () => _gitService.GetDirectoryListing("testUser", "fakeRepo", "", "master");
+            action.Should().Throw<Exception>();
 
-            result = _gitService.GetDirectoryListing("testUser", "listDirectoryTest", "", "fake-branch");
-            result.Should().BeNull();
+            action = () => _gitService.GetDirectoryListing("testUser", "listDirectoryTest", "", "fake-branch");
+            action.Should().Throw<Exception>();
 
-            result = _gitService.GetDirectoryListing("testUser", "listDirectoryTest", "fakePath", "master");
-            result.Should().BeNull();
+            action = () => _gitService.GetDirectoryListing("testUser", "listDirectoryTest", "fakePath", "master");
+            action.Should().Throw<Exception>();
         }
     }
 }
