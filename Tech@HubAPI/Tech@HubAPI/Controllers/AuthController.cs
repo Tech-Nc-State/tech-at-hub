@@ -109,32 +109,22 @@ namespace GitTest.Controllers
             return result ? Created("", "") : Unauthorized();
         }
 
-		private bool IsAuthorized(string username, string password, string resource)
-		{
-			User user = _dbContext.Users.Where(u => u.Username == username).FirstOrDefault();
-			
+        private bool IsAuthorized(string username, string password, string resource)
+        {
+            User? user = _dbContext.Users.Where(u => u.Username == username).FirstOrDefault();
 
+            if (user != null)
+            {
+                byte[] currSalt = user.Salt;
+                byte[] currHashedPassword = _hashing.HashPassword(password, currSalt);
 
-			if (user != null)
-			{
-				byte[] currSalt = user.Salt;
-				byte[] currHashedPassword = _hashing.HashPassword(password, currSalt);
-				if(currHashedPassword.Length != user.Password.Length)
+                if (!_hashing.ByteCheck(currHashedPassword, user.Password))
                 {
-					return false;
-                }
-				if(!_hashing.ByteCheck(currHashedPassword, user.Password))
-                {
-					return false;
+                    return false;
                 }
 
-				string[] data = resource.Split("/");
-				if(data[0].CompareTo(username) != 0)
-                {
-					return false;
-                }
-				return true;
-			}
+                return resource.StartsWith(username);
+            }
 
             return false;
         }
