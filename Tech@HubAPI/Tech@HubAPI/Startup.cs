@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
@@ -117,13 +117,10 @@ namespace Tech_HubAPI
             });
 
             // create the database from our provided models
-            if (env.IsDevelopment())
-            {
-                var serviceScopeFactory = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>();
-                using var serviceScope = serviceScopeFactory.CreateScope();
-                var dbContext = serviceScope.ServiceProvider.GetService<DatabaseContext>();
-                dbContext.Database.EnsureCreated();
-            }
+            var serviceScopeFactory = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>();
+            using var serviceScope = serviceScopeFactory.CreateScope();
+            var dbContext = serviceScope.ServiceProvider.GetService<DatabaseContext>();
+            dbContext.Database.EnsureCreated();
         }
     }
 }
