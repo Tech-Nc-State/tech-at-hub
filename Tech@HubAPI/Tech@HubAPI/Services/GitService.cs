@@ -10,8 +10,17 @@ using Tech_HubAPI.Models.GitModels;
 
 namespace Tech_HubAPI.Services
 {
+    /// <summary>
+    /// Interface to the git subsystem. Use for managing and querying git repositories.
+    /// </summary>
+    // TODO: Make this class thread safe
     public class GitService
     {
+        /// <summary>
+        /// All directories containing git repos are expected to end with this postfix
+        /// </summary>
+        private readonly string _repoDirectoryPostfix = ".git";
+
         private readonly bool _windows;
         private readonly string _baseGitFolder;
         private readonly string _gitBinPath;
@@ -31,15 +40,18 @@ namespace Tech_HubAPI.Services
             _gitBinPath = configuration["Environment:GitPath"].Replace("\\", "/");
         }
 
-        public bool UseTestGitFolder { get; set; }
-
+        /// <summary>
+        /// Name of the folder that will be searched for internal git files within a repository
+        /// </summary>
+        public string InternalGitFolderName { get; set; } = ".git";
 
         /// <summary>
-        /// Gets a list of <c>Branch</c>es in the given user/repo name.
+        /// Gets a list of <see cref="Branch"> in the given user/repo name.
         /// </summary>
         /// <param name="username">the username</param>
         /// <param name="repoName">name of the repository</param>
-        /// <returns>list of Bracnhes if they exist, null otherwise.</returns>
+        /// <returns>list of Bracnhes</returns>
+        /// <exception cref="DirectoryNotFoundException">If the user or repository do not exist</exception>
         public List<Branch> GetBranches(string username, string repoName)
         {
             // Given a username and repoName, list all stored branch names.
@@ -48,21 +60,19 @@ namespace Tech_HubAPI.Services
             string userDirectory = _baseGitFolder + username + "/";
             if (!Directory.Exists(userDirectory))
             {
-                // not sure if we want to return something besides null to indicate that the
-                // error occured for the reason "no user"?
-                throw new DirectoryNotFoundException();
+                throw new DirectoryNotFoundException("User not found");
             }
 
             // Check if repo directory exists
-            string repoDirectory = userDirectory + repoName + ".git/";
+            string repoDirectory = userDirectory + repoName + _repoDirectoryPostfix + "/";
             if (!Directory.Exists(repoDirectory))
             {
                 // repo no exist
-                throw new DirectoryNotFoundException();
+                throw new DirectoryNotFoundException("Repository not found");
             }
 
             string branchDirectory = repoDirectory
-                + (UseTestGitFolder ? "git_folder" : ".git")
+                + InternalGitFolderName
                 + "/refs/heads";
 
             string[] branchNames = new DirectoryInfo(branchDirectory)
@@ -78,17 +88,24 @@ namespace Tech_HubAPI.Services
             return branches;
         }
 
+        /// <summary>
+        /// Creates a new git repository for the user
+        /// </summary>
+        /// <param name="name">Name of the new repository</param>
+        /// <param name="username">User to create the repository under</param>
+        /// <exception cref="Exception">If a repository with that name already exists for the user</exception>
         public void CreateNewRepository(string name, string username)
         {
             // User Directory
             string userDirectory = _baseGitFolder + username + "/";
             if (!Directory.Exists(userDirectory))
             {
+                // user has no repositories yet, create a user folder for them
                 Directory.CreateDirectory(userDirectory);
             }
 
             // Create a new folder for the git repo
-            string repoDirectory = userDirectory + name + ".git" + "/";
+            string repoDirectory = userDirectory + name + _repoDirectoryPostfix + "/";
             if (Directory.Exists(repoDirectory))
             {
                 throw new Exception("Repository " + repoDirectory + " already exists.");
@@ -97,13 +114,22 @@ namespace Tech_HubAPI.Services
 
             // Set the path prefix and working directory
             string oldExeDirectory = _executeService.ExecutableDirectory;
+            string oldWorkingDirectory = _executeService.WorkingDirectory;
             _executeService.ExecutableDirectory = _gitBinPath;
             _executeService.WorkingDirectory = repoDirectory;
 
             // Run the initialize commands
-            _executeService.ExecuteProcess("git", "--bare", "init");
-            _executeService.ExecuteProcess("git", "update-server-info");
-            _executeService.ExecuteProcess("git", "config", "http.receivepack", "true");
+            try
+            {
+                _executeService.ExecuteProcess("git", "--bare", "init");
+                _executeService.ExecuteProcess("git", "update-server-info");
+                _executeService.ExecuteProcess("git", "config", "http.receivepack", "true");
+            }
+            finally
+            {
+                _executeService.ExecutableDirectory = oldExeDirectory;
+                _executeService.WorkingDirectory = oldWorkingDirectory;
+            }
 
             if (!_windows)
             {
@@ -118,6 +144,16 @@ namespace Tech_HubAPI.Services
                 .Close();
         }
 
+        /// <summary>
+        /// Gets the contents of a directory within a git repository.
+        /// </summary>
+        /// <param name="username">User who owns the repository</param>
+        /// <param name="repository">Name of the repository</param>
+        /// <param name="path">Folder path within the repository to get a listing of</param>
+        /// <param name="branch">Branch on the repository to search</param>
+        /// <returns>Contents of the directory as a list of <see cref="DirectoryEntry"/></returns>
+        /// <exception cref="DirectoryNotFoundException">If the user or repository does not exist, or if the path to search does not exist</exception>
+        /// <exception cref="FileNotFoundException">If the branch does not exist</exception>
         public List<DirectoryEntry> GetDirectoryListing(
             string username, string repository, string path, string branch)
         {
@@ -128,18 +164,18 @@ namespace Tech_HubAPI.Services
                 throw new Exception("That user doesn't exist");
             }
 
-            string repoDirectory = userDirectory + repository + ".git/";
+            string repoDirectory = userDirectory + repository + _repoDirectoryPostfix + "/";
             if (!Directory.Exists(repoDirectory))
             {
-                throw new Exception("The repository does not exist");
+                throw new DirectoryNotFoundException("The repository does not exist");
             }
 
             string branchDirectory = repoDirectory
-                + (UseTestGitFolder ? "git_folder" : ".git")
+                + InternalGitFolderName
                 + "/refs/heads";
             if (!Directory.Exists(branchDirectory))
             {
-                throw new Exception("The branch does not exist");
+                throw new DirectoryNotFoundException("The branch does not exist");
             }
 
             string headHash;
@@ -176,7 +212,9 @@ namespace Tech_HubAPI.Services
                     }
 
                     if (!matchedDir)
-                        throw new Exception("Invalid pathname");
+                    {
+                        throw new DirectoryNotFoundException("Invalid pathname");
+                    }
 
                     currentContents = _executeService.ExecuteProcess(
                         "git", "cat-file", "-p", currentHash);

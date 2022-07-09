@@ -31,30 +31,6 @@
     <ProjectReference Include="..\Tech@HubAPI\Tech@HubAPI.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Content Remove="SampleGitRepos\listDirectoryTest.git\anotherRootFile.txt" />
-    <Content Remove="SampleGitRepos\listDirectoryTest.git\rootFile.txt" />
-    <Content Remove="SampleGitRepos\listDirectoryTest.git\rootDir\nestedFile.txt" />
-    <Content Remove="SampleGitRepos\listDirectoryTest.git\rootDir\anotherNestedFile.txt" />
-    <Content Remove="SampleGitRepos\listDirectoryTest.git\rootDir\nestedDir\doublyNestedFile.txt" />
-    <Content Remove="SampleGitRepos\listDirectoryTest.git\rootDir\nestedDir\anotherDoublyNestedFile.txt" />
-    <Content Remove="SampleGitRepos\listDirectoryTest.git\git_folder\config" />
-    <Content Remove="SampleGitRepos\listDirectoryTest.git\git_folder\HEAD" />
-    <Content Remove="SampleGitRepos\listDirectoryTest.git\git_folder\description" />
-    <Content Remove="SampleGitRepos\listDirectoryTest.git\git_folder\index" />
-    <Content Remove="SampleGitRepos\listDirectoryTest.git\git_folder\COMMIT_EDITMSG" />
-    <Content Remove="SampleGitRepos\listDirectoryTest.git\git_folder\objects\bd\255a02f18e472420536395bca9e8d4cf4f40ba" />
-    <Content Remove="SampleGitRepos\listDirectoryTest.git\git_folder\objects\10\dc3e5be7fcaf049bf740fdeb6ab80e79590851" />
-    <Content Remove="SampleGitRepos\listDirectoryTest.git\git_folder\objects\e6\987d8b92456f5b501e3ecbe832461343ae0c09" />
-    <Content Remove="SampleGitRepos\listDirectoryTest.git\git_folder\objects\e6\9de29bb2d1d6434b8b29ae775ad8c2e48c5391" />
-    <Content Remove="SampleGitRepos\listDirectoryTest.git\git_folder\objects\e8\e502510d647859943f988404d8417423a37f45" />
-    <Content Remove="SampleGitRepos\listDirectoryTest.git\git_folder\objects\cb\133dff462ecd1441347619e0cea6c5979cec62" />
-    <Content Remove="SampleGitRepos\listDirectoryTest.git\git_folder\objects\23\b34012098d2376732762fdbeee8607ea673f70" />
-    <Content Remove="SampleGitRepos\listDirectoryTest.git\git_folder\objects\4f\f7c972239605a288195259e8f43c23bb74a2cd" />
-    <Content Remove="SampleGitRepos\listDirectoryTest.git\git_folder\info\exclude" />
-    <Content Remove="SampleGitRepos\listDirectoryTest.git\git_folder\refs\heads\alternate-branch" />
-    <Content Remove="SampleGitRepos\listDirectoryTest.git\git_folder\refs\heads\master" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="developersecrets.json" Condition="'$(ExcludeConfigFilesFromBuildOutput)'=='true'">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>

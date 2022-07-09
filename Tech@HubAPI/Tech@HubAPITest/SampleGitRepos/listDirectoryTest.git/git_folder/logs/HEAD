@@ -1,6 +1,0 @@
-0000000000000000000000000000000000000000 10dc3e5be7fcaf049bf740fdeb6ab80e79590851 ropeace <ropeace@ncsu.edu> 1646092640 -0500	commit (initial): Added test files to the test repo
-10dc3e5be7fcaf049bf740fdeb6ab80e79590851 10dc3e5be7fcaf049bf740fdeb6ab80e79590851 ropeace <ropeace@ncsu.edu> 1646092671 -0500	checkout: moving from master to alternate-branch
-10dc3e5be7fcaf049bf740fdeb6ab80e79590851 e6987d8b92456f5b501e3ecbe832461343ae0c09 ropeace <ropeace@ncsu.edu> 1646092775 -0500	commit: Added a directory and file to the alternate-branch
-e6987d8b92456f5b501e3ecbe832461343ae0c09 10dc3e5be7fcaf049bf740fdeb6ab80e79590851 ropeace <ropeace@ncsu.edu> 1646092791 -0500	checkout: moving from alternate-branch to master
-10dc3e5be7fcaf049bf740fdeb6ab80e79590851 e6987d8b92456f5b501e3ecbe832461343ae0c09 ropeace <ropeace@ncsu.edu> 1646092800 -0500	checkout: moving from master to alternate-branch
-e6987d8b92456f5b501e3ecbe832461343ae0c09 10dc3e5be7fcaf049bf740fdeb6ab80e79590851 ropeace <ropeace@ncsu.edu> 1646092814 -0500	checkout: moving from alternate-branch to master
