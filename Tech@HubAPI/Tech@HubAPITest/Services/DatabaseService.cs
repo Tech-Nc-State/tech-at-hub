@@ -3,7 +3,7 @@ using Microsoft.Extensions.Configuration;
 using System;
 using Tech_HubAPI.Models;
 
-namespace Tech_HubAPITest
+namespace Tech_HubAPITest.Services
 {
     public class DatabaseService : IDisposable
     {

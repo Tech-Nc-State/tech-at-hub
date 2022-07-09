@@ -23,6 +23,7 @@ namespace Tech_HubAPITest
             services.AddSingleton<IConfiguration>(config);
             services.AddScoped<FileSystemService>();
             services.AddScoped<DatabaseService>();
+            services.AddScoped<ApiService>();
         }
     }
 }

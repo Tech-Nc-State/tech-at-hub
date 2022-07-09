@@ -8,8 +8,6 @@ namespace Tech_HubAPI.Models
             : base(options)
         { }
 
-        public DbSet<Book> Books { get; set; }
-        public DbSet<Author> Authors { get; set; }
         public DbSet<User> Users { get; set; }
 
         /// <summary>
@@ -20,21 +18,6 @@ namespace Tech_HubAPI.Models
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-
-            modelBuilder.Entity<Book>(entity =>
-            {
-                entity.HasKey(e => e.Id);
-                entity.HasOne(e => e.Author)
-                    .WithMany(a => a.Books);
-                entity.HasIndex(a => a.Title).IsUnique();
-            });
-
-            modelBuilder.Entity<Author>(entity =>
-            {
-                entity.HasKey(e => e.Id);
-                entity.HasMany(a => a.Books)
-                    .WithOne(b => b.Author);
-            });
 
             modelBuilder.Entity<User>(entity =>
             {
