@@ -111,9 +111,19 @@ namespace GitTest.Controllers
 
         private bool IsAuthorized(string username, string password, string resource)
         {
-            if (username == "a" && password == "b" && resource == "joey/test")
+            User? user = _dbContext.Users.Where(u => u.Username == username).FirstOrDefault();
+
+            if (user != null)
             {
-                return true;
+                byte[] currSalt = user.Salt;
+                byte[] currHashedPassword = _hashing.HashPassword(password, currSalt);
+
+                if (!_hashing.ByteCheck(currHashedPassword, user.Password))
+                {
+                    return false;
+                }
+
+                return resource.StartsWith(username);
             }
 
             return false;

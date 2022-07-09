@@ -41,19 +41,27 @@ namespace Tech_HubAPI.Services
             return hash;
         }
 
-        public bool ByteCheck(byte[] dbPass, byte[] value)
+        /// <summary>
+        /// Compares two byte arrays for equality
+        /// </summary>
+        /// <param name="b1">First byte array</param>
+        /// <param name="b2">Second byte array</param>
+        /// <returns>Whether the two arrays are equal</returns>
+        public bool ByteCheck(byte[] b1, byte[] b2)
         {
-            if (dbPass.Length != value.Length)
+            if (b1.Length != b2.Length)
             {
                 return false;
             }
-            for (int i = 0; i < dbPass.Length; i++)
+
+            for (int i = 0; i < b1.Length; i++)
             {
-                if (!dbPass[i].Equals(value[i]))
+                if (!b1[i].Equals(b2[i]))
                 {
                     return false;
                 }
             }
+
             return true;
         }
     }
