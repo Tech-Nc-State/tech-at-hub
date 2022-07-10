@@ -26,7 +26,6 @@ namespace Tech_HubAPITest
             executeService.WorkingDirectory = fileSystem.RootDirectory;
             _gitService = new GitService(executeService, configuration);
             _fileSystem = fileSystem;
-            _gitService.InternalGitFolderName = "git_folder";
         }
 
         [Fact]
@@ -34,7 +33,6 @@ namespace Tech_HubAPITest
         {
             _gitService.CreateNewRepository("MyRepository", "mkmcary");
             Directory.Exists(_fileSystem.RootDirectory + "git/mkmcary/MyRepository.git").Should().BeTrue();
-            File.Exists(_fileSystem.RootDirectory + "git/mkmcary/MyRepository.git/README.md").Should().BeTrue();
         }
 
         [Fact]

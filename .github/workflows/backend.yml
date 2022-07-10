@@ -39,4 +39,5 @@ jobs:
     - name: Create Working Directory
       run: sudo mkdir /app
     - name: Test
-      run: dotnet test --no-build --verbosity normal Tech@HubAPI/Tech@HubAPITest
+      # command needs sudo because Github Actions are not root by default
+      run: sudo dotnet test --no-build --verbosity normal Tech@HubAPI/Tech@HubAPITest

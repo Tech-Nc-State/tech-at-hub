@@ -16,10 +16,12 @@ namespace Tech_HubAPI.Controllers
     public class RepositoryController : ControllerBase
     {
         private readonly GitService _gitService;
+        private readonly DatabaseContext _dbContext;
 
-        public RepositoryController(GitService gitService)
+        public RepositoryController(GitService gitService, DatabaseContext dbContext)
         {
             _gitService = gitService;
+            _dbContext = dbContext;
         }
 
         [HttpPost]
@@ -31,13 +33,29 @@ namespace Tech_HubAPI.Controllers
             {
                 branches = _gitService.GetBranches(form.Username, form.RepoName);
             }
-            catch (DirectoryNotFoundException)
+            catch (DirectoryNotFoundException ex)
             {
-                return NotFound("Repo not found.");
+                return NotFound(ex.Message);
             }
 
 
             return branches;
+        }
+
+        [Authorize]
+        [HttpPost]
+        [Route("create")]
+        public ActionResult CreateRepository([FromBody] string name)
+        {
+            try
+            {
+                _gitService.CreateNewRepository(name, this.GetUser(_dbContext).Username);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }

@@ -1,0 +1,22 @@
+name: Integration
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  integration_test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Prepare Environment
+        # commands need sudo because Github Actions are not root by default
+        run: |
+          cd integration
+          sudo pip install -r requirements.txt
+      - name: Run Tests
+        run: |
+          cd integration
+          sudo pytest

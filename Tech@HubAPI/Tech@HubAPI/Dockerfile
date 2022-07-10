@@ -19,4 +19,6 @@ RUN dotnet publish "Tech@HubAPI.csproj" -c Release -o /app/publish
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+RUN apt-get -y update
+RUN apt-get -y install git
 ENTRYPOINT ["dotnet", "Tech@HubAPI.dll"]
