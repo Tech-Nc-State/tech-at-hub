@@ -4,7 +4,9 @@ import requests
 class ApiClient:
     def __init__(self):
         self.jwt = ""
-        self.prefix = "http://localhost:5000"
+        # TODO: can change this to 5000 when global proxy is set up
+        # right now is just ensures our proxy settings work
+        self.prefix = "http://localhost:80"
 
     def get(self, url, send_jwt=True) -> requests.Response:
         headers = {}

@@ -1,18 +1,24 @@
 import os
 import docker
 import time
-from dotenv import load_dotenv
 
-load_dotenv()
 client = docker.from_env()
 
-api_dockerfile = os.environ.get("TECH_AT_HUB_PATH") + "/Tech@HubAPI"
+tech_at_hub_path = os.path.abspath(os.path.join(os.getcwd(), os.pardir))
+
+api_dockerfile = tech_at_hub_path + "/Tech@HubAPI"
 api_image_name = "techhubapi-integration-test"
 api_container_name = api_image_name
-git_server_dockerfile = os.environ.get("TECH_AT_HUB_PATH") + "/Tech@HubGitServer"
+api_container_hostname = "api"
+
+git_server_dockerfile = tech_at_hub_path + "/Tech@HubGitServer"
 git_server_image_name = "techhubgitserver-integration-test"
 git_server_container_name = git_server_image_name
+git_server_hostname = "git_server"
+
 mysql_container_name = "mysql-techhub-integration-test"
+mysql_container_hostname = "mysql"
+
 network_name = "techathub"
 
 api_container = None
@@ -32,6 +38,8 @@ def start_containers():
         path=api_dockerfile,
         tag=api_image_name,
         pull=True,
+        rm=True,
+        forcerm=True,
         dockerfile="Tech@HubAPI/Dockerfile",
     )
 
@@ -39,6 +47,8 @@ def start_containers():
         path=git_server_dockerfile,
         tag=git_server_image_name,
         pull=True,
+        rm=True,
+        forcerm=True,
         dockerfile="Dockerfile",
     )
 
@@ -48,7 +58,7 @@ def start_containers():
     network = client.networks.create(network_name, driver="bridge")
 
     print("Starting Containers...")
-    git_dir = os.environ.get("TECH_AT_HUB_PATH") + "/git"
+    git_dir = tech_at_hub_path + "/git"
 
     mysql_container = client.containers.run(
         image="mysql",
@@ -56,7 +66,7 @@ def start_containers():
         name=mysql_container_name,
         ports={"3306/tcp": 3306},
         network=network_name,
-        hostname="mysql",
+        hostname=mysql_container_hostname,
         environment={
             "MYSQL_ROOT_PASSWORD": "dbpass",
             "MYSQL_DATABASE": "tech-at-hub",
@@ -65,20 +75,25 @@ def start_containers():
         },
     )
 
+    # give the mysql server time to start
+    # TODO: find a better solution than this
     time.sleep(25)
 
     api_container = client.containers.run(
         image=api_image_name,
         detach=True,
         name=api_container_name,
+        hostname=api_container_hostname,
         ports={"80/tcp": 5000},
         volumes=[f"{git_dir}/:/app/git"],
         network=network_name,
         environment={
-            "ASPNETCORE_URLS": "http://+:80",
-            "ConnectionStrings__MySqlDatabase": "server=mysql; port=3306; uid=gituser; password=dbpass; database=tech-at-hub;",
+            "ASPNETCORE_URLS": "http://+:80;http://+:5000",
+            "ConnectionStrings__MySqlDatabase": f"server={mysql_container_hostname}; port=3306; uid=gituser; password=dbpass; database=tech-at-hub;",
         },
     )
+
+    time.sleep(7)
 
     git_server_container = client.containers.run(
         image=git_server_image_name,
@@ -87,9 +102,10 @@ def start_containers():
         ports={"80/tcp": 80},
         volumes=[f"{git_dir}/:/app/git"],
         network=network_name,
+        hostname=git_server_hostname
     )
 
-    time.sleep(7)
+    time.sleep(4)
 
 
 def stop_containers():

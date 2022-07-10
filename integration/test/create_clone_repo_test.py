@@ -1,4 +1,5 @@
 import json
+import subprocess
 from util.api import ApiClient
 from util.git import GitClient
 
@@ -41,7 +42,7 @@ def test_create_clone_repo(tmp_path):
     git.run("git checkout -b master")
 
     # create empty file, commit and push
-    open(str(tmp_path) + "/test/myfile.txt", "w").close()
+    git.create("myfile.txt")
     git.run("git add .")
     git.run('git commit -m "Creating-new-file"')
     git.run("git push origin master")

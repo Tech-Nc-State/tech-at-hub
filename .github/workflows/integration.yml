@@ -12,11 +12,11 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Prepare Environment
+        # commands need sudo because Github Actions are not root by default
         run: |
           cd integration
-          pip install -r requirements.txt
+          sudo pip install -r requirements.txt
       - name: Run Tests
         run: |
-          export TECH_AT_HUB_PATH=$(pwd)
           cd integration
-          pytest
+          sudo pytest

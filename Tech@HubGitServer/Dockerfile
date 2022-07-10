@@ -1,4 +1,4 @@
-FROM public.ecr.aws/bitnami/python:3.6
+FROM ubuntu:latest
 EXPOSE 80
 
 # set eastern timezone

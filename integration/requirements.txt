@@ -16,7 +16,6 @@ pluggy==1.0.0
 py==1.11.0
 pyparsing==3.0.9
 pytest==7.1.2
-python-dotenv==0.20.0
 requests==2.28.1
 six==1.16.0
 tomli==2.0.1

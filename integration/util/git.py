@@ -12,3 +12,6 @@ class GitClient:
         p = subprocess.Popen(parts, cwd=str(self.working_dir))
         p.wait()
         assert p.returncode == 0
+
+    def create(self, filename):
+        open(str(self.working_dir) + "/" + filename, "w").close()
