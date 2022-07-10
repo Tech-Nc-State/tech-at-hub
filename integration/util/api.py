@@ -1,5 +1,6 @@
 import requests
 
+
 class ApiClient:
     def __init__(self):
         self.jwt = ""

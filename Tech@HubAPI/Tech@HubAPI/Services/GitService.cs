@@ -35,15 +35,10 @@ namespace Tech_HubAPI.Services
         public GitService(ExecuteService executeService, IConfiguration configuration)
         {
             _executeService = new ExecuteService(configuration);
-            _windows = configuration["Environment:Platform"] == "Windows";
             _baseGitFolder = executeService.WorkingDirectory.Replace("\\", "/") + "git/";  // TODO: Why is this pointing to wrong place in debug?
             _gitBinPath = configuration["Environment:GitPath"].Replace("\\", "/");
+            _windows = configuration["Environment:Platform"] == "Windows";
         }
-
-        /// <summary>
-        /// Name of the folder that will be searched for internal git files within a repository
-        /// </summary>
-        public string InternalGitFolderName { get; set; } = ".git";
 
         /// <summary>
         /// Gets a list of <see cref="Branch"> in the given user/repo name.
@@ -71,9 +66,7 @@ namespace Tech_HubAPI.Services
                 throw new DirectoryNotFoundException("Repository not found");
             }
 
-            string branchDirectory = repoDirectory
-                + InternalGitFolderName
-                + "/refs/heads";
+            string branchDirectory = repoDirectory + "/refs/heads";
 
             string[] branchNames = new DirectoryInfo(branchDirectory)
                 .GetFiles()
@@ -124,24 +117,19 @@ namespace Tech_HubAPI.Services
                 _executeService.ExecuteProcess("git", "--bare", "init");
                 _executeService.ExecuteProcess("git", "update-server-info");
                 _executeService.ExecuteProcess("git", "config", "http.receivepack", "true");
+
+                if (!_windows)
+                {
+                    _executeService.ExecutableDirectory = "/bin/";
+                    _executeService.ExecuteProcess("chown", "-R", "www-data:www-data", ".");
+                    _executeService.ExecuteProcess("chmod", "-R", "755", ".");
+                }
             }
             finally
             {
                 _executeService.ExecutableDirectory = oldExeDirectory;
                 _executeService.WorkingDirectory = oldWorkingDirectory;
             }
-
-            if (!_windows)
-            {
-                // Permission commands
-                _executeService.WorkingDirectory = oldExeDirectory;
-                // _executeService.ExecuteProcess("chown", "-R", "www-data:www-data", ".");
-                //_executeService.ExecuteProcess("chmod", "-R", "755", ".");
-            }
-
-            // create the repository README
-            File.Create(repoDirectory + "README.md")
-                .Close();
         }
 
         /// <summary>
@@ -170,9 +158,7 @@ namespace Tech_HubAPI.Services
                 throw new DirectoryNotFoundException("The repository does not exist");
             }
 
-            string branchDirectory = repoDirectory
-                + InternalGitFolderName
-                + "/refs/heads";
+            string branchDirectory = repoDirectory + "/refs/heads";
             if (!Directory.Exists(branchDirectory))
             {
                 throw new DirectoryNotFoundException("The branch does not exist");

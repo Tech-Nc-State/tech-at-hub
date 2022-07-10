@@ -4,6 +4,7 @@ import shutil
 from dotenv import load_dotenv
 from util.containers import start_containers, stop_containers
 
+
 @pytest.fixture
 def containers():
     load_dotenv()
@@ -13,5 +14,5 @@ def containers():
     start_containers()
     yield
     stop_containers()
-    shutil.rmtree(git_folder)
-    os.mkdir(git_folder)
+    # shutil.rmtree(git_folder)
+    # os.mkdir(git_folder)
