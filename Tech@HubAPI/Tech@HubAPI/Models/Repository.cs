@@ -16,11 +16,11 @@ namespace Tech_HubAPI.Models
         public int Id { get; set; }
 
         /// <summary>
-        /// The Title of this Repository.
+        /// The Name of this Repository.
         /// </summary>
-        public string? Title { get; set; }
+        public string Name { get; set; }
 
-        //public User owner { get; set; }
+        public User Owner { get; set; }
 
         /// <summary>
         /// The Repository Owner's ID.
@@ -32,9 +32,6 @@ namespace Tech_HubAPI.Models
         /// </summary>
         public bool IsPublic { get; set; }
 
-        /// <summary>
-        /// The File Path to this Repository's contents on disk.
-        /// </summary>
-        public string? FilePath { get; set; }
+
     }
 }
