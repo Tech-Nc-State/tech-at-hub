@@ -18,7 +18,7 @@ namespace Tech_HubAPI.Models
         /// <summary>
         /// The Repository Database set.
         /// </summary>
-        public DbSet<RepositoryPermissions> RepositoryPermissions { get; set; }
+        public DbSet<RepositoryPermission> RepositoryPermissions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -38,7 +38,7 @@ namespace Tech_HubAPI.Models
                 entity.HasOne(e => e.Owner);
             });
 
-            modelBuilder.Entity<RepositoryPermissions>(entity =>
+            modelBuilder.Entity<RepositoryPermission>(entity =>
             {
                 entity.HasKey(e => e.Id);
                 entity.HasOne(e => e.User);
