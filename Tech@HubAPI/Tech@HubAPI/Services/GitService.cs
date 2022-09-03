@@ -226,30 +226,40 @@ namespace Tech_HubAPI.Services
 
         public FileContent GetFileContents(string username, string repositoryName, string branchName, string filePath)
         {
-            // Find the Head file
-            string headfile = _baseGitFolder + username + "/" + repositoryName + ".git/"
-                + (UseTestGitFolder ? "git_folder" : ".git")
-                + "/refs/heads/" + branchName;
-            if (!File.Exists(headfile))
+            // Check if user directory exists
+            string userDirectory = _baseGitFolder + username + "/";
+            if (!Directory.Exists(userDirectory))
             {
-                throw new FileNotFoundException("Could not find headfile for " + headfile);
+                throw new DirectoryNotFoundException("User not found");
             }
 
-            // Get the commit hash
-            string commitHash = File.ReadAllText(headfile).Trim();
+            // Check if repo directory exists
+            string repoDirectory = userDirectory + repositoryName + _repoDirectoryPostfix + "/";
+            if (!Directory.Exists(repoDirectory))
+            {
+                // repo no exist
+                throw new DirectoryNotFoundException("Repository not found");
+            }
+
+            string branchDirectory = repoDirectory + "/refs/heads";
+            if (!Directory.Exists(branchDirectory))
+            {
+                throw new DirectoryNotFoundException("The branch does not exist");
+            }
+
+            // Throws exception if file is not found
+            string commitHash = File.ReadAllText(branchDirectory + "/" + branchName).Trim();
 
             // Set up the execute service
             _executeService.ExecutableDirectory = _gitBinPath;
-            string repoDirectory = _baseGitFolder + username + "/" + repositoryName + ".git/";
-            _executeService.WorkingDirectory = repoDirectory + (UseTestGitFolder ? "git_folder" : ".git")
-                + "/refs/heads/";
+            _executeService.WorkingDirectory = branchDirectory;
 
             // Run git cat-file
             string rawCommitData = _executeService.ExecuteProcess("git", "cat-file", "-p", commitHash);
-            Match treeMatch = Regex.Match(rawCommitData, "tree (.+)\n");
+            Match treeMatch = Regex.Match(rawCommitData, "tree (?<hash>.+)\n");
 
             // We will need to go through the entire file path structure
-            string currentHash = treeMatch.Groups[0].Value.Substring(5).Trim();
+            string currentHash = treeMatch.Groups["hash"].Value.Trim();
             string[] pathArray = filePath.Split('/');
             string currentContents = "";
 
@@ -260,20 +270,19 @@ namespace Tech_HubAPI.Services
                 bool matchedDir = false;
                 currentContents = _executeService.ExecuteProcess("git", "cat-file", "-p", currentHash);
 
-                // If it was the final one, just exit
-                //if (dirName.Equals(pathArray[pathArray.Length - 1]))
-                //{
-                //    break;
-                //}
+                // Final element of the path is the name of the file
+                bool findFile = dirName == pathArray[pathArray.Length - 1];
 
                 // Go through output and find the appropriate tree to explore.
                 string[] currentContentLines = currentContents.Split('\n');
                 foreach (string currentContentLine in currentContentLines)
                 {
-                    string[] lineData = currentContentLine.Split(new char[] { ' ', '\t' });
-                    if (lineData[1].Equals("tree") && lineData[3].Equals(dirName))
+                    Match lineMatch = Regex.Match(currentContentLine, "\\d+ (?<type>blob|tree) (?<hash>[0-9a-f]+)\\s+(?<name>.+)");
+                    // line data array: [0] number [1] blob/tree [2] hash [3] name
+                    if ((!findFile && lineMatch.Groups["type"].Value == "tree" && lineMatch.Groups["name"].Value == dirName)
+                        || (findFile && lineMatch.Groups["type"].Value == "blob" && lineMatch.Groups["name"].Value == dirName))
                     {
-                        currentHash = lineData[2];
+                        currentHash = lineMatch.Groups["hash"].Value;
                         matchedDir = true;
                         break;
                     }
@@ -281,21 +290,20 @@ namespace Tech_HubAPI.Services
 
                 if (!matchedDir)
                 {
-                    // we didnt find the folder at some point. Exception?
-                    return null;
+                    throw new DirectoryNotFoundException("Invalid pathname");
                 }
             }
 
+            // run git cat-file one more time to get the file contents
+            string rawFileContents = _executeService.ExecuteProcess("git", "cat-file", "-p", currentHash);
+
             // currentContents now contains the contents of the file
             FileContent fc = new FileContent();
-            fc.Name = pathArray[pathArray.Length];
-
-            // Get the location of the file on disk
-            string diskFilePath = repoDirectory + filePath;
-            fc.Size = (new FileInfo(diskFilePath)).Length;
+            fc.Name = pathArray[pathArray.Length - 1];
+            fc.Size = rawFileContents.Length;
 
             // Assign the contents
-            fc.Contents = currentContents;
+            fc.Contents = rawFileContents;
 
             // Return the filecontent
             return fc;
