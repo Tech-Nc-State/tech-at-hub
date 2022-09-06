@@ -29,12 +29,15 @@ namespace Tech_HubAPITest
         public async Task GetDirectoryListingApiTest()
         {
             var user = await _apiHelper.CreateUser("bob", "passwordyy");
-
+            var token = await _apiHelper.GetJwtResponseToken(await _apiHelper.Login("bob", "passwordyy"));
+            await _apiHelper.CreateRepository(token, new CreateRepositoryForm
+            {
+                Name = "testDirectoryListing",
+                IsPublic = true,
+            });
             _fileSystem.ImportFolder("./SampleGitRepos/testDirectoryListing.git", "git/bob/testDirectoryListing.git");
 
-            var form = new GetDirectoryListingForm("bob", "testDirectoryListing", "", "master");
-            var content = JsonContent.Create(form, typeof(GetDirectoryListingForm));
-            var resp = await _api.Client.PostAsync("/repository/getdirectorylisting", content);
+            var resp = await _api.Client.GetAsync("/repository/bob/testDirectoryListing/listing?branch=master&path=");
             resp.StatusCode.Should().Be(HttpStatusCode.OK);
 
             var entries = await resp.Content.ReadFromJsonAsync<List<DirectoryEntry>>();
@@ -42,6 +45,5 @@ namespace Tech_HubAPITest
             var result = entries.Select(e => e.Name).ToArray();
             result.Should().Contain("Directory");
         }
-
     }
 }

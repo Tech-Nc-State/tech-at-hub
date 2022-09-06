@@ -32,7 +32,7 @@ def test_signup_and_login():
     assert r["username"] == "jbream"
 
     # change password
-    r = api.post(
+    r = api.put(
         "/user/change",
         {
             "username": "jbream",

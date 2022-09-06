@@ -7,6 +7,7 @@ using System.Net.Http.Json;
 using System.Text.Json;
 using System.Threading.Tasks;
 using FluentAssertions;
+using Tech_HubAPI.Forms;
 using Tech_HubAPI.Models;
 
 namespace Tech_HubAPITest.Services;
@@ -36,17 +37,16 @@ public class ApiHelperService
         user.Should().NotBeNull();
         return user;
     }
-
-    public async Task<Repository> CreateRepository(string authToken, string name, bool isPublic)
+    public async Task<Repository> CreateRepository(string token, CreateRepositoryForm form)
     {
-        var request = new HttpRequestMessage(HttpMethod.Post, $"/repository/create?isPublic={isPublic}");
-        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", authToken);
-        request.Content = JsonContent.Create(name);
+        var request = new HttpRequestMessage(HttpMethod.Post, "/repository");
+        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        request.Content = JsonContent.Create(form, typeof(CreateRepositoryForm));
         var resp = await _api.Client.SendAsync(request);
         resp.StatusCode.Should().Be(HttpStatusCode.OK);
 
         var repo = await resp.Content.ReadFromJsonAsync<Repository>();
-        repo.Name.Should().Be(name);
+        repo.Name.Should().Be(form.Name);
         return repo;
     }
 
