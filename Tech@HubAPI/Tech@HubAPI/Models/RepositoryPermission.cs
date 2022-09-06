@@ -2,6 +2,13 @@
 {
     public class RepositoryPermission
     {
+        public RepositoryPermission(int userId, int repositoryId, PermissionLevel level)
+        {
+            UserId = userId;
+            RepositoryId = repositoryId;
+            Level = level;
+        }
+
         public int Id { get; set; }
 
         public User User { get; set; }
@@ -13,7 +20,6 @@
         public int RepositoryId { get; set; }
 
         public PermissionLevel Level { get; set; }
-
     }
 
     public enum PermissionLevel
