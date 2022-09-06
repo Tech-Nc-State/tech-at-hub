@@ -9,6 +9,7 @@ using Tech_HubAPI.Models.GitModels;
 using System.Collections.Generic;
 using System.IO;
 using Tech_HubAPI.Models.Git;
+using System.Threading.Tasks;
 
 namespace Tech_HubAPI.Controllers
 {
@@ -29,13 +30,13 @@ namespace Tech_HubAPI.Controllers
 
         [HttpPost]
         [Route("getbranches")]
-        public ActionResult<List<Branch>> GetBranches([FromBody] GetBranchesForm form)
+        public async Task<ActionResult<List<Branch>>> GetBranches([FromBody] GetBranchesForm form)
         {
             var repo = _dbContext.Repositories
                 .Where(r => r.Owner.Username == form.Username)
                 .Where(r => r.Name == form.RepoName)
                 .FirstOrDefault();
-            var result = _authorizationService.AuthorizeAsync(User, repo, "RequireViewer");
+            var result = await _authorizationService.AuthorizeAsync(User, repo, "RequireRead");
 
             List<Branch>? branches = null;
             try

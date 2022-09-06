@@ -20,6 +20,8 @@ namespace Tech_HubAPI.Authorization
             // is user authenticated? => context.User.Identity?.IsAuthenticated
             // users username => context.User.FindFirst("Username")?.Value
 
+            // requirement is met => context.Succeed(requirement)
+
             return Task.CompletedTask;
         }
     }
