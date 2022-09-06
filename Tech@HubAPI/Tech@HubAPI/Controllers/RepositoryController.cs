@@ -18,17 +18,25 @@ namespace Tech_HubAPI.Controllers
     {
         private readonly GitService _gitService;
         private readonly DatabaseContext _dbContext;
+        private readonly IAuthorizationService _authorizationService;
 
-        public RepositoryController(GitService gitService, DatabaseContext dbContext)
+        public RepositoryController(GitService gitService, DatabaseContext dbContext, IAuthorizationService authorizationService)
         {
             _gitService = gitService;
             _dbContext = dbContext;
+            _authorizationService = authorizationService;
         }
 
         [HttpPost]
         [Route("getbranches")]
         public ActionResult<List<Branch>> GetBranches([FromBody] GetBranchesForm form)
         {
+            var repo = _dbContext.Repositories
+                .Where(r => r.Owner.Username == form.Username)
+                .Where(r => r.Name == form.RepoName)
+                .FirstOrDefault();
+            var result = _authorizationService.AuthorizeAsync(User, repo, "RequireViewer");
+
             List<Branch>? branches = null;
             try
             {

@@ -12,6 +12,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.Mvc.Formatters;
+using Microsoft.AspNetCore.Http;
+using Tech_HubAPI.Authorization;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Tech_HubAPI
 {
@@ -87,6 +90,15 @@ namespace Tech_HubAPI
                             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWT:SecretKey"]))
                         };
                     });
+
+            services.AddAuthorization(options =>
+            {
+                foreach (var requirement in RepositoryAuthRequirementManager.Requirements)
+                {
+                    options.AddPolicy(requirement.RequirementName, b => b.AddRequirements(requirement.Requirement));
+                }
+            });
+            services.AddScoped<IAuthorizationHandler, RepositoryAuthHandler>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
