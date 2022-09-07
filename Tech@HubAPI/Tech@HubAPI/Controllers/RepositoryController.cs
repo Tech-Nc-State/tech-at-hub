@@ -8,6 +8,7 @@ using Tech_HubAPI.Forms;
 using Tech_HubAPI.Models.GitModels;
 using System.Collections.Generic;
 using System.IO;
+using Tech_HubAPI.Models.Git;
 
 namespace Tech_HubAPI.Controllers
 {
@@ -40,6 +41,24 @@ namespace Tech_HubAPI.Controllers
 
 
             return branches;
+        }
+
+        [HttpPost]
+        [Route("getdirectorylisting")]
+        public ActionResult<List<DirectoryEntry>> GetDirectoryListing([FromBody] GetDirectoryListingForm form)
+        {
+            List<DirectoryEntry>? listings = null;
+            try
+            {
+                listings = _gitService.GetDirectoryListing(form.Username, form.RepoName, form.Path, form.Branch);
+            }
+            catch (DirectoryNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+
+
+            return listings;
         }
 
         [Authorize]
