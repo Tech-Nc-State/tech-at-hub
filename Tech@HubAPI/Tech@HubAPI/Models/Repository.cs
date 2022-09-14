@@ -18,10 +18,9 @@ namespace Tech_HubAPI.Models
         /// <param name="owner">Owner Object</param>
         /// <param name="ownerId">Owner ID</param>
         /// <param name="isPublic">True if public, false for private.</param>
-        public Repository(string name, User owner, int ownerId, bool isPublic)
+        public Repository(string name, int ownerId, bool isPublic)
         {
             Name = name;
-            Owner = owner;
             OwnerId = ownerId;
             IsPublic = isPublic;
         }
