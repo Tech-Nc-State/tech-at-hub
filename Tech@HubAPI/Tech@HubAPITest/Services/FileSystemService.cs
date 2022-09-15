@@ -18,7 +18,10 @@ namespace Tech_HubAPITest.Services
             RootDirectory = "test-files\\";
             RootDirectory = RootDirectory.Replace("\\", "/");
 
-            Directory.CreateDirectory(RootDirectory);
+            if (!Directory.Exists(RootDirectory))
+            {
+                Directory.CreateDirectory(RootDirectory);
+            }
         }
 
         /// <summary>
@@ -29,7 +32,10 @@ namespace Tech_HubAPITest.Services
 
         public void Dispose()
         {
-            Directory.Delete(RootDirectory, true);
+            if (Directory.Exists(RootDirectory))
+            {
+                Directory.Delete(RootDirectory, true);
+            }
         }
 
         public void ImportFolder(string name, string destName = "")

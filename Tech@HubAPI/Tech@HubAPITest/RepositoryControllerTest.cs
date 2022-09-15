@@ -37,7 +37,7 @@ namespace Tech_HubAPITest
 
             var form = new GetDirectoryListingForm("bob", "testDirectoryListing", "", "master");
             var content = JsonContent.Create(form, typeof(GetDirectoryListingForm));
-            var resp = await _api.Client.PostAsync("/getdirectorylisting", content);
+            var resp = await _api.Client.PostAsync("/repository/getdirectorylisting", content);
             resp.StatusCode.Should().Be(HttpStatusCode.OK);
 
             var entries = await resp.Content.ReadFromJsonAsync<List<DirectoryEntry>>();

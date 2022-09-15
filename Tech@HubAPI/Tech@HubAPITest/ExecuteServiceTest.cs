@@ -15,7 +15,7 @@ using Tech_HubAPITest.Services;
 
 namespace Tech_HubAPITest
 {
-    [Collection("FileSystemCollection")]
+    [Collection("DatabaseFileSystemCollection")]
     public class ExecuteServiceTest
     {
         private readonly ExecuteService _executeService;
