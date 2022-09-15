@@ -12,7 +12,7 @@ using Xunit;
 
 namespace Tech_HubAPITest
 {
-    [Collection("DatabaseCollection")]
+    [Collection("DatabaseFileSystemCollection")]
     public class UserTest
     {
         private readonly DatabaseService _db;
