@@ -78,7 +78,7 @@ namespace Tech_HubAPI.Controllers
         [Authorize]
         [HttpPost]
         [Route("create")]
-        public ActionResult CreateRepository([FromBody] string name)
+        public ActionResult CreateRepository([FromBody] string name, bool isPublic)
         {
             User? currentUser = this.GetUser(_dbContext);
 
@@ -106,8 +106,11 @@ namespace Tech_HubAPI.Controllers
             // Create the repo on the Git Server
             _gitService.CreateNewRepository(name, currentUser.Username);
             // Create a new repo object as well.
-            var newRepo = new Repository(name, currentUser.Id, true);
+            var newRepo = new Repository(name, currentUser.Id, isPublic);
             _dbContext.Repositories.Add(newRepo);
+            // Create new permissions to make the currently logged in user the admin
+            var newPerms = new RepositoryPermission(currentUser.Id, newRepo.Id, PermissionLevel.Admin);
+            _dbContext.RepositoryPermissions.Add(newPerms);
             _dbContext.SaveChanges();
             return Ok();
         }
