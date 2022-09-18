@@ -108,6 +108,7 @@ namespace Tech_HubAPI.Controllers
             // Create a new repo object as well.
             var newRepo = new Repository(name, currentUser.Id, isPublic);
             _dbContext.Repositories.Add(newRepo);
+            _dbContext.SaveChanges(); 
             // Create new permissions to make the currently logged in user the admin
             var newPerms = new RepositoryPermission(currentUser.Id, newRepo.Id, PermissionLevel.Admin);
             _dbContext.RepositoryPermissions.Add(newPerms);
