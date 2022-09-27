@@ -14,7 +14,7 @@ using Xunit;
 
 namespace Tech_HubAPITest
 {
-    [Collection("FileSystemCollection")]
+    [Collection("DatabaseFileSystemCollection")]
     public class GitServiceTest
     {
         private readonly GitService _gitService;

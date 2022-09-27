@@ -24,6 +24,7 @@ namespace Tech_HubAPITest
             services.AddScoped<FileSystemService>();
             services.AddScoped<DatabaseService>();
             services.AddScoped<ApiService>();
+            services.AddScoped<TestHelpers>();
         }
     }
 }
