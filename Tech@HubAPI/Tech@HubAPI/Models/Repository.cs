@@ -11,6 +11,21 @@ namespace Tech_HubAPI.Models
     public class Repository
     {
         /// <summary>
+        /// Construct a new repository.
+        /// </summary>
+        /// <param name="id">Id</param>
+        /// <param name="name">Name of Repo</param>
+        /// <param name="owner">Owner Object</param>
+        /// <param name="ownerId">Owner ID</param>
+        /// <param name="isPublic">True if public, false for private.</param>
+        public Repository(string name, int ownerId, bool isPublic)
+        {
+            Name = name;
+            OwnerId = ownerId;
+            IsPublic = isPublic;
+        }
+
+        /// <summary>
         /// The Unique ID for this Repository.
         /// </summary>
         public int Id { get; set; }
