@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Tech_HubAPI.Models;
 using Tech_HubAPI.Models.Git;
 using Tech_HubAPI.Models.GitModels;
 using Tech_HubAPI.Services;
@@ -115,6 +116,15 @@ namespace Tech_HubAPITest
 
             action = () => _gitService.GetDirectoryListing("testUser", "testDirectoryListing", "fakePath", "master");
             action.Should().Throw<Exception>();
+        }
+
+        [Fact]
+        public void TestGetFileContents()
+        {
+            _fileSystem.ImportFolder("./SampleGitRepos/testBranches.git", "git/testUser/testBranches.git");
+
+            FileContent fc = _gitService.GetFileContents("testUser", "testBranches", "master", "text.txt");
+            fc.Contents.Should().Be("hello\nthere");
         }
     }
 }

@@ -1,10 +1,11 @@
-﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Tech_HubAPI.Models;
 using Tech_HubAPI.Models.Git;
 using Tech_HubAPI.Models.GitModels;
 
@@ -221,6 +222,91 @@ namespace Tech_HubAPI.Services
             }
 
             return directoryListing;
+        }
+
+        public FileContent GetFileContents(string username, string repositoryName, string branchName, string filePath)
+        {
+            // Check if user directory exists
+            string userDirectory = _baseGitFolder + username + "/";
+            if (!Directory.Exists(userDirectory))
+            {
+                throw new DirectoryNotFoundException("User not found");
+            }
+
+            // Check if repo directory exists
+            string repoDirectory = userDirectory + repositoryName + _repoDirectoryPostfix + "/";
+            if (!Directory.Exists(repoDirectory))
+            {
+                // repo no exist
+                throw new DirectoryNotFoundException("Repository not found");
+            }
+
+            string branchDirectory = repoDirectory + "/refs/heads";
+            if (!Directory.Exists(branchDirectory))
+            {
+                throw new DirectoryNotFoundException("The branch does not exist");
+            }
+
+            // Throws exception if file is not found
+            string commitHash = File.ReadAllText(branchDirectory + "/" + branchName).Trim();
+
+            // Set up the execute service
+            _executeService.ExecutableDirectory = _gitBinPath;
+            _executeService.WorkingDirectory = branchDirectory;
+
+            // Run git cat-file
+            string rawCommitData = _executeService.ExecuteProcess("git", "cat-file", "-p", commitHash);
+            Match treeMatch = Regex.Match(rawCommitData, "tree (?<hash>.+)\n");
+
+            // We will need to go through the entire file path structure
+            string currentHash = treeMatch.Groups["hash"].Value.Trim();
+            string[] pathArray = filePath.Split('/');
+            string currentContents = "";
+
+            // For each directory in the file path
+            foreach (string dirName in pathArray)
+            {
+                // Run git-catfile
+                bool matchedDir = false;
+                currentContents = _executeService.ExecuteProcess("git", "cat-file", "-p", currentHash);
+
+                // Final element of the path is the name of the file
+                bool findFile = dirName == pathArray[pathArray.Length - 1];
+
+                // Go through output and find the appropriate tree to explore.
+                string[] currentContentLines = currentContents.Split('\n');
+                foreach (string currentContentLine in currentContentLines)
+                {
+                    Match lineMatch = Regex.Match(currentContentLine, "\\d+ (?<type>blob|tree) (?<hash>[0-9a-f]+)\\s+(?<name>.+)");
+                    // line data array: [0] number [1] blob/tree [2] hash [3] name
+                    if ((!findFile && lineMatch.Groups["type"].Value == "tree" && lineMatch.Groups["name"].Value == dirName)
+                        || (findFile && lineMatch.Groups["type"].Value == "blob" && lineMatch.Groups["name"].Value == dirName))
+                    {
+                        currentHash = lineMatch.Groups["hash"].Value;
+                        matchedDir = true;
+                        break;
+                    }
+                }
+
+                if (!matchedDir)
+                {
+                    throw new DirectoryNotFoundException("Invalid pathname");
+                }
+            }
+
+            // run git cat-file one more time to get the file contents
+            string rawFileContents = _executeService.ExecuteProcess("git", "cat-file", "-p", currentHash);
+
+            // currentContents now contains the contents of the file
+            FileContent fc = new FileContent();
+            fc.Name = pathArray[pathArray.Length - 1];
+            fc.Size = rawFileContents.Length;
+
+            // Assign the contents
+            fc.Contents = rawFileContents;
+
+            // Return the filecontent
+            return fc;
         }
     }
 }
