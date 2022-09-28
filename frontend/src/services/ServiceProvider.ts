@@ -6,6 +6,9 @@ import ProvidedServices from "./ProvidedServices";
 
 const contexts = new Map<ProvidedServices, React.Context<any | undefined>>();
 
+/**
+ * Provides services through helper methods.
+ */
 const ServiceProvider = {
     createContext: <T>(service: ProvidedServices): React.Context<T | undefined> => {
         const context = React.createContext<T | undefined>(undefined);

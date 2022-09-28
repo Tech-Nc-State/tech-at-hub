@@ -1,6 +1,6 @@
 import '../styles/globals.css'
 import type { AppProps } from 'next/app'
-import {GlobalServices} from "../services/GlobalServices";
+import {GlobalServices} from "../src/services/GlobalServices";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
