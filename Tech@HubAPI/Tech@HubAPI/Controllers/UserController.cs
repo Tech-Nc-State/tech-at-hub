@@ -6,6 +6,11 @@ using Tech_HubAPI.Services;
 using Tech_HubAPI.Models;
 using System.Security.Claims;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using System.Text;
+using System.IO;
+using Microsoft.Extensions.Configuration;
 
 namespace Tech_HubAPI.Controllers
 {
@@ -16,12 +21,76 @@ namespace Tech_HubAPI.Controllers
         private readonly DatabaseContext _dbContext;
         private readonly HashingService _hashingService;
         private readonly JwtService _jwt;
+        private readonly string _defaultWorkingDirectory;
 
-        public UserController(DatabaseContext dbContext, HashingService hashingService, JwtService jwt)
+        public UserController(DatabaseContext dbContext, HashingService hashingService, JwtService jwt, IConfiguration configuration)
         {
             _jwt = jwt;
             _dbContext = dbContext;
             _hashingService = hashingService;
+            _defaultWorkingDirectory = configuration["Environment:DefaultWorkingDirectory"].Replace("\\", "/");
+        }
+
+        [HttpPost]
+        [Route("uploadprofilepicture")]
+        [Authorize]
+        public async Task<ActionResult> UploadProfilePicture(IFormFile file)
+        {
+            string[] validImageExtensions = { ".png", ".jpg" };
+
+            if (file == null || file.Length == 0)
+            {
+                return BadRequest("The file is empty.");
+            }
+
+            var path = BitConverter.ToString(_hashingService.HashFile(file)).Replace("-", "");
+            var ext = Path.GetExtension(file.FileName).ToLowerInvariant();
+
+            using var stream = System.IO.File.Create(_defaultWorkingDirectory + "/profile_pictures/" + path + "." + ext);
+            await file.CopyToAsync(stream);
+
+            if (string.IsNullOrEmpty(ext) || Array.IndexOf(validImageExtensions, ext) == -1)
+            {
+                throw new NotSupportedException(ext + "is not a supported extension.");
+            }
+
+            var user = this.GetUser(_dbContext);
+
+            user.ProfilePicturePath = path;
+
+            return Ok();
+        }
+
+        [HttpGet]
+        [Route("getprofilepicture")]
+        public ActionResult GetProfilePicture(string username)
+        {
+            if (username == null || username.Length == 0)
+            {
+                return BadRequest("The user is empty.");
+            }
+
+            var user = _dbContext.Users.Where(u => u.Username == username).FirstOrDefault();
+
+            if (user == null)
+            {
+                return BadRequest("The username is not found.");
+            }
+
+            var path = user.ProfilePicturePath;
+
+            var ext = path.Substring(path.IndexOf("."));
+
+            var stream = System.IO.File.OpenRead(path);
+
+            var mime = "image/jpeg";
+
+            if (ext == "png")
+            {
+                mime = "image/png";
+            }
+
+            return new FileStreamResult(stream, mime);
         }
 
         [HttpGet]
