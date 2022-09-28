@@ -1,4 +1,17 @@
 services:
+  nginx:
+    build: ./nginx/
+    ports:
+      - 80:80
+      - 443:443
+    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+    restart: unless-stopped
+
+  frontend:
+    build: ./frontend/
+    ports:
+      - 3000:3000
+
   backend:
     depends_on:
       - mysql
@@ -16,8 +29,8 @@ services:
 
   git-server:
     build: ./Tech@HubGitServer/
-    ports:
-      - 80:80
+#    ports:
+#      - 80:80
     volumes:
       - type: volume
         source: file-store
