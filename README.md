@@ -2,9 +2,22 @@
 
 Code-hosting website built for fun by students at NC State University
 
+## Environment Setup
+
+We use pre-commit to automatically manage our git hooks. pre-commit is required to develop in this project. We enforce a strict LF-only line ending policy. Our Dockerfiles will break if any CRLF's are introduced into the project. One of the pre-commit hooks is a LF enforcer hook. To setup:
+
+1. Run `pip install pre-commit`
+2. Run `pre-commit install`
+
+In addition, to prevent git from auto-converting LF's to CRLF's on Windows machines, run
+
+```bash
+git config core.autocrlf false
+```
+
 ## Project Configuration
 
-```
+```json
 {
     "ConnectionStrings": {
         "MySqlDatabase": "server=localhost; port=3306; uid=root; password=dbpass; database=tech-at-hub;"
