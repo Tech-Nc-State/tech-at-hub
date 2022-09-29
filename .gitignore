@@ -1,5 +1,6 @@
 **/developersecrets.json
-.vs/
+.vs
+.idea
 
 # Git
 git

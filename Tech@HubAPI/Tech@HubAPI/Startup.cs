@@ -1,20 +1,19 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Mvc.Formatters;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi.Models;
-using Tech_HubAPI.Models;
-using Microsoft.EntityFrameworkCore;
-using Tech_HubAPI.Services;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using Microsoft.AspNetCore.Mvc.Formatters;
-using Microsoft.AspNetCore.Http;
+using Microsoft.OpenApi.Models;
 using Tech_HubAPI.Authorization;
-using Microsoft.AspNetCore.Authorization;
+using Tech_HubAPI.Models;
+using Tech_HubAPI.Services;
 
 namespace Tech_HubAPI
 {

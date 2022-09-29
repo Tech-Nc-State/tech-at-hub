@@ -1,7 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
-using System;
-using System.Linq;
+﻿using System.Linq;
+using Microsoft.AspNetCore.Mvc;
 using Tech_HubAPI.Models;
 namespace Tech_HubAPI.Controllers
 {
@@ -16,7 +14,7 @@ namespace Tech_HubAPI.Controllers
             _dbContext = dbContext;
         }
 
-        
+
         [HttpPost]
         [Route("add")]
         public IActionResult CreatePermission([FromBody] RepositoryPermission repoPerm)
@@ -25,7 +23,7 @@ namespace Tech_HubAPI.Controllers
 
             RepositoryPermission searchPerm = _dbContext.RepositoryPermissions.Where(r => r.Id == repoPerm.Id).FirstOrDefault();
 
-            if(searchPerm == null)
+            if (searchPerm == null)
             {
                 _dbContext.RepositoryPermissions.Add(repoPerm);
                 _dbContext.SaveChanges();
@@ -35,14 +33,14 @@ namespace Tech_HubAPI.Controllers
             return BadRequest("The permission for this user already exists");
         }
 
-        
+
         [HttpPut]
         [Route("edit")]
         public IActionResult EditPermissions([FromBody] RepositoryPermission repoPerm)
         {
             RepositoryPermission searchPerm = _dbContext.RepositoryPermissions.Where(r => r.Id == repoPerm.Id).FirstOrDefault();
 
-            if(searchPerm == null)
+            if (searchPerm == null)
             {
                 return BadRequest("This user does not have persmissions assigned previously.");
             }
@@ -71,7 +69,7 @@ namespace Tech_HubAPI.Controllers
 
         [HttpGet]
         [Route("get")]
-        public ActionResult<PermissionLevel?> GetPermissions( int repoId, int userId)
+        public ActionResult<PermissionLevel?> GetPermissions(int repoId, int userId)
         {
             RepositoryPermission searchPerm = _dbContext.RepositoryPermissions.Where(r => r.RepositoryId == repoId && r.UserId == userId).FirstOrDefault();
 
@@ -81,10 +79,10 @@ namespace Tech_HubAPI.Controllers
             }
             else
             {
-                
+
                 return searchPerm.Level;
             }
-      
+
         }
 
     }
