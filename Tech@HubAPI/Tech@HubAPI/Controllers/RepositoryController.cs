@@ -77,7 +77,7 @@ namespace Tech_HubAPI.Controllers
         [Authorize]
         [HttpPost]
         [Route("create")]
-        public ActionResult CreateRepository([FromBody] string name, [FromQuery] bool isPublic)
+        public ActionResult<Repository> CreateRepository([FromBody] string name, [FromQuery] bool isPublic)
         {
             User? currentUser = this.GetUser(_dbContext);
 
@@ -112,7 +112,7 @@ namespace Tech_HubAPI.Controllers
             var newPerms = new RepositoryPermission(currentUser.Id, newRepo.Id, PermissionLevel.Admin);
             _dbContext.RepositoryPermissions.Add(newPerms);
             _dbContext.SaveChanges();
-            return Ok();
+            return Ok(newRepo);
         }
     }
 }

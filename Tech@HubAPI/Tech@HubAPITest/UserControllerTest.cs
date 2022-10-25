@@ -18,9 +18,9 @@ namespace Tech_HubAPITest
     {
         private readonly ApiService _api;
         private readonly DatabaseService _db;
-        private readonly TestHelpers _th;
+        private readonly ApiHelperService _th;
 
-        public UserControllerTest(ApiService api, DatabaseService db, TestHelpers th)
+        public UserControllerTest(ApiService api, DatabaseService db, ApiHelperService th)
         {
             _api = api;
             _db = db;

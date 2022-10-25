@@ -16,19 +16,19 @@ namespace Tech_HubAPITest
     {
         private readonly ApiService _api;
         private readonly FileSystemService _fileSystem;
-        private readonly TestHelpers _testHelpers;
+        private readonly ApiHelperService _apiHelper;
 
-        public RepositoryControllerTest(ApiService api, FileSystemService fileSystem, TestHelpers testHelpers)
+        public RepositoryControllerTest(ApiService api, FileSystemService fileSystem, ApiHelperService testHelpers)
         {
             _api = api;
             _fileSystem = fileSystem;
-            _testHelpers = testHelpers;
+            _apiHelper = testHelpers;
         }
 
         [Fact]
         public async Task GetDirectoryListingApiTest()
         {
-            var user = await _testHelpers.CreateUser("bob", "passwordyy");
+            var user = await _apiHelper.CreateUser("bob", "passwordyy");
 
             _fileSystem.ImportFolder("./SampleGitRepos/testDirectoryListing.git", "git/bob/testDirectoryListing.git");
 
