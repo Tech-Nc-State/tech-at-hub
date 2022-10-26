@@ -11,6 +11,7 @@ using Tech_HubAPI.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using System;
 using Microsoft.AspNetCore.Mvc.Formatters;
 
 namespace Tech_HubAPI
@@ -28,7 +29,7 @@ namespace Tech_HubAPI
         public void ConfigureServices(IServiceCollection services)
         {
             string connectionString = Configuration.GetConnectionString("MySqlDatabase");
-
+            Console.WriteLine(connectionString);
             services.AddDbContext<DatabaseContext>(options =>
             {
                 options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));

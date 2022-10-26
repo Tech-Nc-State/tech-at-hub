@@ -1,33 +1,24 @@
 services:
   nginx:
-    build: ./nginx/
+    image: nginx
+    container_name: nginx
     ports:
-      - 80:80
-      - 443:443
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/conf.d:/etc/nginx/conf.d
     command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
     restart: unless-stopped
 
   frontend:
+    hostname: frontend
     build: ./frontend/
-    ports:
-      - 3000:3000
-
-  backend:
-    depends_on:
-      - mysql
-    build:
-      context: ./Tech@HubAPI/
-      dockerfile: Tech@HubAPI/Dockerfile
-    ports:
-      - 5000:80
-    volumes:
-      - type: volume
-        source: file-store
-        target: /app/git
-    environment:
-      ASPNETCORE_URLS: http://+:80
+#    ports:
+#      - 3000:3000
 
   git-server:
+    hostname: git-server
     build: ./Tech@HubGitServer/
 #    ports:
 #      - 80:80
@@ -37,9 +28,10 @@ services:
         target: /app/git
 
   mysql:
+    hostname: mysql
     image: mysql:5.7
     volumes:
-      - database
+      - database:/var/lib/mysql
     environment:
       MYSQL_ROOT_PASSWORD: dbpass
       MYSQL_DATABASE: tech-at-hub
@@ -47,6 +39,22 @@ services:
       MYSQL_PASSWORD: dbpass
     ports:
       - 3306:3306
+
+  backend:
+    hostname: backend
+    depends_on:
+      - mysql
+    build:
+      context: ./Tech@HubAPI/
+      dockerfile: Tech@HubAPI/Dockerfile
+#    ports:
+#      - 5000:80
+    volumes:
+      - type: volume
+        source: file-store
+        target: /app/git
+    environment:
+      ASPNETCORE_URLS: http://+:80
 
 volumes:
   file-store:
