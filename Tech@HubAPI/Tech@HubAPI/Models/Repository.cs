@@ -1,6 +1,4 @@
-using System.Collections.Generic;
-
-namespace Tech_HubAPI.Models
+﻿namespace Tech_HubAPI.Models
 {
     /// <summary>
     /// The Repository Class will be used to represent all the data needed to track a

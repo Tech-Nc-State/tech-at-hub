@@ -1,8 +1,6 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Tech_HubAPI.Models;
 
 namespace Tech_HubAPI.Authorization
@@ -70,7 +68,7 @@ namespace Tech_HubAPI.Authorization
                 }
 
             }
-                
+
             return Task.CompletedTask;
         }
     }

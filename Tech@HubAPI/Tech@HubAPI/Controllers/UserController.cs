@@ -1,16 +1,13 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Linq;
-using Tech_HubAPI.Services;
-using Tech_HubAPI.Models;
-using System.Security.Claims;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using System.Text;
+﻿using System;
 using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Tech_HubAPI.Models;
+using Tech_HubAPI.Services;
 
 namespace Tech_HubAPI.Controllers
 {

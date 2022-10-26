@@ -1,7 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
-using System;
-using System.Linq;
+﻿using System.Linq;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Tech_HubAPI.Models;
 namespace Tech_HubAPI.Controllers
 {
@@ -16,18 +15,19 @@ namespace Tech_HubAPI.Controllers
             _dbContext = dbContext;
         }
 
-        
-        [HttpPost]
-        [Route("add")]
-        public IActionResult CreatePermission([FromBody] RepositoryPermission repoPerm)
+        [HttpPut]
+        [Route("set")]
+        [Authorize]
+        public IActionResult SetPermission([FromQuery] int userId, [FromQuery] int repoId, [FromQuery] PermissionLevel level)
         {
+            RepositoryPermission? searchPerm = _dbContext.RepositoryPermissions
+                .Where(r => r.Id == repoId)
+                .FirstOrDefault();
 
-
-            RepositoryPermission searchPerm = _dbContext.RepositoryPermissions.Where(r => r.Id == repoPerm.Id).FirstOrDefault();
-
-            if(searchPerm == null)
+            if (searchPerm == null)
             {
-                _dbContext.RepositoryPermissions.Add(repoPerm);
+                var perm = new RepositoryPermission(userId, repoId, level);
+                _dbContext.RepositoryPermissions.Add(perm);
                 _dbContext.SaveChanges();
                 return Ok();
             }
@@ -35,29 +35,14 @@ namespace Tech_HubAPI.Controllers
             return BadRequest("The permission for this user already exists");
         }
 
-        
-        [HttpPut]
-        [Route("edit")]
-        public IActionResult EditPermissions([FromBody] RepositoryPermission repoPerm)
-        {
-            RepositoryPermission searchPerm = _dbContext.RepositoryPermissions.Where(r => r.Id == repoPerm.Id).FirstOrDefault();
-
-            if(searchPerm == null)
-            {
-                return BadRequest("This user does not have persmissions assigned previously.");
-            }
-
-            searchPerm.Level = repoPerm.Level;
-            _dbContext.RepositoryPermissions.Update(searchPerm);
-            _dbContext.SaveChanges();
-            return Ok();
-        }
-
         [HttpDelete]
         [Route("delete")]
-        public IActionResult DeletePermissions([FromBody] RepositoryPermission repoPerm)
+        [Authorize]
+        public IActionResult DeletePermissions([FromQuery] int userId, [FromQuery] int repoId)
         {
-            RepositoryPermission searchPerm = _dbContext.RepositoryPermissions.Where(r => r.Id == repoPerm.Id).FirstOrDefault();
+            RepositoryPermission? searchPerm = _dbContext.RepositoryPermissions
+                .Where(r => r.Id == repoId)
+                .FirstOrDefault();
 
             if (searchPerm == null)
             {
@@ -71,21 +56,19 @@ namespace Tech_HubAPI.Controllers
 
         [HttpGet]
         [Route("get")]
-        public ActionResult<PermissionLevel?> GetPermissions( int repoId, int userId)
+        public ActionResult<PermissionLevel?> GetPermissions(int repoId, int userId)
         {
-            RepositoryPermission searchPerm = _dbContext.RepositoryPermissions.Where(r => r.RepositoryId == repoId && r.UserId == userId).FirstOrDefault();
+            RepositoryPermission? searchPerm = _dbContext.RepositoryPermissions
+                .Where(r => r.RepositoryId == repoId)
+                .Where(r => r.User.Id == userId)
+                .FirstOrDefault();
 
             if (searchPerm == null)
             {
                 return NotFound("This user does not exist.");
             }
-            else
-            {
-                
-                return searchPerm.Level;
-            }
-      
-        }
 
+            return searchPerm.Level;
+        }
     }
 }

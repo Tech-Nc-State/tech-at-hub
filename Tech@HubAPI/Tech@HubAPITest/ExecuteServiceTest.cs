@@ -1,17 +1,11 @@
-﻿using FluentAssertions;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Tech_HubAPI.Models;
-using Xunit;
-using Tech_HubAPI.Services; // This lets me call Execute.cs (same namespace)
-using System.IO;
-using Microsoft.Extensions.Configuration;
+﻿using System;
 using System.ComponentModel;
+using System.IO;
+using FluentAssertions;
+using Microsoft.Extensions.Configuration;
+using Tech_HubAPI.Services; // This lets me call Execute.cs (same namespace)
 using Tech_HubAPITest.Services;
+using Xunit;
 
 namespace Tech_HubAPITest
 {

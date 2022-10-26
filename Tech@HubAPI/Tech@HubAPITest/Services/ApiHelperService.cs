@@ -1,25 +1,21 @@
-﻿using Google.Protobuf.WellKnownTypes;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http.Json;
-using System.Net.Http;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
-using Tech_HubAPI.Models;
-using Tech_HubAPITest.Services;
-using FluentAssertions;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Net.Http.Json;
 using System.Text.Json;
-using Xunit;
+using System.Threading.Tasks;
+using FluentAssertions;
+using Tech_HubAPI.Models;
 
 namespace Tech_HubAPITest.Services;
-public class TestHelpers
+public class ApiHelperService
 {
     private readonly ApiService _api;
     private readonly DatabaseService _db;
 
-    public TestHelpers(ApiService api, DatabaseService db)
+    public ApiHelperService(ApiService api, DatabaseService db)
     {
         _api = api;
         _db = db;
@@ -37,7 +33,21 @@ public class TestHelpers
             .Where(u => u.Username == username)
             .FirstOrDefault();
 
+        user.Should().NotBeNull();
         return user;
+    }
+
+    public async Task<Repository> CreateRepository(string authToken, string name, bool isPublic)
+    {
+        var request = new HttpRequestMessage(HttpMethod.Post, $"/repository/create?isPublic={isPublic}");
+        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", authToken);
+        request.Content = JsonContent.Create(name);
+        var resp = await _api.Client.SendAsync(request);
+        resp.StatusCode.Should().Be(HttpStatusCode.OK);
+
+        var repo = await resp.Content.ReadFromJsonAsync<Repository>();
+        repo.Name.Should().Be(name);
+        return repo;
     }
 
     public async Task<HttpResponseMessage> Login(string username, string password)

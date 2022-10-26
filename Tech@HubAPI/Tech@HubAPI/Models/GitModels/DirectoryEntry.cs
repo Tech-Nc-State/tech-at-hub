@@ -1,5 +1,4 @@
-﻿using System;
-namespace Tech_HubAPI.Models.Git
+﻿namespace Tech_HubAPI.Models.Git
 {
     public class DirectoryEntry
     {

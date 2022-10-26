@@ -1,14 +1,12 @@
-﻿using FluentAssertions;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
-using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using FluentAssertions;
 using Tech_HubAPI.Models;
 using Tech_HubAPITest.Services;
 using Xunit;
@@ -20,9 +18,9 @@ namespace Tech_HubAPITest
     {
         private readonly ApiService _api;
         private readonly DatabaseService _db;
-        private readonly TestHelpers _th;
+        private readonly ApiHelperService _th;
 
-        public UserControllerTest(ApiService api, DatabaseService db, TestHelpers th)
+        public UserControllerTest(ApiService api, DatabaseService db, ApiHelperService th)
         {
             _api = api;
             _db = db;

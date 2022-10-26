@@ -1,15 +1,14 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Linq;
-using Tech_HubAPI.Services;
-using Tech_HubAPI.Models;
-using Tech_HubAPI.Forms;
-using Tech_HubAPI.Models.GitModels;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using Tech_HubAPI.Models.Git;
+using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Tech_HubAPI.Forms;
+using Tech_HubAPI.Models;
+using Tech_HubAPI.Models.Git;
+using Tech_HubAPI.Models.GitModels;
+using Tech_HubAPI.Services;
 
 namespace Tech_HubAPI.Controllers
 {
@@ -78,7 +77,7 @@ namespace Tech_HubAPI.Controllers
         [Authorize]
         [HttpPost]
         [Route("create")]
-        public ActionResult CreateRepository([FromBody] string name, [FromQuery] bool isPublic)
+        public ActionResult<Repository> CreateRepository([FromBody] string name, [FromQuery] bool isPublic)
         {
             User? currentUser = this.GetUser(_dbContext);
 
@@ -113,7 +112,7 @@ namespace Tech_HubAPI.Controllers
             var newPerms = new RepositoryPermission(currentUser.Id, newRepo.Id, PermissionLevel.Admin);
             _dbContext.RepositoryPermissions.Add(newPerms);
             _dbContext.SaveChanges();
-            return Ok();
+            return Ok(newRepo);
         }
     }
 }
