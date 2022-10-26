@@ -132,6 +132,13 @@ namespace Tech_HubAPI.Services
             }
         }
 
+        public void DeleteRepository(string name, string username)
+        {
+            string userDirectory = _baseGitFolder + username + "/";
+            string repoDirectory = userDirectory + name + _repoDirectoryPostfix + "/";
+            Directory.Delete(repoDirectory, true);
+        }
+
         /// <summary>
         /// Gets the contents of a directory within a git repository.
         /// </summary>

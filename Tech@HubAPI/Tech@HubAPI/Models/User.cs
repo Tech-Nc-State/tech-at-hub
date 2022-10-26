@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Tech_HubAPI.Models
 {
@@ -16,6 +17,8 @@ namespace Tech_HubAPI.Models
             Description = description;
             ProfilePicturePath = profilePicturePath;
             BirthDate = birthDate;
+            Permissions = new List<RepositoryPermission>();
+            Repositories = new List<Repository>();
         }
 
         public int Id { get; set; }
@@ -37,5 +40,9 @@ namespace Tech_HubAPI.Models
         public string? ProfilePicturePath { get; set; }
 
         public DateTime BirthDate { get; set; }
+
+        public List<RepositoryPermission> Permissions { get; set; }
+
+        public List<Repository> Repositories { get; set; }
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace Tech_HubAPI.Models
+﻿using System.Collections.Generic;
+
+namespace Tech_HubAPI.Models
 {
     /// <summary>
     /// The Repository Class will be used to represent all the data needed to track a
@@ -21,6 +23,7 @@
             Name = name;
             OwnerId = ownerId;
             IsPublic = isPublic;
+            Permissions = new List<RepositoryPermission>();
         }
 
         /// <summary>
@@ -45,6 +48,9 @@
         /// </summary>
         public bool IsPublic { get; set; }
 
-
+        /// <summary>
+        /// List of permissions associated with this repository
+        /// </summary>
+        public List<RepositoryPermission> Permissions { get; set; }
     }
 }
