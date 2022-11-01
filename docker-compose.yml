@@ -37,8 +37,8 @@ services:
       MYSQL_DATABASE: tech-at-hub
       MYSQL_USER: gituser
       MYSQL_PASSWORD: dbpass
-    ports:
-      - 3306:3306
+#    ports:
+#      - 3306:3306
 
   backend:
     hostname: backend
