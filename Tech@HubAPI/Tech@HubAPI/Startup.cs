@@ -1,12 +1,18 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Mvc.Formatters;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Tech_HubAPI.Authorization;
 using Tech_HubAPI.Models;
-using Microsoft.EntityFrameworkCore;
 using Tech_HubAPI.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -88,6 +94,15 @@ namespace Tech_HubAPI
                             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWT:SecretKey"]))
                         };
                     });
+
+            services.AddAuthorization(options =>
+            {
+                foreach (var requirement in RepositoryAuthRequirementManager.Requirements)
+                {
+                    options.AddPolicy(requirement.RequirementName, b => b.AddRequirements(requirement.Requirement));
+                }
+            });
+            services.AddScoped<IAuthorizationHandler, RepositoryAuthHandler>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

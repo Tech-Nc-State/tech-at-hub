@@ -1,10 +1,7 @@
-﻿using FluentAssertions;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using FluentAssertions;
+using Microsoft.EntityFrameworkCore;
 using Tech_HubAPI.Models;
 using Tech_HubAPITest.Services;
 using Xunit;
@@ -12,7 +9,7 @@ using Xunit;
 
 namespace Tech_HubAPITest
 {
-    [Collection("DatabaseCollection")]
+    [Collection("DatabaseFileSystemCollection")]
     public class UserTest
     {
         private readonly DatabaseService _db;
