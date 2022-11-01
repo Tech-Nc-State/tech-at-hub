@@ -157,9 +157,9 @@ namespace Tech_HubAPI.Controllers
             return user;
         }
 
-        [HttpPut]
+        [HttpPost]
         [Authorize]
-        [Route("change")]
+        [Route("password")]
         public IActionResult PasswordChange([FromBody] ChangePasswordForm passwordForm)
         {
             User? currUser = _dbContext.Users.Where(u => u.Username == passwordForm.UserName).FirstOrDefault();

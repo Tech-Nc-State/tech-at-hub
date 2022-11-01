@@ -88,7 +88,7 @@ namespace Tech_HubAPITest
             string token = await _th.GetJwtResponseToken(resp);
 
             var form = new ChangePasswordForm("bob", "passwordyy", "mynewpassword", "mynewpassword");
-            var request = new HttpRequestMessage(HttpMethod.Put, "/user/change");
+            var request = new HttpRequestMessage(HttpMethod.Post, "/user/password");
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
             request.Content = JsonContent.Create(form, typeof(ChangePasswordForm));
             resp = await _api.Client.SendAsync(request);
