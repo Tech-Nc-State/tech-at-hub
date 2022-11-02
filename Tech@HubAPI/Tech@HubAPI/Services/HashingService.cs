@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -11,6 +9,20 @@ namespace Tech_HubAPI.Services
     {
         private RNGCryptoServiceProvider rngP = new RNGCryptoServiceProvider();
         private SHA512 shaM = new SHA512Managed();
+
+        public byte[] HashFile(Microsoft.AspNetCore.Http.IFormFile file)
+        {
+            var stream = file.OpenReadStream();
+
+            var streamReader = new StreamReader(stream);
+
+            string fileContents = streamReader.ReadToEnd();
+
+            byte[] fileBytes = Encoding.ASCII.GetBytes(fileContents);
+
+            byte[] hash = shaM.ComputeHash(fileBytes);
+            return hash;
+        }
 
         /// <summary>
         /// Get a randomized 32 byte salt

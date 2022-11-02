@@ -1,11 +1,10 @@
-﻿using FluentAssertions;
-using Microsoft.Extensions.Configuration;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using FluentAssertions;
+using Microsoft.Extensions.Configuration;
+using Tech_HubAPI.Models;
 using Tech_HubAPI.Models.Git;
 using Tech_HubAPI.Models.GitModels;
 using Tech_HubAPI.Services;
@@ -14,7 +13,7 @@ using Xunit;
 
 namespace Tech_HubAPITest
 {
-    [Collection("FileSystemCollection")]
+    [Collection("DatabaseFileSystemCollection")]
     public class GitServiceTest
     {
         private readonly GitService _gitService;
@@ -115,6 +114,15 @@ namespace Tech_HubAPITest
 
             action = () => _gitService.GetDirectoryListing("testUser", "testDirectoryListing", "fakePath", "master");
             action.Should().Throw<Exception>();
+        }
+
+        [Fact]
+        public void TestGetFileContents()
+        {
+            _fileSystem.ImportFolder("./SampleGitRepos/testBranches.git", "git/testUser/testBranches.git");
+
+            FileContent fc = _gitService.GetFileContents("testUser", "testBranches", "master", "text.txt");
+            fc.Contents.Should().Be("hello\nthere");
         }
     }
 }

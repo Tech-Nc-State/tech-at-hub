@@ -15,6 +15,11 @@ namespace Tech_HubAPI.Models
         /// </summary>
         public DbSet<Repository> Repositories { get; set; }
 
+        /// <summary>
+        /// The Repository Database set.
+        /// </summary>
+        public DbSet<RepositoryPermission> RepositoryPermissions { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -30,7 +35,14 @@ namespace Tech_HubAPI.Models
             modelBuilder.Entity<Repository>(entity =>
             {
                 entity.HasKey(e => e.Id);
-                //entity.HasOne(e => e.Owner)
+                entity.HasOne(e => e.Owner);
+            });
+
+            modelBuilder.Entity<RepositoryPermission>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.HasOne(e => e.User);
+                entity.HasOne(e => e.Repository);
             });
         }
     }

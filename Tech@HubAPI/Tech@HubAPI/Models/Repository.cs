@@ -1,6 +1,4 @@
-using System.Collections.Generic;
-
-namespace Tech_HubAPI.Models
+﻿namespace Tech_HubAPI.Models
 {
     /// <summary>
     /// The Repository Class will be used to represent all the data needed to track a
@@ -11,16 +9,31 @@ namespace Tech_HubAPI.Models
     public class Repository
     {
         /// <summary>
+        /// Construct a new repository.
+        /// </summary>
+        /// <param name="id">Id</param>
+        /// <param name="name">Name of Repo</param>
+        /// <param name="owner">Owner Object</param>
+        /// <param name="ownerId">Owner ID</param>
+        /// <param name="isPublic">True if public, false for private.</param>
+        public Repository(string name, int ownerId, bool isPublic)
+        {
+            Name = name;
+            OwnerId = ownerId;
+            IsPublic = isPublic;
+        }
+
+        /// <summary>
         /// The Unique ID for this Repository.
         /// </summary>
         public int Id { get; set; }
 
         /// <summary>
-        /// The Title of this Repository.
+        /// The Name of this Repository.
         /// </summary>
-        public string? Title { get; set; }
+        public string Name { get; set; }
 
-        //public User owner { get; set; }
+        public User Owner { get; set; }
 
         /// <summary>
         /// The Repository Owner's ID.
@@ -32,9 +45,6 @@ namespace Tech_HubAPI.Models
         /// </summary>
         public bool IsPublic { get; set; }
 
-        /// <summary>
-        /// The File Path to this Repository's contents on disk.
-        /// </summary>
-        public string? FilePath { get; set; }
+
     }
 }
