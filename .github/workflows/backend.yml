@@ -46,6 +46,4 @@ jobs:
 
     - name: Test
       # command needs sudo because Github Actions are not root by default
-      run: sudo dotnet test --no-build --verbosity normal Tech@HubAPI/Tech@HubAPITest
-      env:
-        ConnectionStrings__MySqlDatabase: "server=localhost; port=3306; uid=gituser; password=dbpass; database=tech-at-hub;"
+      run: sudo dotnet test --no-build --verbosity normal Tech@HubAPI/Tech@HubAPITest --environment ConnectionStrings__MySqlDatabase="server=localhost; port=3306; uid=gituser; password=dbpass; database=tech-at-hub;"
