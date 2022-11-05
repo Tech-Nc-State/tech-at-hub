@@ -22,5 +22,12 @@ class ApiClient:
         r = requests.post(f"{self.prefix}{url}", json=body_dict, headers=headers)
         return r
 
+    def put(self, url, body_dict, send_jwt=True) -> requests.Response:
+        headers = {}
+        if send_jwt and self.jwt != "":
+            headers["Authorization"] = f"Bearer {self.jwt}"
+        r = requests.put(f"{self.prefix}{url}", json=body_dict, headers=headers)
+        return r
+
     def set_jwt(self, jwt):
         self.jwt = jwt

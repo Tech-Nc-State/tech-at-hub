@@ -27,13 +27,13 @@ namespace Tech_HubAPI.Controllers
             _authorizationService = authorizationService;
         }
 
-        [HttpPost]
-        [Route("getbranches")]
-        public async Task<ActionResult<List<Branch>>> GetBranches([FromBody] GetBranchesForm form)
+        [HttpGet]
+        [Route("{Username}/{RepoName}/branches")]
+        public async Task<ActionResult<List<Branch>>> GetBranches(string username, string repoName)
         {
             var repo = _dbContext.Repositories
-                .Where(r => r.Owner.Username == form.Username)
-                .Where(r => r.Name == form.RepoName)
+                .Where(r => r.Owner.Username == username)
+                .Where(r => r.Name == repoName)
                 .FirstOrDefault();
             var result = await _authorizationService.AuthorizeAsync(User, repo, "RequireRead");
 
@@ -42,42 +42,48 @@ namespace Tech_HubAPI.Controllers
                 return Unauthorized("You are not authorized for this repo.");
             }
 
-            List<Branch>? branches = null;
             try
             {
-                branches = _gitService.GetBranches(form.Username, form.RepoName);
+                return _gitService.GetBranches(username, repoName);
             }
             catch (DirectoryNotFoundException ex)
             {
                 return NotFound(ex.Message);
             }
-
-
-            return branches;
         }
 
-        [HttpPost]
-        [Route("getdirectorylisting")]
-        public ActionResult<List<DirectoryEntry>> GetDirectoryListing([FromBody] GetDirectoryListingForm form)
+        [HttpGet]
+        [Route("{UserName}/{RepoName}/listing")]
+        public async Task<ActionResult<List<DirectoryEntry>>> GetDirectoryListing(
+            string username,
+            string repoName,
+            [FromQuery] string branch,
+            [FromQuery] string? path = null)
         {
-            List<DirectoryEntry>? listings = null;
+            var repo = _dbContext.Repositories
+                .Where(r => r.Owner.Username == username)
+                .Where(r => r.Name == repoName)
+                .FirstOrDefault();
+            var result = await _authorizationService.AuthorizeAsync(User, repo, "RequireRead");
+
+            if (!result.Succeeded)
+            {
+                return Unauthorized("You are not authorized for this repo.");
+            }
+
             try
             {
-                listings = _gitService.GetDirectoryListing(form.Username, form.RepoName, form.Path, form.Branch);
+                return _gitService.GetDirectoryListing(username, repoName, path ?? "", branch);
             }
             catch (DirectoryNotFoundException ex)
             {
                 return NotFound(ex.Message);
             }
-
-
-            return listings;
         }
 
         [Authorize]
         [HttpPost]
-        [Route("create")]
-        public ActionResult<Repository> CreateRepository([FromBody] string name, [FromQuery] bool isPublic)
+        public ActionResult<Repository> CreateRepository([FromBody] CreateRepositoryForm form)
         {
             User? currentUser = this.GetUser(_dbContext);
 
@@ -91,7 +97,7 @@ namespace Tech_HubAPI.Controllers
             //       there might be same-named repos that arent caught because its doing "first" and not "all"
             Repository? existingRepo = _dbContext.Repositories
                 .Where(r => r.Owner.Username == currentUser.Username)
-                .Where(r => r.Name == name)
+                .Where(r => r.Name == form.Name)
                 .FirstOrDefault();
 
             // Only block repo creation if its by the same user.
@@ -103,15 +109,18 @@ namespace Tech_HubAPI.Controllers
             }
 
             // Create the repo on the Git Server
-            _gitService.CreateNewRepository(name, currentUser.Username);
+            _gitService.CreateNewRepository(form.Name, currentUser.Username);
+
             // Create a new repo object as well.
-            var newRepo = new Repository(name, currentUser.Id, isPublic);
+            var newRepo = new Repository(form.Name, currentUser.Id, form.IsPublic);
             _dbContext.Repositories.Add(newRepo);
             _dbContext.SaveChanges();
+
             // Create new permissions to make the currently logged in user the admin
             var newPerms = new RepositoryPermission(currentUser.Id, newRepo.Id, PermissionLevel.Admin);
             _dbContext.RepositoryPermissions.Add(newPerms);
             _dbContext.SaveChanges();
+
             return Ok(newRepo);
         }
     }

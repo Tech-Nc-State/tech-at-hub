@@ -29,7 +29,7 @@ namespace Tech_HubAPI.Controllers
         }
 
         [HttpPost]
-        [Route("uploadprofilepicture")]
+        [Route("me/profilepicture")]
         [Authorize]
         public async Task<ActionResult> UploadProfilePicture(IFormFile file)
         {
@@ -59,7 +59,7 @@ namespace Tech_HubAPI.Controllers
         }
 
         [HttpGet]
-        [Route("getprofilepicture")]
+        [Route("{username}/profilepicture")]
         public ActionResult GetProfilePicture(string username)
         {
             if (username == null || username.Length == 0)
@@ -75,11 +75,8 @@ namespace Tech_HubAPI.Controllers
             }
 
             var path = user.ProfilePicturePath;
-
             var ext = path.Substring(path.IndexOf("."));
-
             var stream = System.IO.File.OpenRead(path);
-
             var mime = "image/jpeg";
 
             if (ext == "png")
@@ -91,7 +88,7 @@ namespace Tech_HubAPI.Controllers
         }
 
         [HttpGet]
-        [Route("get/{ID}")]
+        [Route("{ID}")]
         public ActionResult<User> GetUserById(int ID)
         {
             var user = _dbContext.Users.Where(u => u.Id == ID).FirstOrDefault();
@@ -162,21 +159,19 @@ namespace Tech_HubAPI.Controllers
 
         [HttpPost]
         [Authorize]
-        [Route("change")]
+        [Route("password")]
         public IActionResult PasswordChange([FromBody] ChangePasswordForm passwordForm)
         {
-            User currUser = _dbContext.Users.Where(u => u.Username == passwordForm.UserName).FirstOrDefault();
+            User? currUser = _dbContext.Users.Where(u => u.Username == passwordForm.UserName).FirstOrDefault();
             if (currUser == null)
             {
                 return NotFound();
             }
 
-
             byte[] currSalt = currUser.Salt;
             byte[] oldHashedPassword = _hashingService.HashPassword(passwordForm.OldPassword, currSalt);
             if (_hashingService.ByteCheck(currUser.Password, oldHashedPassword))
             {
-
                 try
                 {
                     passwordForm.Validate();
@@ -191,7 +186,6 @@ namespace Tech_HubAPI.Controllers
                 {
                     return Conflict(ex.Message);
                 }
-
             }
             return Conflict("Incorrect password.");
         }

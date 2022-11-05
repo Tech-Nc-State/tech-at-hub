@@ -29,7 +29,7 @@ def test_create_clone_repo(tmp_path):
     api.set_jwt(r["token"])
 
     # create a repository
-    r = api.post("/repository/create", "test")
+    r = api.post("/repository", {"name": "test", "isPublic": True})
     assert r.status_code == 200
 
     # clone the repository
@@ -48,7 +48,7 @@ def test_create_clone_repo(tmp_path):
     git.run("git push origin master")
 
     # query the api for the branch
-    r = api.post("/repository/getbranches", {"username": "jbream", "repoName": "test"})
+    r = api.get("/repository/jbream/test/branches")
     assert r.status_code == 200
 
     b = json.loads(r.content)

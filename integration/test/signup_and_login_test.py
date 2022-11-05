@@ -33,7 +33,7 @@ def test_signup_and_login():
 
     # change password
     r = api.post(
-        "/user/change",
+        "/user/password",
         {
             "username": "jbream",
             "oldPassword": "abcd1234",

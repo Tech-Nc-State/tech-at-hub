@@ -25,9 +25,9 @@ namespace Tech_HubAPITest
         [Fact]
         public async Task TestPermissionsUnauthenticated()
         {
-            var resp = await _api.Client.PutAsync($"/permission/set", null);
+            var resp = await _api.Client.PutAsync($"/permission", null);
             resp.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
-            resp = await _api.Client.DeleteAsync($"/permission/delete");
+            resp = await _api.Client.DeleteAsync($"/permission");
             resp.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         }
 

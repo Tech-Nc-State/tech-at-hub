@@ -40,7 +40,7 @@ namespace Tech_HubAPITest
             var user = await _th.CreateUser("bob", "passwordyy");
 
             // get the user
-            var resp = await _api.Client.GetAsync($"/user/get/{user.Id}");
+            var resp = await _api.Client.GetAsync($"/user/{user.Id}");
             resp.StatusCode.Should().Be(HttpStatusCode.OK);
             user = await resp.Content.ReadFromJsonAsync<User>();
 
@@ -88,7 +88,7 @@ namespace Tech_HubAPITest
             string token = await _th.GetJwtResponseToken(resp);
 
             var form = new ChangePasswordForm("bob", "passwordyy", "mynewpassword", "mynewpassword");
-            var request = new HttpRequestMessage(HttpMethod.Post, "/user/change");
+            var request = new HttpRequestMessage(HttpMethod.Post, "/user/password");
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
             request.Content = JsonContent.Create(form, typeof(ChangePasswordForm));
             resp = await _api.Client.SendAsync(request);
