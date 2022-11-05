@@ -30,7 +30,6 @@ namespace Tech_HubAPI
         public void ConfigureServices(IServiceCollection services)
         {
             string connectionString = Configuration.GetConnectionString("MySqlDatabase");
-
             services.AddDbContext<DatabaseContext>(options =>
             {
                 options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));

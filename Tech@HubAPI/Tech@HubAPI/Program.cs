@@ -15,7 +15,8 @@ namespace Tech_HubAPI
             Host.CreateDefaultBuilder(args)
                 .ConfigureAppConfiguration((hostContext, config) =>
                 {
-                    config.AddJsonFile("developersecrets.json", optional: true, reloadOnChange: true);
+                    config.AddJsonFile("developersecrets.json", optional: true, reloadOnChange: true)
+                          .AddEnvironmentVariables();
                 })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
