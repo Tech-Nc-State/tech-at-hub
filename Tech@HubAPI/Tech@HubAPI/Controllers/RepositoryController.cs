@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -50,6 +50,22 @@ namespace Tech_HubAPI.Controllers
             {
                 return NotFound(ex.Message);
             }
+        }
+
+        [HttpGet]
+        [Route("getfilecontent")]
+        public ActionResult<FileContent> GetFileContent(string username, string reponame, string branchname, string filepath)
+        {
+            FileContent fc = null;
+            try
+            {
+                fc = _gitService.GetFileContents(username, reponame, branchname, filepath);
+            }
+            catch (DirectoryNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            return fc;
         }
 
         [HttpGet]
