@@ -53,7 +53,7 @@ namespace Tech_HubAPI.Controllers
         }
 
         [HttpGet]
-        [Route("getfilecontent")]
+        [Route("{UserName}/{RepoName}/{BranchName}/{FilePath}")]
         public ActionResult<FileContent> GetFileContent(string username, string reponame, string branchname, string filepath)
         {
             FileContent fc = null;
@@ -64,6 +64,10 @@ namespace Tech_HubAPI.Controllers
             catch (DirectoryNotFoundException ex)
             {
                 return NotFound(ex.Message);
+            }
+            catch(FileNotFoundException exc)
+            {
+                return NotFound(exc.Message);
             }
             return fc;
         }
