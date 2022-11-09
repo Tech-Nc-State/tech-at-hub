@@ -1,4 +1,10 @@
 **/developersecrets.json
+.vs/
 
 # Git
 git
+
+# Profile Pictures Folder
+profile_pictures
+
+.DS_Store

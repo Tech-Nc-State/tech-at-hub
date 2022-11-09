@@ -4,7 +4,7 @@ import ProvidedServices from "./ProvidedServices";
 export interface ITokenService {
     getToken(): any,
     getTokenString(): any,
-    setToken(): void,
+    setToken(token: {token: string, expiration: string}): void,
     invalidateToken(): void
 }
 

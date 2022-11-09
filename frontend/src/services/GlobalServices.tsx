@@ -1,5 +1,6 @@
 import {TokenService} from "./TokenService";
 import {UserService} from "./UserService";
+import {AuthService} from "./AuthService";
 
 /**
  * Services used application wide
@@ -9,7 +10,9 @@ export function GlobalServices({children}: any) {
     return (
         <TokenService>
             <UserService>
-                {children}
+                <AuthService>
+                    {children}
+                </AuthService>
             </UserService>
         </TokenService>
     );

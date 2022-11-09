@@ -4,6 +4,7 @@
 enum ProvidedServices {
     TokenService,
     UserService,
+    AuthService,
 }
 
 export default ProvidedServices;
