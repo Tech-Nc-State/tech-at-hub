@@ -3,6 +3,7 @@
  */
 enum ProvidedServices {
     TokenService,
+    UserService,
 }
 
 export default ProvidedServices;

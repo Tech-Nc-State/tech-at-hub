@@ -1,10 +1,11 @@
 import ServiceProvider from "./ServiceProvider";
 import ProvidedServices from "./ProvidedServices";
-import {useEffect, useRef, useState} from "react";
 
 export interface ITokenService {
-    token: {token: string, expiration: string},
-    addToken(): void
+    getToken(): any,
+    getTokenString(): any,
+    setToken(): void,
+    invalidateToken(): void
 }
 
 const TokenServiceContext = ServiceProvider.createContext(ProvidedServices.TokenService);
@@ -25,6 +26,12 @@ export function TokenService({children}: any) {
         }
     }
 
+    const getTokenString = () => {
+        let tokenString = localStorage.getItem(TOKEN_KEY);
+        if (!tokenString) return null;
+        return tokenString;
+    }
+
     const setToken = (token: {token: string, expiration: string}) => {
         localStorage.setItem(TOKEN_KEY, JSON.stringify(token));
     }
@@ -35,6 +42,7 @@ export function TokenService({children}: any) {
 
     const tokenService = {
         getToken,
+        getTokenString,
         setToken,
         invalidateToken,
     }
