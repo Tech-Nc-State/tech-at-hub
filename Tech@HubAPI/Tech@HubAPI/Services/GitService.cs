@@ -315,7 +315,7 @@ namespace Tech_HubAPI.Services
         /// <param name="repoName">name of the repository</param>
         /// <returns>list of Bracnhes</returns>
         /// <exception cref="DirectoryNotFoundException">If the user or repository do not exist</exception>
-        public List<Tag> GetTags(string username, string repositoryName, string branchName)
+        public List<Tag> GetTags(string username, string repositoryName)
         {
             // Given a username and repoName, list all stored tags.
 
