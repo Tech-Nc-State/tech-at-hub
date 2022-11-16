@@ -42,17 +42,17 @@ namespace Tech_HubAPI.Services
 			return hash;
         }
 
-		public byte[] HashFile(Microsoft.AspNetCore.Http.IFormFile file)
+		public byte[] HashFile(byte[] file)
         {
-			var stream = file.OpenReadStream();
+			//var stream = file.OpenReadStream();
 
-			var streamReader = new StreamReader(stream);
+			//var streamReader = new StreamReader(stream);
 
-			string fileContents = streamReader.ReadToEnd();
+			//string fileContents = streamReader.ReadToEnd();
 
-			byte[] fileBytes = Encoding.ASCII.GetBytes(fileContents);
+			//byte[] fileBytes = Encoding.ASCII.GetBytes(fileContents);
 
-			byte[] hash = shaM.ComputeHash(fileBytes);
+			byte[] hash = shaM.ComputeHash(file);
 			return hash;
         }
 	}

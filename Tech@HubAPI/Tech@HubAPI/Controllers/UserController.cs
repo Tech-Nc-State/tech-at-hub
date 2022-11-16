@@ -42,18 +42,22 @@ namespace Tech_HubAPI.Controllers
 				return BadRequest("The file is empty.");
 			}
 
-			var path = BitConverter.ToString(_hashingService.HashFile(file)).Replace("-", "");
-
 			var ext = Path.GetExtension(file.FileName).ToLowerInvariant();
-
-			using (var stream = System.IO.File.Create(_defaultWorkingDirectory + "/profile_pictures/" + path + "." + ext))
-			{
-				await file.CopyToAsync(stream);
-			}
 
 			if (string.IsNullOrEmpty(ext) || Array.IndexOf(validImageExtensions, ext) == -1)
 			{
 				throw new NotSupportedException(ext + "is not a supported extension.");
+			}
+
+			var tempPath = fixImage(file, ext);
+
+			var tempFile = File.ReadAllBytes(tempPath);
+
+			var path = BitConverter.ToString(_hashingService.HashFile(tempFile)).Replace("-", "");
+
+			using (var stream = System.IO.File.Create(_defaultWorkingDirectory + "/profile_pictures/" + path + ".jpg"))
+			{
+				await file.CopyToAsync(stream);
 			}
 
 			var user = this.GetUser(_dbContext);
@@ -87,12 +91,33 @@ namespace Tech_HubAPI.Controllers
 
 			var mime = "image/jpeg";
 
-			if(ext == "png")
-            {
-				mime = "image/png";
-            }
-
 			return new FileStreamResult(stream, mime);
         }
+
+		private Path fixImage(IFormFile file, string ext){
+
+			Path tempPath = System.IO.Path.GetTempPath();
+			tempPath = Path.combine(tempPath, "tempFile." + ext);
+			using StreamWriter sw = new StreamWriter(tempPath);
+			file.CopyTo(sw);
+
+			Image image = Image.FromFile(tempPath);
+
+			Bitmap resizedImg = new Bitmap(96, 96);
+
+        	double ratioX = (double)resizedImg.Width / (double)img.Width;
+        	double ratioY = (double)resizedImg.Height / (double)img.Height;
+        	double ratio = ratioX < ratioY ? ratioX : ratioY;
+
+        	int newHeight = Convert.ToInt32(img.Height * ratio);
+        	int newWidth = Convert.ToInt32(img.Width * ratio);
+
+       		 using (Graphics g = Graphics.FromImage(resizedImg))
+        	{
+           		 g.DrawImage(img, 0, 0, newWidth, newHeight);
+       	 	}
+        	resizedImg.Save(tempPath);
+			return tempPath;
+		}
 	}
 }
