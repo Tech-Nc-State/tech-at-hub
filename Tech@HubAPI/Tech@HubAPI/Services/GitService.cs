@@ -307,5 +307,46 @@ namespace Tech_HubAPI.Services
             // Return the filecontent
             return fc;
         }
+
+        /// <summary>
+        /// Gets a list of <see cref="Tag"> in the given user/repo name.
+        /// </summary>
+        /// <param name="username">the username</param>
+        /// <param name="repoName">name of the repository</param>
+        /// <returns>list of Bracnhes</returns>
+        /// <exception cref="DirectoryNotFoundException">If the user or repository do not exist</exception>
+        public List<Tag> GetTags(string username, string repositoryName, string branchName)
+        {
+            // Given a username and repoName, list all stored tags.
+
+            // Check if user directory exists
+            string userDirectory = _baseGitFolder + username + "/";
+            if (!Directory.Exists(userDirectory))
+            {
+                throw new DirectoryNotFoundException("User not found");
+            }
+
+            // Check if repo directory exists
+            string repoDirectory = userDirectory + repositoryName + _repoDirectoryPostfix + "/";
+            if (!Directory.Exists(repoDirectory))
+            {
+                // repo no exist
+                throw new DirectoryNotFoundException("Repository not found");
+            }
+
+            string tagDirectory = repoDirectory + "/refs/tags";
+
+            string[] tagNames = new DirectoryInfo(tagDirectory)
+                .GetFiles()
+                .Select(f => f.Name)
+                .ToArray();
+
+            // assign info to tags
+            List<Tag> tags = tagNames
+                .Select(name => new Tag(name, File.ReadAllText(tagDirectory + "/" + name).Trim()))
+                .ToList();
+
+            return tags;
+        }
     }
 }
