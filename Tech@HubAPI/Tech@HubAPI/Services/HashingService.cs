@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -10,15 +9,15 @@ namespace Tech_HubAPI.Services
         private RNGCryptoServiceProvider rngP = new RNGCryptoServiceProvider();
         private SHA512 shaM = new SHA512Managed();
 
-        public byte[] HashFile(Microsoft.AspNetCore.Http.IFormFile file)
+        public byte[] HashFile(byte[] file)
         {
-            var stream = file.OpenReadStream();
+            //var stream = file.OpenReadStream();
 
-            var streamReader = new StreamReader(stream);
+            //var streamReader = new StreamReader(stream);
 
-            string fileContents = streamReader.ReadToEnd();
+            //string fileContents = streamReader.ReadToEnd();
 
-            byte[] fileBytes = Encoding.ASCII.GetBytes(fileContents);
+            //byte[] fileBytes = Encoding.ASCII.GetBytes(fileContents);
 
             byte[] hash = shaM.ComputeHash(fileBytes);
             return hash;
