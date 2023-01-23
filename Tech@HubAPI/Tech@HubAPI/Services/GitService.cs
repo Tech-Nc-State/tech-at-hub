@@ -21,7 +21,7 @@ namespace Tech_HubAPI.Services
         /// </summary>
         private readonly string _repoDirectoryPostfix = ".git";
 
-        private readonly bool _windows;
+        private readonly bool _linux;
         private readonly string _baseGitFolder;
         private readonly string _gitBinPath;
         private readonly ExecuteService _executeService;
@@ -37,7 +37,7 @@ namespace Tech_HubAPI.Services
             _executeService = new ExecuteService(configuration);
             _baseGitFolder = executeService.WorkingDirectory.Replace("\\", "/") + "git/";  // TODO: Why is this pointing to wrong place in debug?
             _gitBinPath = configuration["Environment:GitPath"].Replace("\\", "/");
-            _windows = configuration["Environment:Platform"] == "Windows";
+            _linux = configuration["Environment:Platform"] == "Linux";
         }
 
         /// <summary>
@@ -118,7 +118,7 @@ namespace Tech_HubAPI.Services
                 _executeService.ExecuteProcess("git", "update-server-info");
                 _executeService.ExecuteProcess("git", "config", "http.receivepack", "true");
 
-                if (!_windows)
+                if (_linux)
                 {
                     _executeService.ExecutableDirectory = "/bin/";
                     _executeService.ExecuteProcess("chown", "-R", "www-data:www-data", ".");
