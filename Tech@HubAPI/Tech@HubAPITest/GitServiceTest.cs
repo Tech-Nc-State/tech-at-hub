@@ -63,7 +63,7 @@ namespace Tech_HubAPITest
         {
             _fileSystem.ImportFolder("./SampleGitRepos/testTags.git", "git/testUser/testTags.git");
 
-            List<Tag> tags = _gitService.GetTags("testUser", "testBranches");
+            List<Tag> tags = _gitService.GetTags("testUser", "testTags");
 
             tags.Count.Should().Be(4);
             string[] tagNames = tags.Select(tag => tag.Name).ToArray();
