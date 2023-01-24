@@ -307,5 +307,20 @@ namespace Tech_HubAPI.Services
             // Return the filecontent
             return fc;
         }
+
+        /// <summary>
+        /// Returns a list of all Commits that make up the current branch.
+        /// </summary>
+        /// <param name="username"></param> the repo owner's username
+        /// <param name="repository"></param> the repo name
+        /// <param name="branch"></param> the branch to get commits of
+        /// <returns>A list of Commit objects that makes up the current branch.</returns>
+        public Commit[] GetCommitLog(string username, string repository, string branch)
+        {
+            // TODO: Get the list of commits from the file system, make sure u find the right one if it exists
+            // TODO: Make the Commit objects into an array and return this. See GetBranches(), probably.
+
+            return null;
+        }
     }
 }
