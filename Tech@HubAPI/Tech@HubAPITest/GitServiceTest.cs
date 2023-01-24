@@ -59,6 +59,29 @@ namespace Tech_HubAPITest
         }
 
         [Fact]
+        public void TestGetTags()
+        {
+            _fileSystem.ImportFolder("./SampleGitRepos/testTags.git", "git/testUser/testTags.git");
+
+            List<Tag> tags = _gitService.GetTags("testUser", "testTags");
+
+            tags.Count.Should().Be(4);
+            string[] tagNames = tags.Select(tag => tag.Name).ToArray();
+            tagNames.Should().Contain("hello");
+            tagNames.Should().Contain("howdu");
+            tagNames.Should().Contain("testtag");
+            tagNames.Should().Contain("released");
+
+        }
+
+        [Fact]
+        public void TestGetTagsNotExisting()
+        {
+            Action run = () => _gitService.GetTags("testUser", "testTags");
+            run.Should().Throw<DirectoryNotFoundException>();
+        }
+
+        [Fact]
         public void TestGitDirectoryListing()
         {
             _fileSystem.ImportFolder("./SampleGitRepos/testDirectoryListing.git", "git/testUser/testDirectoryListing.git");
