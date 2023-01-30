@@ -101,11 +101,30 @@ namespace Tech_HubAPI.Controllers
             }
         }
 
+        // TODO: This is currently failing the permissions check when running in Swagger. Check this out.
         [HttpGet]
         [Route("{Username}/{RepoName}/tags")]
         public async Task<ActionResult<List<Tag>>> GetTags(string username, string repoName)
         {
-            return null; // TODO: fill the rest of this in. Use the gitService call.
+            var repo = _dbContext.Repositories
+                .Where(r => r.Owner.Username == username)
+                .Where(r => r.Name == repoName)
+                .FirstOrDefault();
+            var result = await _authorizationService.AuthorizeAsync(User, repo, "RequireRead"); // user must have read perms to read branch tags.
+
+            if (!result.Succeeded)
+            {
+                return Unauthorized("You are not authorized for this repo.");
+            }
+
+            try
+            {
+                return _gitService.GetTags(username, repoName);
+            }
+            catch (DirectoryNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
 
         [Authorize]

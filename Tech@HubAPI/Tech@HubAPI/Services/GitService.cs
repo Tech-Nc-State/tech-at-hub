@@ -313,7 +313,7 @@ namespace Tech_HubAPI.Services
         /// </summary>
         /// <param name="username">the username</param>
         /// <param name="repoName">name of the repository</param>
-        /// <returns>list of Bracnhes</returns>
+        /// <returns>list of Tags</returns>
         /// <exception cref="DirectoryNotFoundException">If the user or repository do not exist</exception>
         public List<Tag> GetTags(string username, string repositoryName)
         {
