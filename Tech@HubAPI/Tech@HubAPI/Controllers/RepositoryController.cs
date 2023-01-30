@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -99,6 +99,13 @@ namespace Tech_HubAPI.Controllers
             {
                 return NotFound(ex.Message);
             }
+        }
+
+        [HttpGet]
+        [Route("{Username}/{RepoName}/tags")]
+        public async Task<ActionResult<List<Tag>>> GetTags(string username, string repoName)
+        {
+            return null; // TODO: fill the rest of this in. Use the gitService call.
         }
 
         [Authorize]

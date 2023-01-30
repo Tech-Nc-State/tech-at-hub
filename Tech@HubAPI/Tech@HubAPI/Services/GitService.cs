@@ -309,7 +309,7 @@ namespace Tech_HubAPI.Services
         }
 
         /// <summary>
-        /// Gets a list of <see cref="Tag"> in the given user/repo name.
+        /// Gets a list of <see cref="Tag">s in the given user/repo name.
         /// </summary>
         /// <param name="username">the username</param>
         /// <param name="repoName">name of the repository</param>
