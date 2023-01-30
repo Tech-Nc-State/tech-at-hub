@@ -101,7 +101,6 @@ namespace Tech_HubAPI.Controllers
             }
         }
 
-        // TODO: This is currently failing the permissions check when running in Swagger. Check this out.
         [HttpGet]
         [Route("{Username}/{RepoName}/tags")]
         public async Task<ActionResult<List<Tag>>> GetTags(string username, string repoName)
