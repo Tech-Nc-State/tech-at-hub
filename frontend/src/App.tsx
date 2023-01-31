@@ -11,9 +11,9 @@ const theme = createTheme({
     primary: {
       main: "#CC0000",
     },
-    // secondary: {
-    //   main: "#FACD1A",
-    // },
+    secondary: {
+      main: "#FFA0A0",
+    },
   },
   typography: {
     fontFamily: "Oxygen",

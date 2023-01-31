@@ -1,19 +1,19 @@
 import { Typography, Box } from "@mui/material";
-// import popcornSvg from "../assets/popcorn.svg";
+import logoSvg from "../assets/logo.svg";
 
 function TechAtLogo() {
   return (
     <Box
-      display="flex"
-      justifyContent="start"
-      alignItems="center"
+      // display="flex"
+      // justifyContent="start"
+      // alignItems="center"
       margin="10px"
     >
-      {/* <img
-        src={""}
+      <img
+        src={logoSvg}
         style={{ width: "50px", flexGrow: 0, marginRight: "10px" }}
-      /> */}
-      <Typography
+      />
+      {/* <Typography
         variant="h6"
         noWrap
         sx={{
@@ -27,7 +27,7 @@ function TechAtLogo() {
         }}
       >
         Tech @ Hub
-      </Typography>
+      </Typography> */}
     </Box>
   );
 }
