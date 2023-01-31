@@ -53,3 +53,4 @@ git config core.autocrlf false
 10. Roman Peace
 11. Shrihan Dadi
 12. Kriti Patnala
+13. Arnaav Goyal
