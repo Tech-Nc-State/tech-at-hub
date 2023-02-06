@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
 using Tech_HubAPI.Models;
 using Tech_HubAPI.Services;
 
@@ -33,33 +35,24 @@ namespace Tech_HubAPI.Controllers
         [Authorize]
         public async Task<ActionResult> UploadProfilePicture(IFormFile file)
         {
-
             if (file == null || file.Length == 0)
             {
                 return BadRequest("The file is empty.");
             }
 
-            var ext = Path.GetExtension(file.FileName).ToLowerInvariant();
+            using var image = await Image.LoadAsync(file.OpenReadStream());
+            image.Mutate(x => x.Resize(96, 96));
 
-            if (string.IsNullOrEmpty(ext) || Array.IndexOf(validImageExtensions, ext) == -1)
-            {
-                throw new NotSupportedException(ext + "is not a supported extension.");
-            }
+            using var ms = new MemoryStream();
+            image.SaveAsJpeg(ms);
 
-            var tempPath = fixImage(file, ext);
-
-            var tempFile = File.ReadAllBytes(tempPath);
-
-            var path = BitConverter.ToString(_hashingService.HashFile(tempFile)).Replace("-", "");
-
-            using (var stream = System.IO.File.Create(_defaultWorkingDirectory + "/profile_pictures/" + path + ".jpg"))
-            {
-                await file.CopyToAsync(stream);
-            }
+            var path = BitConverter.ToString(_hashingService.HashFile(ms.ToArray())).Replace("-", "");
+            image.SaveAsJpeg(_defaultWorkingDirectory + "/profile_pictures/" + path + ".jpg");
 
             var user = this.GetUser(_dbContext);
 
             user.ProfilePicturePath = path;
+            _dbContext.SaveChanges();
 
             return Ok();
         }
@@ -194,32 +187,6 @@ namespace Tech_HubAPI.Controllers
                 }
             }
             return Conflict("Incorrect password.");
-        }
-        private Path fixImage(IFormFile file, string ext)
-        {
-
-            Path tempPath = System.IO.Path.GetTempPath();
-            tempPath = Path.combine(tempPath, "tempFile." + ext);
-            using StreamWriter sw = new StreamWriter(tempPath);
-            file.CopyTo(sw);
-
-            Image image = Image.FromFile(tempPath);
-
-            Bitmap resizedImg = new Bitmap(96, 96);
-
-            double ratioX = (double)resizedImg.Width / (double)img.Width;
-            double ratioY = (double)resizedImg.Height / (double)img.Height;
-            double ratio = ratioX < ratioY ? ratioX : ratioY;
-
-            int newHeight = Convert.ToInt32(img.Height * ratio);
-            int newWidth = Convert.ToInt32(img.Width * ratio);
-
-            using (Graphics g = Graphics.FromImage(resizedImg))
-            {
-                g.DrawImage(img, 0, 0, newWidth, newHeight);
-            }
-            resizedImg.Save(tempPath);
-            return tempPath;
         }
     }
 }
