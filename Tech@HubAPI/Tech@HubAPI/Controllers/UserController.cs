@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
 using Tech_HubAPI.Models;
 using Tech_HubAPI.Services;
 
@@ -33,27 +35,24 @@ namespace Tech_HubAPI.Controllers
         [Authorize]
         public async Task<ActionResult> UploadProfilePicture(IFormFile file)
         {
-            string[] validImageExtensions = { ".png", ".jpg" };
-
             if (file == null || file.Length == 0)
             {
                 return BadRequest("The file is empty.");
             }
 
-            var path = BitConverter.ToString(_hashingService.HashFile(file)).Replace("-", "");
-            var ext = Path.GetExtension(file.FileName).ToLowerInvariant();
+            using var image = await Image.LoadAsync(file.OpenReadStream());
+            image.Mutate(x => x.Resize(96, 96));
 
-            using var stream = System.IO.File.Create(_defaultWorkingDirectory + "/profile_pictures/" + path + "." + ext);
-            await file.CopyToAsync(stream);
+            using var ms = new MemoryStream();
+            image.SaveAsJpeg(ms);
 
-            if (string.IsNullOrEmpty(ext) || Array.IndexOf(validImageExtensions, ext) == -1)
-            {
-                throw new NotSupportedException(ext + "is not a supported extension.");
-            }
+            var path = BitConverter.ToString(_hashingService.HashFile(ms.ToArray())).Replace("-", "");
+            image.SaveAsJpeg(_defaultWorkingDirectory + "/profile_pictures/" + path + ".jpg");
 
             var user = this.GetUser(_dbContext);
 
             user.ProfilePicturePath = path;
+            _dbContext.SaveChanges();
 
             return Ok();
         }
