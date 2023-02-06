@@ -11,15 +11,7 @@ namespace Tech_HubAPI.Services
 
         public byte[] HashFile(byte[] file)
         {
-            //var stream = file.OpenReadStream();
-
-            //var streamReader = new StreamReader(stream);
-
-            //string fileContents = streamReader.ReadToEnd();
-
-            //byte[] fileBytes = Encoding.ASCII.GetBytes(fileContents);
-
-            byte[] hash = shaM.ComputeHash(fileBytes);
+            byte[] hash = shaM.ComputeHash(file);
             return hash;
         }
 
