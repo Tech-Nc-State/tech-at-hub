@@ -222,7 +222,17 @@ namespace Tech_HubAPI.Services
 
             return directoryListing;
         }
-
+        /// <summary>
+        /// Gets the contents of a given file in a specific branch by reconstructing
+        /// the associated Git objects. Returns a <see cref="FileContent"/> object that
+        /// contains the file's contents on that branch.
+        /// </summary>
+        /// <param name="username">The repo owner's username.</param>
+        /// <param name="repositoryName">The name of the repository.</param>
+        /// <param name="branchName">Selected branch from the repository.</param>
+        /// <param name="filePath">Path to a specific file within the repo.</param>
+        /// <returns></returns>
+        /// <exception cref="DirectoryNotFoundException">if given user, repo, or branch isnt found.</exception>
         public FileContent GetFileContents(string username, string repositoryName, string branchName, string filePath)
         {
             // Check if user directory exists
@@ -309,11 +319,12 @@ namespace Tech_HubAPI.Services
         }
 
         /// <summary>
-        /// Gets a list of <see cref="Tag"> in the given user/repo name.
+        /// Gets a list of <see cref="Tag">s in the given user/repo name.
+        /// Will return empty list if no tags exist.
         /// </summary>
         /// <param name="username">the username</param>
         /// <param name="repoName">name of the repository</param>
-        /// <returns>list of Bracnhes</returns>
+        /// <returns>list of Tags</returns>
         /// <exception cref="DirectoryNotFoundException">If the user or repository do not exist</exception>
         public List<Tag> GetTags(string username, string repositoryName)
         {
