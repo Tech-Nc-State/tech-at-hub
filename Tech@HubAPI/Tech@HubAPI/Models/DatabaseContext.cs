@@ -44,6 +44,14 @@ namespace Tech_HubAPI.Models
                 entity.HasOne(e => e.User);
                 entity.HasOne(e => e.Repository);
             });
+
+            // Issue
+            modelBuilder.Entity<Issue>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.HasOne(e => e.Title);
+                entity.HasOne(e => e.Author);
+            });
         }
     }
 }
