@@ -9,11 +9,11 @@ import {AuthService} from "./AuthService";
 export function GlobalServices({children}: any) {
     return (
         <TokenService>
-            <UserService>
-                <AuthService>
+            <AuthService>
+                <UserService>
                     {children}
-                </AuthService>
-            </UserService>
+                </UserService>
+            </AuthService>
         </TokenService>
     );
 }

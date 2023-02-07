@@ -6,10 +6,11 @@ import axios from "axios";
 import {useAuthService} from "./AuthService";
 
 export interface IUserService {
+    currentUser: any
     retrieveCurrentUser(): void;
 }
 
-const UserServiceContext = ServiceProvider.createContext(ProvidedServices.UserService);
+const UserServiceContext = ServiceProvider.createContext<IUserService>(ProvidedServices.UserService);
 export const useUserService = () => ServiceProvider.use<IUserService>(ProvidedServices.UserService);
 
 export function UserService({children}: any) {

@@ -52,6 +52,4 @@ export function TokenService({children}: any) {
             {children}
         </TokenServiceContext.Provider>
     )
-
-
 }
