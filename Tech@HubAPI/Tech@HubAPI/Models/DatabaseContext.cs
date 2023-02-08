@@ -52,6 +52,21 @@ namespace Tech_HubAPI.Models
                 entity.HasOne(e => e.Title);
                 entity.HasOne(e => e.Author);
             });
+
+            // Comment
+            modelBuilder.Entity<Comment>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.HasOne(e => e.Body);
+            });
+
+            // Label
+            modelBuilder.Entity<Label>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.HasOne(e => e.Title);
+                entity.HasOne(e => e.Color);
+            });
         }
     }
 }

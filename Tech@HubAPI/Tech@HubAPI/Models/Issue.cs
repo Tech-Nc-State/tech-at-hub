@@ -5,28 +5,31 @@ namespace Tech_HubAPI.Models
 {
     public class Issue
     {
-        public Issue(string id, string title, User author, string activity, string buildInfo, string summary,string stepsToReproduce,
-            string expectedResults, string actualResults, List<Comment> comments, List<User> assignees, List<Label> labels)
+        public Issue(int id, string title, User author, Repository repository, string activity, string buildInfo, string summary,string stepsToReproduce,
+            string expectedResults, string actualResults)
         {
             Id = id;
             Title = title;
             Author = author;
+            Repository = repository;
             Activity = activity;
             BuildInfo = buildInfo;
             Summary = summary;
             StepsToReproduce = stepsToReproduce;
             ExpectedResults = expectedResults;
             ActualResults = actualResults;
-            Comments = comments;
-            Assignees = assignees;
-            Labels = labels;
+            Comments = new List<Comment>();
+            Assignees = new List<User>();
+            Labels = new List<Label>();
         }
 
-        public string Id { get; set; }
+        public int Id { get; set; }
 
         public string Title { get; set; }
 
         public User Author { get; set; }
+
+        public Repository Repository { get; set; }
 
         public string Activity { get; set; }
 
