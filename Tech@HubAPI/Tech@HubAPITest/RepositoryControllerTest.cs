@@ -30,8 +30,8 @@ namespace Tech_HubAPITest
         [Fact]
         public async Task GetDirectoryListingApiTest()
         {
-            var user = await _apiHelper.CreateUser("bob", "passwordyy");
-            var token = await _apiHelper.GetJwtResponseToken(await _apiHelper.Login("bob", "passwordyy"));
+            var user = await _apiHelper.CreateUser("bob", "Passwordyy$_");
+            var token = await _apiHelper.GetJwtResponseToken(await _apiHelper.Login("bob", "Passwordyy$_"));
             await _apiHelper.CreateRepository(token, new CreateRepositoryForm
             {
                 Name = "testDirectoryListing",
@@ -51,8 +51,8 @@ namespace Tech_HubAPITest
         [Fact]
         public async Task GetTagsApiTest()
         {
-            var user = await _apiHelper.CreateUser("john", "passwordpassword");
-            var token = await _apiHelper.GetJwtResponseToken(await _apiHelper.Login("john", "passwordpassword"));
+            var user = await _apiHelper.CreateUser("john", "Passwordyy$_");
+            var token = await _apiHelper.GetJwtResponseToken(await _apiHelper.Login("john", "Passwordyy$_"));
             await _apiHelper.CreateRepository(token, new CreateRepositoryForm
             {
                 Name = "testTags",
