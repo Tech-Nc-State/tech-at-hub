@@ -40,7 +40,7 @@ public class SignUpForm
         }
 
         string pwd_capitals = @"[A-Z]+";
-        string pwd_symbols = "[~`!@#$%^&*()-_=+[{]}\\|;:'\",<.>/?]+";
+        string pwd_symbols = "[^A-Za-z0-9]+";
 
         if (Password.Length < 8)
         {
