@@ -68,8 +68,6 @@ namespace Tech_HubAPI.Models
             modelBuilder.Entity<Label>(entity =>
             {
                 entity.HasKey(e => e.Id);
-                entity.HasOne(e => e.LabelTitle);
-                entity.HasOne(e => e.Color);
             });
         }
     }
