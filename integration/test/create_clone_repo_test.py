@@ -15,7 +15,7 @@ def test_create_clone_repo(tmp_path):
             "firstName": "Joey",
             "lastName": "Bream",
             "username": "jbream",
-            "password": "abcd1234",
+            "password": "Abcd1234_",
             "email": "myemail@email.com",
             "birthDate": "1/1/2000",
         },

@@ -12,7 +12,7 @@ def test_signup_and_login():
             "firstName": "Joey",
             "lastName": "Bream",
             "username": "jbream",
-            "password": "abcd1234",
+            "password": "Abcd1234_",
             "email": "myemail@email.com",
             "birthDate": "1/1/2000",
         },
