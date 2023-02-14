@@ -8,14 +8,17 @@ def test_create_clone_repo(tmp_path):
     api = ApiClient()
     git = GitClient(str(tmp_path))
 
+    user = "jbream"
+    pw = "Abcd1234_"
+
     # hit the signup endpoint
     r = api.post(
         "/user",
         {
             "firstName": "Joey",
             "lastName": "Bream",
-            "username": "jbream",
-            "password": "Abcd1234_",
+            "username": user,
+            "password": pw,
             "email": "myemail@email.com",
             "birthDate": "1/1/2000",
         },
@@ -23,7 +26,7 @@ def test_create_clone_repo(tmp_path):
     assert r.status_code == 200
 
     # hit the login endpoint
-    r = api.post("/auth/login", {"username": "jbream", "password": "abcd1234"})
+    r = api.post("/auth/login", {"username": user, "password": pw})
     assert r.status_code == 200
     r = json.loads(r.content)
     api.set_jwt(r["token"])
