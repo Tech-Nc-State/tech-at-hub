@@ -24,3 +24,7 @@ export function setToken(token: {token: string, expiration: string}) {
 export function invalidateToken() {
     localStorage.removeItem(TOKEN_KEY)
 }
+
+export function getAuthHeader() {
+    return { Authorization: 'Bearer ' + getTokenString() };
+}
