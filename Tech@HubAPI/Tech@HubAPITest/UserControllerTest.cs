@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -32,6 +33,8 @@ namespace Tech_HubAPITest
         {
             var user = await _th.CreateUser("bob", "passwordyy");
             user.Should().NotBeNull();
+
+            File.Exists(user.ProfilePicturePath).Should().BeTrue();
         }
 
         [Fact]
@@ -78,7 +81,8 @@ namespace Tech_HubAPITest
             user.Username.Should().Be("bob");
             user.Password.Should().BeNull();
             user.Salt.Should().BeNull();
-        }
+
+            }
 
         [Fact]
         public async Task TestChangePassword()
