@@ -17,6 +17,10 @@ const router = createBrowserRouter([
         path: "/about",
         element: <p>Hi there!</p>,
       },
+      {
+          path: "/markdown-test",
+          element: <MarkdownRenderer markdown="##Hello##"/>
+      }
     ],
   },
 ]);

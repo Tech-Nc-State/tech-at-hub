@@ -3,8 +3,8 @@ import React from 'react';
 import ReactMarkdown from 'react-markdown';
 
 
-function markdownRender(input : string) {
-    return (<ReactMarkdown children={input}/>);
+function MarkdownRender(props) {
+    return (<ReactMarkdown children={props.markdown}/>);
 }
 
 export default markdownRender;
