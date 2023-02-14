@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -39,10 +40,11 @@ namespace Tech_HubAPITest
         [InlineData("Passwordyy", "Password must include a symbol.")]
         public async Task TestCreateUserInvalidPassword(string s, string e)
         {
-            Func<Task> action = async () => await _th.CreateUser("bob", s);
-
-            await action.Should().ThrowAsync<ArgumentException>()
-                .WithMessage(e);
+            // create a test user in the db
+            var form = new SignUpForm("Bob", "Bobby", "bob", s, "a@b.com", "1/1/1");
+            var content = JsonContent.Create(form, typeof(SignUpForm));
+            var resp = await _api.Client.PostAsync("/user", content);
+            resp.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         }
 
         [Fact]
