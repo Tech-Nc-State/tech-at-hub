@@ -50,7 +50,8 @@ namespace Tech_HubAPI.Models
             {
                 entity.HasKey(e => e.Id);
                 entity.HasOne(e => e.Title);
-                entity.HasOne(e => e.Author);
+                entity.HasKey(e => e.AuthorId);
+                entity.HasKey(e => e.RepositoryId);
             });
 
             // Comment
