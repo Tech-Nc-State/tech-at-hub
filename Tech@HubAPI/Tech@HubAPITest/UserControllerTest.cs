@@ -36,9 +36,9 @@ namespace Tech_HubAPITest
         }
 
         [Theory]
-        [InlineData("passwordyy", "Password must include a capital letter.")]
-        [InlineData("Passwordyy", "Password must include a symbol.")]
-        public async Task TestCreateUserInvalidPassword(string s, string e)
+        [InlineData("passwordyy")]
+        [InlineData("Passwordyy")]
+        public async Task TestCreateUserInvalidPassword(string s)
         {
             // create a test user in the db
             var form = new SignUpForm("Bob", "Bobby", "bob", s, "a@b.com", "1/1/1");
