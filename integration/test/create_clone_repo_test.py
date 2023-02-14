@@ -36,7 +36,7 @@ def test_create_clone_repo(tmp_path):
     assert r.status_code == 200
 
     # clone the repository
-    git.run("git clone http://jbream:abcd1234@localhost/git/jbream/test.git")
+    git.run(f"git clone http://jbream:{pw}@localhost/git/jbream/test.git")
 
     # cd into the repository
     git = GitClient(str(tmp_path) + "/test")
