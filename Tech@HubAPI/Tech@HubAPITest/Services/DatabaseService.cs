@@ -16,6 +16,7 @@ namespace Tech_HubAPITest.Services
                 .Options;
 
             DbContext = new DatabaseContext(options);
+            DbContext.Database.EnsureDeleted();
             DbContext.Database.EnsureCreated();
         }
 
