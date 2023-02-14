@@ -5,11 +5,11 @@ namespace Tech_HubAPI.Models
 {
     public class Issue
     {
-        public Issue(int id, string title, int authorId, int repositoryId, string activity, string buildInfo, string summary,string stepsToReproduce,
+        public Issue(int id, string issueTitle, int authorId, int repositoryId, string activity, string buildInfo, string summary,string stepsToReproduce,
             string expectedResults, string actualResults)
         {
             Id = id;
-            Title = title;
+            IssueTitle = issueTitle;
             AuthorId = authorId;
             RepositoryId = repositoryId;
             Activity = activity;
@@ -25,7 +25,7 @@ namespace Tech_HubAPI.Models
 
         public int Id { get; set; }
 
-        public string Title { get; set; }
+        public string IssueTitle { get; set; }
 
         public int AuthorId { get; set; }
 

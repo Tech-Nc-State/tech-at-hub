@@ -5,16 +5,16 @@ namespace Tech_HubAPI.Models
 {
     public class Label
     {
-        public Label(int id, string title, string color)
+        public Label(int id, string labelTitle, string color)
         {
             Id = id;
-            Title = title;
+            LabelTitle = labelTitle;
             Color = color;
         }
 
         public int Id { get; set; }
 
-        public string Title { get; set; }
+        public string LabelTitle { get; set; }
 
         // Hexcode possibly
         public string Color { get; set; }
