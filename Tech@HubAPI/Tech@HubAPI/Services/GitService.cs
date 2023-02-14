@@ -315,10 +315,54 @@ namespace Tech_HubAPI.Services
         /// <param name="repository"></param> the repo name
         /// <param name="branch"></param> the branch to get commits of
         /// <returns>A list of Commit objects that makes up the current branch.</returns>
-        public Commit[] GetCommitLog(string username, string repository, string branch)
+        public List<Commit> GetCommitLog(string username, string repository, string branchName)
         {
+            string userDirectory = _baseGitFolder + username + "/";
+
+            if (!Directory.Exists(userDirectory))
+            {
+                throw new Exception("That user doesn't exist");
+            }
+
+            string repoDirectory = userDirectory + repository + _repoDirectoryPostfix + "/";
+            if (!Directory.Exists(repoDirectory))
+            {
+                throw new DirectoryNotFoundException("The repository does not exist");
+            }
+
+            string branchDirectory = repoDirectory + "/refs/heads";
+            if (!Directory.Exists(branchDirectory))
+            {
+                throw new DirectoryNotFoundException("The branch does not exist");
+            }
+
             // TODO: Get the list of commits from the file system, make sure u find the right one if it exists
             // TODO: Make the Commit objects into an array and return this. See GetBranches(), probably.
+
+            // Throws exception if file is not found
+            string commitHash = File.ReadAllText(branchDirectory + "/" + branchName).Trim();
+
+            // Setup the list to be ready to go.
+            List<Commit> commitList = new List<Commit>();
+
+            // Set up the execute service
+            _executeService.ExecutableDirectory = _gitBinPath;
+            _executeService.WorkingDirectory = branchDirectory;
+
+            // Run git cat-file
+            string rawCommitData = _executeService.ExecuteProcess("git", "cat-file", "-p", commitHash);
+            Match parentMatch = Regex.Match(rawCommitData, "parent (?<hash>.+)\n");
+            Match authorMatch = Regex.Match(rawCommitData, "author (?<hash>.+)\n");  // TODO: this regex is probably broken.
+            // TODO: Fix this dam regex lmao.
+
+            // TODO: run cat-file -p on the commit 
+
+
+            while (parentMatch.Success)
+            {
+                // Keep trying to rematch and make new Commits to add to the list
+                // The commits will probably be added in reverse chronological order.
+            }
 
             return null;
         }

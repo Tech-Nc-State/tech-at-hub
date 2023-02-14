@@ -40,5 +40,10 @@
         /// </summary>
         public string Diff { get; set; }  // TODO: Figure out how to implement this. Is string the best data type?
 
+        /// <summary>
+        /// The parent commit of this commit. Equal to null if this is HEAD. Not used yet.
+        /// </summary>
+        public Commit Parent { get; set; }
+
     }
 }
