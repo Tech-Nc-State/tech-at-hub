@@ -61,7 +61,6 @@ namespace Tech_HubAPI.Models
             modelBuilder.Entity<Comment>(entity =>
             {
                 entity.HasKey(e => e.Id);
-                entity.HasOne(e => e.Body);
             });
 
             // Label
