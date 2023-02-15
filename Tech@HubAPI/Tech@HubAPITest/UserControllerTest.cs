@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -33,6 +33,7 @@ namespace Tech_HubAPITest
         {
             var user = await _th.CreateUser("bob", "Passwordyy$_");
             user.Should().NotBeNull();
+            File.Exists(user.ProfilePicturePath).Should().BeTrue();
         }
 
         [Theory]
