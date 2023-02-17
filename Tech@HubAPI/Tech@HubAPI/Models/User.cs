@@ -38,7 +38,7 @@ namespace Tech_HubAPI.Models
 
         public DateTime BirthDate { get; set; }
 
-        public DateTime LastLoginAttempt { get; set; }
+        public DateTime? LastLoginAttempt { get; set; }
 
         public string? LastLoginAttemptIp { get; set; }
     }
