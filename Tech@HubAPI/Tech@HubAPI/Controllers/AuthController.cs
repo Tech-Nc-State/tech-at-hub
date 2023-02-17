@@ -61,14 +61,7 @@ namespace GitTest.Controllers
             TimeSpan loginInterval;
             DateTime now = DateTime.Now;
 
-            if (user.LastLoginAttempt == null)
-            {
-                loginInterval = TimeSpan.Zero;
-            }
-            else
-            {
-                loginInterval = now - (DateTime)user.LastLoginAttempt;
-            }
+            loginInterval = now - user.LastLoginAttempt;
 
             user.LastLoginAttempt = now;
             user.LastLoginAttemptIp = ip;
