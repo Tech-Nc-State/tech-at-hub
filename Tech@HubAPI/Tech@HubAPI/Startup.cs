@@ -97,6 +97,16 @@ namespace Tech_HubAPI
                 }
             });
             services.AddScoped<IAuthorizationHandler, RepositoryAuthHandler>();
+
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(
+                    policy =>
+                    {
+                        policy.WithOrigins("http://localhost:5000",
+                                            "http://localhost:3000");
+                    });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -117,6 +127,7 @@ namespace Tech_HubAPI
             // Uncomment when the other web-servers are configured for HTTPS
             //app.UseHttpsRedirection();
 
+            app.UseCors();
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
