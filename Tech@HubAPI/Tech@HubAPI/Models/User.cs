@@ -4,8 +4,6 @@ namespace Tech_HubAPI.Models
 {
     public class User
     {
-        private DateTime lastLogin;
-
         public User(string username, byte[] password, byte[] salt, string email, string firstName,
             string lastName, string description, string? profilePicturePath, DateTime birthDate)
         {
@@ -40,16 +38,8 @@ namespace Tech_HubAPI.Models
 
         public DateTime BirthDate { get; set; }
 
-        public DateTime LastLogin
-        {
-            get
-            {
-                return this.lastLogin;
-            }
-            set
-            {
-                this.lastLogin = DateTime.Now;
-            }
-        }
+        public DateTime LastLoginAttempt { get; set; }
+
+        public string? LastLoginAttemptIp { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Security.Claims;
@@ -44,7 +45,33 @@ namespace GitTest.Controllers
                 return NotFound();
             }
 
-            TimeSpan loginInterval = DateTime.Now - user.LastLogin;
+            
+            string? ipNullable = Request.HttpContext.GetServerVariable("REMOTE_ADDR");
+            string ip;
+            if (ipNullable == null)
+            {
+                ip = "localhost";
+            }
+            else
+            {
+                ip = (string)ipNullable;
+            }
+            System.Diagnostics.Debug.WriteLine(ip);
+
+            TimeSpan loginInterval;
+            DateTime now = DateTime.Now;
+
+            if (user.LastLoginAttempt == null)
+            {
+                loginInterval = TimeSpan.Zero;
+            }
+            else
+            {
+                loginInterval = now - (DateTime)user.LastLoginAttempt;
+            }
+
+            user.LastLoginAttempt = now;
+            user.LastLoginAttemptIp = ip;
 
             if (loginInterval.Seconds < minLoginInterval)
             {
