@@ -124,5 +124,16 @@ namespace Tech_HubAPITest
             FileContent fc = _gitService.GetFileContents("testUser", "testBranches", "master", "text.txt");
             fc.Contents.Should().Be("hello\nthere");
         }
+
+        [Fact]
+        public void TestGetCommitLog()
+        {
+            _fileSystem.ImportFolder("./SampleGitRepos/testGetCommitLog.git", "git/testUser/testGetCommitLog.git");
+
+            List<Commit> commits = _gitService.GetCommitLog("testUser", "testGetCommitLog", "master");
+
+            commits.Should().HaveCount(6);
+
+        }
     }
 }

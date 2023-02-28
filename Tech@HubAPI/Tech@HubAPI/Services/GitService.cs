@@ -350,7 +350,7 @@ namespace Tech_HubAPI.Services
             _executeService.WorkingDirectory = branchDirectory;
 
             // Run git cat-file
-            string rawCommitData = _executeService.ExecuteProcess("git", "cat-file", "-p", commitHash);
+            string rawCommitData = _executeService.ExecuteProcess("git", "cat-file", "-p", commitHash); // this could just be branch name.
             Match parentMatch = Regex.Match(rawCommitData, "parent (?<hash>.+)\n");
             Match authorMatch = Regex.Match(rawCommitData, "author (?<hash>.+)\n");  // TODO: this regex is probably broken.
             // TODO: Fix this dam regex lmao.
@@ -362,9 +362,29 @@ namespace Tech_HubAPI.Services
             {
                 // Keep trying to rematch and make new Commits to add to the list
                 // The commits will probably be added in reverse chronological order.
+                Commit newCommit = new Commit(0, authorMatch.Groups["hash"].Value, "TODO: Replace message", commitHash, "Pretend this is a diff");
+
+                // set previous's commits parent
+                Commit? last = commitList.Last();
+                if (last != null)
+                {
+                    commitList.Last().Parent = newCommit;
+                }
+
+                // add new commit to back.
+                commitList.Add(newCommit);
+
+                // replace current commit hash
+                commitHash = parentMatch.Groups["hash"].Value;
+
+                // get new commit data.
+                rawCommitData = _executeService.ExecuteProcess("git", "cat-file", "-p", commitHash);
+                parentMatch = Regex.Match(rawCommitData, "parent (?<hash>.+)\n");
+
+                
             }
 
-            return null;
+            return commitList;
         }
     }
 }
