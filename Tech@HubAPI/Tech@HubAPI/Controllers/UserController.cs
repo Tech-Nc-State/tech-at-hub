@@ -145,8 +145,23 @@ namespace Tech_HubAPI.Controllers
 
             DateTime.TryParse(form.BirthDate, out DateTime birthDate);
 
+
+
+            String randomPfpPicture = "";
+              
+            if (Directory.Exists("Profile_Pictures_JPG/"))
+            {
+                var rand = new Random();
+                var files = Directory.GetFiles("Profile_Pictures_JPG/", "*.jpg");
+                if (files.Length != 0)
+                {
+                    randomPfpPicture = files[rand.Next(files.Length)];
+                }
+            }
+               
+
             var user = new User(form.Username, hashedPassword, salt, form.Email, form.FirstName,
-                    form.LastName, "", null, birthDate);
+                    form.LastName, "", randomPfpPicture, birthDate);
             _dbContext.Users.Add(user);
             _dbContext.SaveChanges();
 

@@ -1,4 +1,6 @@
-﻿namespace Tech_HubAPI.Models
+﻿using System.Collections.Generic;
+
+namespace Tech_HubAPI.Models
 {
     /// <summary>
     /// The Repository Class will be used to represent all the data needed to track a
@@ -21,6 +23,7 @@
             Name = name;
             OwnerId = ownerId;
             IsPublic = isPublic;
+            Issues = new List<Issue>();
         }
 
         /// <summary>
@@ -44,6 +47,11 @@
         /// Whether this Repository is Public or Private.
         /// </summary>
         public bool IsPublic { get; set; }
+
+        /// <summary>
+        /// Repository's list of issues.
+        /// </summary>
+        public List<Issue> Issues { get; set; }
 
 
     }
