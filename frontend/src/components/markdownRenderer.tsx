@@ -1,10 +1,13 @@
+import React from "react";
+import ReactMarkdown from "react-markdown";
 
-import React from 'react';
-import ReactMarkdown from 'react-markdown';
-
-
-function MarkdownRender(props) {
-    return (<ReactMarkdown children={props.markdown}/>);
+interface markdownProps {
+    text: string;
 }
 
-export default markdownRender;
+function renderMarkdown(props : markdownProps) {
+    return <ReactMarkdown>{props.text}</ReactMarkdown>
+}
+
+
+export default renderMarkdown;
