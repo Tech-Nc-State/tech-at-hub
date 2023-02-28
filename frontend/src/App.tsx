@@ -5,6 +5,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 import NavBar from "./components/navbar";
 import Footer from "./components/footer";
+import { GlobalServices } from "./services/GlobalServices";
 
 const theme = createTheme({
   palette: {
@@ -25,38 +26,38 @@ const theme = createTheme({
 
 function App() {
   return (
-    <Box>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <NavBar />
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            p: 3,
-          }}
-        >
-          <Paper
-            elevation={10}
-            sx={{
-              borderRadius: 10,
-              width: "70%",
-              height: "100%",
-              minWidth: 700,
-              minHeight: 1000,
-              justifyContent: "center",
-              alignItems: "center",
-              textAlign: "center",
-              p: 5,
-            }}
-          >
-            <Outlet />
-          </Paper>
+      <GlobalServices>
+        <Box>
+          <ThemeProvider theme={theme}>
+            <CssBaseline />
+            <NavBar />
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                p: 3,
+              }}
+            >
+              <Box
+                sx={{
+                  width: "70%",
+                  height: "100%",
+                  minWidth: 700,
+                  minHeight: 1000,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  textAlign: "center",
+                  p: 5,
+                }}
+              >
+                <Outlet />
+              </Box>
+            </Box>
+            <Footer />
+          </ThemeProvider>
         </Box>
-        <Footer />
-      </ThemeProvider>
-    </Box>
+      </GlobalServices>
   );
 }
 
