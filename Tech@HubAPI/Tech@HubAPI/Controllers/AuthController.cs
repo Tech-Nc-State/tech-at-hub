@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Net;
 using System.Security.Claims;
 using System.Text;
 using System.Text.RegularExpressions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Tech_HubAPI.Models;
@@ -32,12 +35,40 @@ namespace GitTest.Controllers
         [Route("login")]
         public IActionResult Login([FromBody] Credentials credentials)
         {
+            int minLoginInterval = 3;
+
             // https://delushaandelu.medium.com/jwt-auth-in-asp-net-core-353595b9b7c4
             var user = _dbContext.Users.Where(u => u.Username == credentials.Username).FirstOrDefault();
 
             if (user == null)
             {
                 return NotFound();
+            }
+
+            
+            string? ipNullable = Request.HttpContext.GetServerVariable("REMOTE_ADDR");
+            string ip;
+            if (ipNullable == null)
+            {
+                ip = "localhost";
+            }
+            else
+            {
+                ip = (string)ipNullable;
+            }
+            System.Diagnostics.Debug.WriteLine(ip);
+
+            TimeSpan loginInterval;
+            DateTime now = DateTime.Now;
+
+            loginInterval = now - user.LastLoginAttempt;
+
+            user.LastLoginAttempt = now;
+            user.LastLoginAttemptIp = ip;
+
+            if (loginInterval.Seconds < minLoginInterval)
+            {
+                return StatusCode((int)HttpStatusCode.TooManyRequests);
             }
 
             byte[] hashedPasswordAttempt = _hashing.HashPassword(credentials.Password, user.Salt);

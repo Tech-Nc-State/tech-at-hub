@@ -20,6 +20,12 @@ namespace Tech_HubAPI.Models
         /// </summary>
         public DbSet<RepositoryPermission> RepositoryPermissions { get; set; }
 
+        public DbSet<Issue> Issues { get; set; }
+
+        public DbSet<Comment> Comments { get; set; }
+
+        public DbSet<Label> Labels { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -43,6 +49,24 @@ namespace Tech_HubAPI.Models
                 entity.HasKey(e => e.Id);
                 entity.HasOne(e => e.User);
                 entity.HasOne(e => e.Repository);
+            });
+
+            // Issue
+            modelBuilder.Entity<Issue>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+            });
+
+            // Comment
+            modelBuilder.Entity<Comment>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+            });
+
+            // Label
+            modelBuilder.Entity<Label>(entity =>
+            {
+                entity.HasKey(e => e.Id);
             });
         }
     }
