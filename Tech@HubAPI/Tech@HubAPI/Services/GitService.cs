@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using Microsoft.Extensions.Configuration;
 using Tech_HubAPI.Models;
 using Tech_HubAPI.Models.Git;
 using Tech_HubAPI.Models.GitModels;
+using static System.Net.Mime.MediaTypeNames;
+using static System.Net.WebRequestMethods;
 
 namespace Tech_HubAPI.Services
 {
@@ -75,10 +78,36 @@ namespace Tech_HubAPI.Services
 
             // assign info to branches
             List<Branch> branches = branchNames
-                .Select(name => new Branch(name, File.ReadAllText(branchDirectory + "/" + name).Trim()))
+                .Select(name => new Branch(name, System.IO.File.ReadAllText(branchDirectory + "/" + name).Trim()))
                 .ToList();
 
             return branches;
+        }
+
+        public void CreateNewBranch(string username, string repository, string branchName, string branchHash)
+        {
+            // Given a username and repoName, create a new branch repository.
+
+            // Check if user directory exists
+            string userDirectory = _baseGitFolder + username + "/";
+            if (!Directory.Exists(userDirectory))
+            {
+                throw new DirectoryNotFoundException("User not found");
+            }
+
+            // Check if repo directory exists
+            string repoDirectory = userDirectory + repository + _repoDirectoryPostfix + "/";
+            if (!Directory.Exists(repoDirectory))
+            {
+                // repo no exist
+                throw new DirectoryNotFoundException("Repository not found");
+            }
+
+            string branchPath = repoDirectory + "refs/heads/" + branchName;
+
+            // Create a new file
+            System.IO.File.WriteAllText(branchPath, branchHash);
+
         }
 
         /// <summary>
@@ -166,7 +195,7 @@ namespace Tech_HubAPI.Services
 
             string headHash;
             // Throws exception if file is not found
-            headHash = File.ReadAllText(branchDirectory + "/" + branch).Trim();
+            headHash = System.IO.File.ReadAllText(branchDirectory + "/" + branch).Trim();
 
             _executeService.ExecutableDirectory = _gitBinPath;
             _executeService.WorkingDirectory = branchDirectory;
@@ -257,7 +286,7 @@ namespace Tech_HubAPI.Services
             }
 
             // Throws exception if file is not found
-            string commitHash = File.ReadAllText(branchDirectory + "/" + branchName).Trim();
+            string commitHash = System.IO.File.ReadAllText(branchDirectory + "/" + branchName).Trim();
 
             // Set up the execute service
             _executeService.ExecutableDirectory = _gitBinPath;
@@ -354,7 +383,7 @@ namespace Tech_HubAPI.Services
 
             // assign info to tags
             List<Tag> tags = tagNames
-                .Select(name => new Tag(name, File.ReadAllText(tagDirectory + "/" + name).Trim()))
+                .Select(name => new Tag(name, System.IO.File.ReadAllText(tagDirectory + "/" + name).Trim()))
                 .ToList();
 
             return tags;
