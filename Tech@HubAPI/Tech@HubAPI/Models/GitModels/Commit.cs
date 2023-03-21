@@ -1,4 +1,6 @@
-﻿namespace Tech_HubAPI.Models.GitModels
+﻿using System;
+
+namespace Tech_HubAPI.Models.GitModels
 {
     /// <summary>
     /// Contains information about a single Git commit object.
@@ -6,19 +8,18 @@
     /// </summary>
     public class Commit
     {
-        public Commit(ulong timestamp, string username, string message, string hash, string diff)
+        public Commit(DateTime timestamp, string username, string message, string hash)
         {
             Timestamp = timestamp;
             Username = username;
             Message = message;
             Hash = hash;
-            Diff = diff;
         }
 
         /// <summary>
         /// The UNIX timestamp of the commit.
         /// </summary>
-        public ulong Timestamp { get; set; }
+        public DateTime Timestamp { get; set; }
 
         /// <summary>
         /// The username of the user that made this commit.
@@ -34,11 +35,6 @@
         /// The SHA hash of this commit.
         /// </summary>
         public string Hash { get; set; }
-
-        /// <summary>
-        /// The diff of this commit. Not implemented.
-        /// </summary>
-        public string Diff { get; set; }  // TODO: Figure out how to implement this. Is string the best data type?
 
         /// <summary>
         /// The parent commit of this commit. Equal to null if this is HEAD. Not used yet.

@@ -349,10 +349,13 @@ namespace Tech_HubAPI.Services
             _executeService.ExecutableDirectory = _gitBinPath;
             _executeService.WorkingDirectory = branchDirectory;
 
+            // Regex Strings
+            string infoRegex = "author (?<author>.+)\ncommitter (?<comitter>.+)\n(?<message>.+)"; // TODO: Message isnt working, author and comitter working tho.
+
             // Run git cat-file
             string rawCommitData = _executeService.ExecuteProcess("git", "cat-file", "-p", commitHash); // this could just be branch name.
             Match parentMatch = Regex.Match(rawCommitData, "parent (?<hash>.+)\n");
-            Match authorMatch = Regex.Match(rawCommitData, "author (?<hash>.+)\n");  // TODO: this regex is probably broken.
+            Match infoMatch = Regex.Match(rawCommitData, infoRegex);
             // TODO: Fix this dam regex lmao.
 
             // TODO: run cat-file -p on the commit 
@@ -362,14 +365,15 @@ namespace Tech_HubAPI.Services
             {
                 // Keep trying to rematch and make new Commits to add to the list
                 // The commits will probably be added in reverse chronological order.
-                Commit newCommit = new Commit(0, authorMatch.Groups["hash"].Value, "TODO: Replace message", commitHash, "Pretend this is a diff");
+                Commit newCommit = new Commit(new DateTime(), infoMatch.Groups["author"].Value, infoMatch.Groups["message"].Value, commitHash);
+
 
                 // set previous's commits parent
-                Commit? last = commitList.Last();
-                if (last != null)
+                if (commitList.Count > 0)
                 {
                     commitList.Last().Parent = newCommit;
                 }
+                
 
                 // add new commit to back.
                 commitList.Add(newCommit);
@@ -380,11 +384,12 @@ namespace Tech_HubAPI.Services
                 // get new commit data.
                 rawCommitData = _executeService.ExecuteProcess("git", "cat-file", "-p", commitHash);
                 parentMatch = Regex.Match(rawCommitData, "parent (?<hash>.+)\n");
+                infoMatch = Regex.Match(rawCommitData, infoRegex);
 
-                
+
             }
 
-            return commitList;
+            return commitList; // TODO: Rework ths to return a single Commit instead of a list.
         }
     }
 }
