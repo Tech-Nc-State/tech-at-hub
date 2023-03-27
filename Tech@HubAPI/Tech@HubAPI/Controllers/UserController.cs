@@ -73,7 +73,16 @@ namespace Tech_HubAPI.Controllers
                 return BadRequest("The username is not found.");
             }
 
-            var path = user.ProfilePicturePath;
+            String path;
+            if (System.IO.File.Exists("Profile_Pictures_JPG/" + user.ProfilePicturePath))
+            {
+                path = "Profile_Pictures_JPG/" + user.ProfilePicturePath;
+            }
+            else
+            {
+                path = user.ProfilePicturePath;
+            }
+            
             var ext = path.Substring(path.IndexOf("."));
             var stream = System.IO.File.OpenRead(path);
             var mime = "image/jpeg";
