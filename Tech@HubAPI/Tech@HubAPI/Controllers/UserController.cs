@@ -46,11 +46,11 @@ namespace Tech_HubAPI.Controllers
             using var ms = new MemoryStream();
             image.SaveAsJpeg(ms);
 
-            var path = BitConverter.ToString(_hashingService.HashFile(ms.ToArray())).Replace("-", "");
-            image.SaveAsJpeg(_defaultWorkingDirectory + "/profile_pictures/" + path + ".jpg");
+            var path = BitConverter.ToString(_hashingService.HashFile(ms.ToArray())).Replace("-", "") + ".jpg";
+            image.SaveAsJpeg(_defaultWorkingDirectory + "/profile_pictures/" + path);
 
             var user = this.GetUser(_dbContext);
-
+            _dbContext.Users.Update(user);
             user.ProfilePicturePath = path;
             _dbContext.SaveChanges();
 
@@ -80,17 +80,12 @@ namespace Tech_HubAPI.Controllers
             }
             else
             {
-                path = user.ProfilePicturePath;
+                path = _defaultWorkingDirectory + "/profile_pictures/" + user.ProfilePicturePath;
             }
             
             var ext = path.Substring(path.IndexOf("."));
             var stream = System.IO.File.OpenRead(path);
             var mime = "image/jpeg";
-
-            if (ext == "png")
-            {
-                mime = "image/png";
-            }
 
             return new FileStreamResult(stream, mime);
         }
