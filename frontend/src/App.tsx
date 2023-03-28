@@ -5,7 +5,6 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 import NavBar from "./components/navbar";
 import Footer from "./components/footer";
-import RepositoryHeader from "./components/repo_header";
 import React from "react";
 import { GlobalServices } from "./services/GlobalServices";
 
@@ -33,7 +32,6 @@ function App() {
           <ThemeProvider theme={theme}>
             <CssBaseline />
             <NavBar />
-            <RepositoryHeader initialPos={0}/>
             <Box
               sx={{
                 display: "flex",
