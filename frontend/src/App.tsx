@@ -5,6 +5,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 import NavBar from "./components/navbar";
 import Footer from "./components/footer";
+import React from "react";
 import { GlobalServices } from "./services/GlobalServices";
 
 const theme = createTheme({
