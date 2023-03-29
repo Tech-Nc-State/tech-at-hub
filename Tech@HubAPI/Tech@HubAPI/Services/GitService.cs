@@ -352,7 +352,7 @@ namespace Tech_HubAPI.Services
             // Regex Strings
             // It's not pretty but it works.
             string infoRegex = "tree (?<tree>.+)\nparent (?<parent>.+)\nauthor (?<author>.+) <(?<authorEmail>.+)> (?<authorTimestamp>[0-9]+) (?<authorTimezone>-?[0-9]+).*\ncommitter (?<comitter>.+) <(?<committerEmail>.+)> (?<comitterTimestamp>[0-9]+) (?<comitterTimezone>-?[0-9]+)(\\s)+(?<message>(.+(\\s)*))";
-            string parentlessRegex = "tree (?<tree>.+)\n.*\nauthor (?<author>.+) <(?<authorEmail>.+)> (?<authorTimestamp>[0-9]+) (?<authorTimezone>-?[0-9]+).*\ncommitter (?<comitter>.+) <(?<committerEmail>.+)> (?<comitterTimestamp>[0-9]+) (?<comitterTimezone>-?[0-9]+)(\\s)+(?<message>(.+(\\s)*))";
+            string parentlessRegex = "tree (?<tree>.+)(\\s)author (?<author>.+) <(?<authorEmail>.+)> (?<authorTimestamp>[0-9]+) (?<authorTimezone>-?[0-9]+).*\\ncommitter (?<comitter>.+) <(?<committerEmail>.+)> (?<comitterTimestamp>[0-9]+) (?<comitterTimezone>-?[0-9]+)(\\s)+(?<message>(.+(\\s)*))";
             string parentRegex = "parent (?<hash>.+)\n";
 
             // Run git cat-file
@@ -394,10 +394,20 @@ namespace Tech_HubAPI.Services
 
             infoMatch = Regex.Match(rawCommitData, parentlessRegex);
             // Tack on the final commit, since it doesnt have a parent.
-            commitList.Add(new Commit(UnixTimeStampToDateTime(double.Parse(infoMatch.Groups["authorTimestamp"].Value)),
+            Commit lastCommit = new Commit(UnixTimeStampToDateTime(double.Parse(infoMatch.Groups["authorTimestamp"].Value)),
                     infoMatch.Groups["authorEmail"].Value,
                     infoMatch.Groups["message"].Value,
-                    commitHash));
+                    commitHash);
+
+            // set previous's commits parent
+            if (commitList.Count > 0)
+            {
+                commitList.Last().Parent = lastCommit;
+            }
+
+            commitList.Add(lastCommit);
+
+            
 
             return commitList; // TODO: Rework ths to return a single Commit instead of a list.
         }

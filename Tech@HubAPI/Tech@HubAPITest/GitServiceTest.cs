@@ -159,10 +159,10 @@ namespace Tech_HubAPITest
             commits[4].Username.Should().Be("nzbennet@ncsu.edu");
             commits[4].Parent.Should().Be(commits[5]);
 
-            commits[4].Hash.Should().Be("69c62533d3da440af734fd9aa3d743ef150fc779");
-            commits[4].Message.Should().Be("Commit 1");
-            commits[4].Username.Should().Be("nzbennet@ncsu.edu");
-            commits[4].Parent.Should().BeNull();
+            commits[5].Hash.Should().Be("69c62533d3da440af734fd9aa3d743ef150fc779");
+            commits[5].Message.Should().Be("Commit 1");
+            commits[5].Username.Should().Be("nzbennet@ncsu.edu");
+            commits[5].Parent.Should().BeNull();
 
 
         }
