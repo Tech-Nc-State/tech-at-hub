@@ -379,7 +379,7 @@ namespace Tech_HubAPI.Services
             // Make the Commit objects into an array and return this. See GetBranches(), probably.
 
             // Throws exception if file is not found
-            string commitHash = File.ReadAllText(branchDirectory + "/" + branchName).Trim();
+            string commitHash = System.IO.File.ReadAllText(branchDirectory + "/" + branchName).Trim();
 
             // Setup the list to be ready to go.
             List<Commit> commitList = new List<Commit>();
