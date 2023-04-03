@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using Microsoft.Extensions.Configuration;
 using Tech_HubAPI.Models;
 using Tech_HubAPI.Models.Git;
 using Tech_HubAPI.Models.GitModels;
+using static System.Net.Mime.MediaTypeNames;
+using static System.Net.WebRequestMethods;
 
 namespace Tech_HubAPI.Services
 {
@@ -75,10 +78,36 @@ namespace Tech_HubAPI.Services
 
             // assign info to branches
             List<Branch> branches = branchNames
-                .Select(name => new Branch(name, File.ReadAllText(branchDirectory + "/" + name).Trim()))
+                .Select(name => new Branch(name, System.IO.File.ReadAllText(branchDirectory + "/" + name).Trim()))
                 .ToList();
 
             return branches;
+        }
+
+        public void CreateNewBranch(string username, string repository, string branchName, string branchHash)
+        {
+            // Given a username and repoName, create a new branch repository.
+
+            // Check if user directory exists
+            string userDirectory = _baseGitFolder + username + "/";
+            if (!Directory.Exists(userDirectory))
+            {
+                throw new DirectoryNotFoundException("User not found");
+            }
+
+            // Check if repo directory exists
+            string repoDirectory = userDirectory + repository + _repoDirectoryPostfix + "/";
+            if (!Directory.Exists(repoDirectory))
+            {
+                // repo no exist
+                throw new DirectoryNotFoundException("Repository not found");
+            }
+
+            string branchPath = repoDirectory + "refs/heads/" + branchName;
+
+            // Create a new file
+            System.IO.File.WriteAllText(branchPath, branchHash);
+
         }
 
         /// <summary>
@@ -166,7 +195,7 @@ namespace Tech_HubAPI.Services
 
             string headHash;
             // Throws exception if file is not found
-            headHash = File.ReadAllText(branchDirectory + "/" + branch).Trim();
+            headHash = System.IO.File.ReadAllText(branchDirectory + "/" + branch).Trim();
 
             _executeService.ExecutableDirectory = _gitBinPath;
             _executeService.WorkingDirectory = branchDirectory;
@@ -222,7 +251,17 @@ namespace Tech_HubAPI.Services
 
             return directoryListing;
         }
-
+        /// <summary>
+        /// Gets the contents of a given file in a specific branch by reconstructing
+        /// the associated Git objects. Returns a <see cref="FileContent"/> object that
+        /// contains the file's contents on that branch.
+        /// </summary>
+        /// <param name="username">The repo owner's username.</param>
+        /// <param name="repositoryName">The name of the repository.</param>
+        /// <param name="branchName">Selected branch from the repository.</param>
+        /// <param name="filePath">Path to a specific file within the repo.</param>
+        /// <returns></returns>
+        /// <exception cref="DirectoryNotFoundException">if given user, repo, or branch isnt found.</exception>
         public FileContent GetFileContents(string username, string repositoryName, string branchName, string filePath)
         {
             // Check if user directory exists
@@ -247,7 +286,7 @@ namespace Tech_HubAPI.Services
             }
 
             // Throws exception if file is not found
-            string commitHash = File.ReadAllText(branchDirectory + "/" + branchName).Trim();
+            string commitHash = System.IO.File.ReadAllText(branchDirectory + "/" + branchName).Trim();
 
             // Set up the execute service
             _executeService.ExecutableDirectory = _gitBinPath;
@@ -418,6 +457,47 @@ namespace Tech_HubAPI.Services
             DateTime dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
             dateTime = dateTime.AddSeconds(unixTimeStamp).ToLocalTime();
             return dateTime;
+        }
+
+        /// Gets a list of <see cref="Tag">s in the given user/repo name.
+        /// Will return empty list if no tags exist.
+        /// </summary>
+        /// <param name="username">the username</param>
+        /// <param name="repoName">name of the repository</param>
+        /// <returns>list of Tags</returns>
+        /// <exception cref="DirectoryNotFoundException">If the user or repository do not exist</exception>
+        public List<Tag> GetTags(string username, string repositoryName)
+        {
+            // Given a username and repoName, list all stored tags.
+
+            // Check if user directory exists
+            string userDirectory = _baseGitFolder + username + "/";
+            if (!Directory.Exists(userDirectory))
+            {
+                throw new DirectoryNotFoundException("User not found");
+            }
+
+            // Check if repo directory exists
+            string repoDirectory = userDirectory + repositoryName + _repoDirectoryPostfix + "/";
+            if (!Directory.Exists(repoDirectory))
+            {
+                // repo no exist
+                throw new DirectoryNotFoundException("Repository not found");
+            }
+
+            string tagDirectory = repoDirectory + "/refs/tags";
+
+            string[] tagNames = new DirectoryInfo(tagDirectory)
+                .GetFiles()
+                .Select(f => f.Name)
+                .ToArray();
+
+            // assign info to tags
+            List<Tag> tags = tagNames
+                .Select(name => new Tag(name, System.IO.File.ReadAllText(tagDirectory + "/" + name).Trim()))
+                .ToList();
+
+            return tags;
         }
     }
 }

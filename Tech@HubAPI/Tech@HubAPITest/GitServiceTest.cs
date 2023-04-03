@@ -35,6 +35,20 @@ namespace Tech_HubAPITest
         }
 
         [Fact]
+        public void TestCreateBranch()
+        {
+            _gitService.CreateNewRepository("MyRepo", "nsfogg");
+            Directory.Exists(_fileSystem.RootDirectory + "git/nsfogg/MyRepo.git").Should().BeTrue();
+
+            _gitService.CreateNewBranch("nsfogg", "MyRepo", "newBranch", "branchHash");
+            File.Exists(_fileSystem.RootDirectory + "git/nsfogg/MyRepo.git/refs/heads/newBranch").Should().BeTrue();
+
+            List<Branch> branches = _gitService.GetBranches("nsfogg", "MyRepo");
+            string[] branchNames = branches.Select(branch => branch.Name).ToArray();
+            branchNames.Should().Contain("newBranch");
+        }
+
+        [Fact]
         public void TestGetBranches()
         {
             _fileSystem.ImportFolder("./SampleGitRepos/testBranches.git", "git/testUser/testBranches.git");
@@ -55,6 +69,29 @@ namespace Tech_HubAPITest
         public void TestGetBranchesNotExisting()
         {
             Action run = () => _gitService.GetBranches("testUser", "testBranches");
+            run.Should().Throw<DirectoryNotFoundException>();
+        }
+
+        [Fact]
+        public void TestGetTags()
+        {
+            _fileSystem.ImportFolder("./SampleGitRepos/testTags.git", "git/testUser/testTags.git");
+
+            List<Tag> tags = _gitService.GetTags("testUser", "testTags");
+
+            tags.Count.Should().Be(4);
+            string[] tagNames = tags.Select(tag => tag.Name).ToArray();
+            tagNames.Should().Contain("hello");
+            tagNames.Should().Contain("howdu");
+            tagNames.Should().Contain("testtag");
+            tagNames.Should().Contain("released");
+
+        }
+
+        [Fact]
+        public void TestGetTagsNotExisting()
+        {
+            Action run = () => _gitService.GetTags("testUser", "testTags");
             run.Should().Throw<DirectoryNotFoundException>();
         }
 

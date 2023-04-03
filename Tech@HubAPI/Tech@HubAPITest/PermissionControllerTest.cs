@@ -34,8 +34,8 @@ namespace Tech_HubAPITest
         [Fact]
         public async Task CreatePermissionNonexistentRepoTest()
         {
-            var user = await _apiHelper.CreateUser("bob", "passwordy");
-            string token = await _apiHelper.GetJwtResponseToken(await _apiHelper.Login("bob", "passwordy"));
+            var user = await _apiHelper.CreateUser("bob", "Passwordyy$_");
+            string token = await _apiHelper.GetJwtResponseToken(await _apiHelper.Login("bob", "Passwordyy$_"));
 
             var perm = new RepositoryPermission(user.Id, 1, PermissionLevel.Write);
 

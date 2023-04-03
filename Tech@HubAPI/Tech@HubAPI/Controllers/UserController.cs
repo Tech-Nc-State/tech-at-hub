@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
 using Tech_HubAPI.Models;
 using Tech_HubAPI.Services;
 
@@ -33,27 +35,24 @@ namespace Tech_HubAPI.Controllers
         [Authorize]
         public async Task<ActionResult> UploadProfilePicture(IFormFile file)
         {
-            string[] validImageExtensions = { ".png", ".jpg" };
-
             if (file == null || file.Length == 0)
             {
                 return BadRequest("The file is empty.");
             }
 
-            var path = BitConverter.ToString(_hashingService.HashFile(file)).Replace("-", "");
-            var ext = Path.GetExtension(file.FileName).ToLowerInvariant();
+            using var image = await Image.LoadAsync(file.OpenReadStream());
+            image.Mutate(x => x.Resize(96, 96));
 
-            using var stream = System.IO.File.Create(_defaultWorkingDirectory + "/profile_pictures/" + path + "." + ext);
-            await file.CopyToAsync(stream);
+            using var ms = new MemoryStream();
+            image.SaveAsJpeg(ms);
 
-            if (string.IsNullOrEmpty(ext) || Array.IndexOf(validImageExtensions, ext) == -1)
-            {
-                throw new NotSupportedException(ext + "is not a supported extension.");
-            }
+            var path = BitConverter.ToString(_hashingService.HashFile(ms.ToArray())).Replace("-", "") + ".jpg";
+            image.SaveAsJpeg(_defaultWorkingDirectory + "/profile_pictures/" + path);
 
             var user = this.GetUser(_dbContext);
-
+            _dbContext.Users.Update(user);
             user.ProfilePicturePath = path;
+            _dbContext.SaveChanges();
 
             return Ok();
         }
@@ -74,15 +73,19 @@ namespace Tech_HubAPI.Controllers
                 return BadRequest("The username is not found.");
             }
 
-            var path = user.ProfilePicturePath;
+            String path;
+            if (System.IO.File.Exists("Profile_Pictures_JPG/" + user.ProfilePicturePath))
+            {
+                path = "Profile_Pictures_JPG/" + user.ProfilePicturePath;
+            }
+            else
+            {
+                path = _defaultWorkingDirectory + "/profile_pictures/" + user.ProfilePicturePath;
+            }
+            
             var ext = path.Substring(path.IndexOf("."));
             var stream = System.IO.File.OpenRead(path);
             var mime = "image/jpeg";
-
-            if (ext == "png")
-            {
-                mime = "image/png";
-            }
 
             return new FileStreamResult(stream, mime);
         }
@@ -146,8 +149,23 @@ namespace Tech_HubAPI.Controllers
 
             DateTime.TryParse(form.BirthDate, out DateTime birthDate);
 
+
+
+            String randomPfpPicture = "";
+              
+            if (Directory.Exists("Profile_Pictures_JPG/"))
+            {
+                var rand = new Random();
+                var files = Directory.GetFiles("Profile_Pictures_JPG/", "*.jpg");
+                if (files.Length != 0)
+                {
+                    randomPfpPicture = files[rand.Next(files.Length)];
+                }
+            }
+               
+
             var user = new User(form.Username, hashedPassword, salt, form.Email, form.FirstName,
-                    form.LastName, "", null, birthDate);
+                    form.LastName, "", randomPfpPicture, birthDate);
             _dbContext.Users.Add(user);
             _dbContext.SaveChanges();
 
