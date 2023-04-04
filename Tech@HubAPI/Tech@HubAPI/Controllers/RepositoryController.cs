@@ -168,5 +168,40 @@ namespace Tech_HubAPI.Controllers
 
             return Ok(newRepo);
         }
+
+        [HttpGet]
+        [Route("{Username}/{RepoName}/{BranchName}/commits")]
+        public async Task<ActionResult<List<Commit>>> GetCommits(
+            string username,
+            string repoName,
+            string branchName,
+            [FromQuery] int start,
+            [FromQuery] int perPage
+            )
+        {
+            var repo = _dbContext.Repositories
+                .Where(r => r.Owner.Username == username)
+                .Where(r => r.Name == repoName)
+                .FirstOrDefault();
+            var result = await _authorizationService.AuthorizeAsync(User, repo, "RequireRead");
+
+            if (!result.Succeeded)
+            {
+                return Unauthorized("You are not authorized for this repo.");
+            }
+
+            try
+            {
+                // Do paging here
+                List<Commit> commits = _gitService.GetCommitLog(username, repoName, branchName);
+
+                List<Commit> filtered = commits.Skip(start).Take(perPage).ToList();
+                return filtered;
+            }
+            catch (DirectoryNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
     }
 }
