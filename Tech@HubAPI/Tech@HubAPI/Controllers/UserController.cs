@@ -73,16 +73,16 @@ namespace Tech_HubAPI.Controllers
                 return BadRequest("The username is not found.");
             }
 
-            String path;
-            if (System.IO.File.Exists("Profile_Pictures_JPG/" + user.ProfilePicturePath))
+            string path;
+            if (System.IO.File.Exists(user.ProfilePicturePath))
             {
-                path = "Profile_Pictures_JPG/" + user.ProfilePicturePath;
+                path = user.ProfilePicturePath;
             }
             else
             {
                 path = _defaultWorkingDirectory + "/profile_pictures/" + user.ProfilePicturePath;
             }
-            
+
             var ext = path.Substring(path.IndexOf("."));
             var stream = System.IO.File.OpenRead(path);
             var mime = "image/jpeg";
@@ -149,10 +149,7 @@ namespace Tech_HubAPI.Controllers
 
             DateTime.TryParse(form.BirthDate, out DateTime birthDate);
 
-
-
-            String randomPfpPicture = "";
-              
+            string randomPfpPicture = "";
             if (Directory.Exists("Profile_Pictures_JPG/"))
             {
                 var rand = new Random();
@@ -162,7 +159,7 @@ namespace Tech_HubAPI.Controllers
                     randomPfpPicture = files[rand.Next(files.Length)];
                 }
             }
-               
+
 
             var user = new User(form.Username, hashedPassword, salt, form.Email, form.FirstName,
                     form.LastName, "", randomPfpPicture, birthDate);

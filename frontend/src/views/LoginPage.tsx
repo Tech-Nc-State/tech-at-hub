@@ -1,77 +1,91 @@
-import { Box, Button, TextField } from "@mui/material";
-import { redirect } from "react-router-dom";
-import axios from "axios";
-import { useUserService } from "../services/UserService";
-import { setToken, getAuthHeader } from "../api/TokenAPI";
-import {useEffect, useState } from "react";
+import { Box, Button, TextField, Typography } from "@mui/material";
+import { useEffect, useState } from "react";
+import { useSessionService } from "../services/SessionService";
+import { SessionToken, login } from "../api/AuthApi";
+import { useNavigate } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faLock, faUser } from "@fortawesome/free-solid-svg-icons";
 
 function LoginPage() {
-    const userService = useUserService();
-    const [loginInfo, setLoginInfo] = useState({username: '', password: ''});
+  const sessionService = useSessionService();
+  const navigate = useNavigate();
+  const [loginInfo, setLoginInfo] = useState({ username: "", password: "" });
 
-    useEffect(() => {
-        if (userService.hasUser()) {
-            redirect("/");
-        }
-    }, []);
-
-    function login(username: string, password: string) {
-        axios
-            .post("http://localhost:5000/auth/login", {
-                username: username,
-                password: password
-            }).then((res) => {
-                setToken({
-                    token: res.data.token,
-                    expiration: res.data.expiration
-                });
-                axios.get("http://localhost:5000/user/me", {
-                    headers: getAuthHeader()
-                }).then((res) => {
-                    userService.setCurrentUser(res.data);
-                }).catch((error) => {
-                    console.log(error)
-                })
-            }).catch((error) => {
-                console.log(error);
-                alert(error);
-        });
+  useEffect(() => {
+    if (sessionService.hasSessionToken()) {
+      navigate("/");
     }
+  }, []);
 
-    return (
-        <Box>
-            <p>Login Page</p>
+  const loginHandler = async () => {
+    try {
+      // use the API to get a token
+      let sessionTokenResponse = await login(
+        loginInfo.username,
+        loginInfo.password
+      );
+      let sessionToken: SessionToken = sessionTokenResponse.data;
+      // save the token to a session
+      sessionService.createSession(sessionToken);
+      // redirect to home page
+      navigate("/");
+      window.location.reload();
+    } catch (err) {}
+  };
+
+  return (
+    <Box>
+      <Typography sx={{ fontSize: "3rem", fontWeight: "700" }}>
+        Login
+      </Typography>
+      <Box sx={{ display: "flex", justifyContent: "center" }}>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            width: "50%",
+            alignItems: "center",
+          }}
+        >
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            <FontAwesomeIcon icon={faUser} />
             <TextField
-                id="standard-basic"
-                label="Username"
-                value={loginInfo.username}
-                onChange={(event) => {
-                    setLoginInfo({
-                        ...loginInfo,
-                        username: event.target.value
-                    });
-                }}
+              id="standard-basic"
+              label="Username"
+              value={loginInfo.username}
+              onChange={(event) => {
+                setLoginInfo({
+                  ...loginInfo,
+                  username: event.target.value,
+                });
+              }}
+              sx={{ m: "10px" }}
             />
+          </Box>
+
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            <FontAwesomeIcon icon={faLock} style={{}} />
             <TextField
-                id="standard-basic"
-                label="Password"
-                type="password"
-                value={loginInfo.password}
-                onChange={(event) => {
-                    setLoginInfo({
-                        ...loginInfo,
-                        password: event.target.value
-                    });
-                }}
+              id="standard-basic"
+              label="Password"
+              type="password"
+              value={loginInfo.password}
+              onChange={(event) => {
+                setLoginInfo({
+                  ...loginInfo,
+                  password: event.target.value,
+                });
+              }}
+              sx={{ m: "10px" }}
             />
-            <Button
-                variant="contained"
-                onClick={() => login(loginInfo.username, loginInfo.password)}
-            >
-                Login
-            </Button>
+          </Box>
+          <Button variant="contained" onClick={loginHandler}>
+            Login
+          </Button>
         </Box>
-    );
+      </Box>
+    </Box>
+  );
 }
 
 export default LoginPage;

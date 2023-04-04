@@ -2,7 +2,7 @@
  * List of top level services used by the application
  */
 enum ProvidedServices {
-    UserService
+    SessionService
 }
 
 export default ProvidedServices;
