@@ -18,18 +18,19 @@ function LoginPage() {
   }, []);
 
   const loginHandler = async () => {
-    // use the API to get a token
-    let sessionTokenResponse = await login(
-      loginInfo.username,
-      loginInfo.password
-    );
-    if (sessionTokenResponse.status == 200) {
+    try {
+      // use the API to get a token
+      let sessionTokenResponse = await login(
+        loginInfo.username,
+        loginInfo.password
+      );
       let sessionToken: SessionToken = sessionTokenResponse.data;
       // save the token to a session
       sessionService.createSession(sessionToken);
       // redirect to home page
       navigate("/");
-    }
+      window.location.reload();
+    } catch (err) {}
   };
 
   return (

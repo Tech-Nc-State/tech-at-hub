@@ -14,14 +14,17 @@ function HomePage() {
   const [user, setUser] = useState<any>(null);
 
   useEffect(() => {
-    getMe(sessionService.getSessionToken()).then((response) => {
-      setUser(response.data);
-    });
+    if (sessionService.hasSessionToken()) {
+      getMe(sessionService.getSessionToken()).then((response) => {
+        setUser(response.data);
+      });
+    }
   }, []);
 
   const logout = () => {
     sessionService.clearSession();
     setUser(null);
+    window.location.reload();
   };
 
   return (

@@ -19,11 +19,34 @@ import { Link } from "react-router-dom";
 import MenuIcon from "@mui/icons-material/Menu";
 import AdbIcon from "@mui/icons-material/Adb";
 import TechAtLogo from "./logo";
+import { useSessionService } from "../services/SessionService";
+import { useEffect, useState } from "react";
+import { getMe } from "../api/AuthApi";
+import { getProfilePicture } from "../api/UserApi";
 
 const pages = [{ name: "About", route: "/about" }];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 function NavBar() {
+  const sessionService = useSessionService();
+  const [pfp, setPfp] = useState<any>(null);
+
+  useEffect(() => {
+    if (sessionService.hasSessionToken()) {
+      getMe(sessionService.getSessionToken()).then((response) => {
+        getProfilePicture(response.data.username).then((response) => {
+          const base64 = btoa(
+            new Uint8Array(response.data).reduce(
+              (data, byte) => data + String.fromCharCode(byte),
+              ""
+            )
+          );
+          setPfp(base64);
+        });
+      });
+    }
+  }, []);
+
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
   );
@@ -127,7 +150,7 @@ function NavBar() {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="popcorn.svg" />
+                <Avatar alt="" src={`data:;base64,${pfp}`} />
               </IconButton>
             </Tooltip>
             <Menu
