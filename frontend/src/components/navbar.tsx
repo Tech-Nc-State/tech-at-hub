@@ -61,7 +61,7 @@ function NavBar() {
           {/* Buttons */}
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {pages.map(({ name, route }) => (
-              <Link to={route} style={{ textDecoration: "none" }}>
+              <Link key={name} to={route} style={{ textDecoration: "none" }}>
                 <Button
                   key={name}
                   onClick={handleCloseNavMenu}
@@ -106,6 +106,7 @@ function NavBar() {
             >
               {pages.map(({ name, route }) => (
                 <Link
+                  key={name}
                   to={route}
                   style={{ color: "black", textDecoration: "none" }}
                 >
