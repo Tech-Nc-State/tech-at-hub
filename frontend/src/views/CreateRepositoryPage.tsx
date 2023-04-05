@@ -5,8 +5,12 @@ import { SessionToken, login } from "../api/AuthApi";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLock, faUser } from "@fortawesome/free-solid-svg-icons";
-import { CreateRepositoryForm, createRepository } from "../api/RepositoryApi";
-import { getMe } from "../api/UserApi";
+import {
+  CreateRepositoryForm,
+  Repository,
+  createRepository,
+} from "../api/RepositoryApi";
+import { User, getMe } from "../api/UserApi";
 
 function CreateRepositoryPage() {
   const sessionService = useSessionService();
@@ -17,10 +21,13 @@ function CreateRepositoryPage() {
     let sessionToken: SessionToken = sessionService.getSessionToken();
     try {
       // use the API to create the repo
-      await createRepository(sessionToken, repoInfo);
+      let repository: Repository = await createRepository(
+        sessionToken,
+        repoInfo
+      );
       // redirect to the repo page
-      let user: any = await getMe(sessionToken);
-      navigate(`/repository/${user.data.username}/${repoInfo.name}`);
+      let user: User = await getMe(sessionToken);
+      navigate(`/repository/${user.username}/${repository.name}`);
     } catch (err) {}
   };
 
@@ -62,7 +69,7 @@ function CreateRepositoryPage() {
               onChange={(event) => {
                 setRepoInfo({
                   ...repoInfo,
-                  isPublic: event.target.value == "on",
+                  isPublic: event.target.value == "on", // TODO: This doesn't work
                 });
               }}
               sx={{ m: "10px" }}

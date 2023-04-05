@@ -20,8 +20,7 @@ function LoginPage() {
   const loginHandler = async () => {
     try {
       // use the API to get a token
-      let sessionTokenResponse = await login(loginInfo);
-      let sessionToken: SessionToken = sessionTokenResponse.data;
+      let sessionToken: SessionToken = await login(loginInfo);
       // save the token to a session
       sessionService.createSession(sessionToken);
       // redirect to home page

@@ -3,11 +3,28 @@ import {
   RepositoryHeader,
   RepositoryHeaderProps,
 } from "../components/repo_header";
-import { Box, Tabs, Tab, TabProps, Typography } from "@mui/material";
+import {
+  Box,
+  Tabs,
+  Tab,
+  TabProps,
+  Typography,
+  Table,
+  TableBody,
+  TableRow,
+  TableCell,
+} from "@mui/material";
 import { useEffect, useState } from "react";
 import { useLoaderData } from "react-router";
 import { useSessionService } from "../services/SessionService";
-import { getBranches } from "../api/RepositoryApi";
+import {
+  Branch,
+  DirectoryEntry,
+  getBranches,
+  getListing,
+} from "../api/RepositoryApi";
+import { faFile, faFolder } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const StyledTab = styled((props: TabProps) => <Tab disableRipple {...props} />)(
   ({ theme }) => ({
@@ -19,19 +36,21 @@ function RepositoryPage() {
   const [tab, setTab] = useState(0);
   const repoInfo: any = useLoaderData();
   const sessionService = useSessionService();
-  const [branches, setBranches] = useState();
+  const [listing, setListing] = useState<DirectoryEntry[]>();
 
   const swapTab = (event: React.SyntheticEvent, new_value: number) => {
     setTab(new_value);
   };
 
   useEffect(() => {
-    getBranches(
+    getListing(
       sessionService.getSessionToken(),
       repoInfo.username,
-      repoInfo.repoName
-    ).then((response) => {
-      setBranches(response.data);
+      repoInfo.repoName,
+      "master",
+      ""
+    ).then((dirs) => {
+      setListing(dirs);
     });
   }, []);
 
@@ -46,7 +65,18 @@ function RepositoryPage() {
   return (
     <Box>
       <RepositoryHeader {...repositoryProps} />
-      <Typography>{`Branches: ${branches}`}</Typography>
+      <Table>
+        <TableBody>
+          {listing?.map((entry) => (
+            <TableRow>
+              <TableCell>
+                <FontAwesomeIcon icon={entry.isDirectory ? faFolder : faFile} />
+                <Typography>{entry.name}</Typography>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
       <Box
         sx={{
           borderBottom: "1px solid #d2d2d2",

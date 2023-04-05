@@ -1,5 +1,5 @@
 import { Box, Button, Typography } from "@mui/material";
-import { getMe } from "../api/UserApi";
+import { User, getMe } from "../api/UserApi";
 import { useSessionService } from "../services/SessionService";
 import { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -11,12 +11,12 @@ import {
 
 function HomePage() {
   const sessionService = useSessionService();
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
     if (sessionService.hasSessionToken()) {
-      getMe(sessionService.getSessionToken()).then((response) => {
-        setUser(response.data);
+      getMe(sessionService.getSessionToken()).then((user) => {
+        setUser(user);
       });
     }
   }, []);

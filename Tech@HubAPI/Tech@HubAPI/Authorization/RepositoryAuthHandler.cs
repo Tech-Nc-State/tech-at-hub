@@ -16,16 +16,10 @@ namespace Tech_HubAPI.Authorization
 
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, RepositoryAuthRequirement requirement, Repository resource)
         {
-            // is user authenticated? => context.User.Identity?.IsAuthenticated
-            // users username => context.User.FindFirst("Username")?.Value
-
-            // requirement is met => context.Succeed(requirement)
-
             // Check Auth
             if (context.User.Identity?.IsAuthenticated == true)
             {
                 // Authenticated Users
-                // TODO: Get the current user's permission level for the current repo (resource)
                 string? username = context.User.FindFirst("Username")?.Value;
                 User? user = _dbContext.Users
                     .Where(u => u.Username == username)
@@ -46,16 +40,19 @@ namespace Tech_HubAPI.Authorization
                 {
                     context.Succeed(requirement);
                 }
+                else if (perm == null && resource.IsPublic && requirement.MinimumPermission == PermissionLevel.Read)
+                {
+                    // an authenticated user has read access to public repos by default
+                    context.Succeed(requirement);
+                }
                 else
                 {
                     context.Fail();
                 }
-
-
             }
-            else
+            else // For unauthenticated users
             {
-                // Unauthenticated Users
+                // If the repo is private or the operation requires higher than Read access
                 if (resource.IsPublic == false || requirement.MinimumPermission != PermissionLevel.Read)
                 {
                     // dont allow any viewing

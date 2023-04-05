@@ -11,6 +11,7 @@ export class Credentials {
     password: string = "";
 }
 
-export const login = async (credentials: Credentials): Promise<AxiosResponse> => {
-    return axios.post(`http://${getBackendServer()}/auth/login`, credentials);
+export const login = async (credentials: Credentials): Promise<SessionToken> => {
+    let resp = await axios.post(`http://${getBackendServer()}/auth/login`, credentials);
+    return resp.data as SessionToken;
 }

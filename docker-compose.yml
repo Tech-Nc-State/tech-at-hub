@@ -45,7 +45,7 @@ services:
 #      - 3306:3306
 
   backend:
-    hostname: api
+    hostname: backend
     depends_on:
       - mysql
     build:
