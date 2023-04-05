@@ -7,6 +7,7 @@ import HomePage from "./views/HomePage";
 import LoginPage from "./views/LoginPage";
 import SignupPage from "./views/SignupPage";
 import RepositoryPage from "./views/RepositoryPage";
+import CreateRepositoryPage from "./views/CreateRepositoryPage";
 
 const router = createBrowserRouter([
   {
@@ -18,21 +19,28 @@ const router = createBrowserRouter([
         element: <HomePage />,
       },
       {
-        path: "/about",
+        path: "about",
         element: <p>Hi there!</p>,
       },
       {
-        path: "/login",
-        element: <LoginPage />
+        path: "login",
+        element: <LoginPage />,
       },
       {
         path: "signup",
-        element: <SignupPage />
+        element: <SignupPage />,
       },
       {
-        path: "repository",
-        element: <RepositoryPage />
-      }
+        path: "repository/:username/:repoName",
+        element: <RepositoryPage />,
+        loader: ({ params }) => {
+          return params;
+        },
+      },
+      {
+        path: "new",
+        element: <CreateRepositoryPage />,
+      },
     ],
   },
 ]);

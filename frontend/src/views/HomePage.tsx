@@ -1,5 +1,5 @@
 import { Box, Button, Typography } from "@mui/material";
-import { getMe } from "../api/AuthApi";
+import { getMe } from "../api/UserApi";
 import { useSessionService } from "../services/SessionService";
 import { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -60,6 +60,11 @@ function HomePage() {
                 icon={faRightFromBracket}
                 style={{ marginLeft: "10px" }}
               />
+            </Button>
+          )}
+          {sessionService.hasSessionToken() && (
+            <Button variant="contained" href="/new" sx={{ m: "10px" }}>
+              Create Repository
             </Button>
           )}
         </Box>
