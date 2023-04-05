@@ -69,7 +69,7 @@ function CreateRepositoryPage() {
               onChange={(event) => {
                 setRepoInfo({
                   ...repoInfo,
-                  isPublic: event.target.value == "on", // TODO: This doesn't work
+                  isPublic: event.target.checked,
                 });
               }}
               sx={{ m: "10px" }}

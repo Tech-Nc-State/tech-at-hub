@@ -9,7 +9,7 @@ tech_at_hub_path = os.path.abspath(os.path.join(os.getcwd(), os.pardir))
 api_dockerfile = tech_at_hub_path + "/Tech@HubAPI"
 api_image_name = "techhubapi-integration-test"
 api_container_name = api_image_name
-api_container_hostname = "api"
+api_container_hostname = "backend"
 
 git_server_dockerfile = tech_at_hub_path + "/Tech@HubGitServer"
 git_server_image_name = "techhubgitserver-integration-test"
