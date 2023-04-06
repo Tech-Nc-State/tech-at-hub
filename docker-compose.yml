@@ -48,6 +48,7 @@ services:
     hostname: backend
     depends_on:
       - mysql
+    restart: on-failure
     build:
       context: ./Tech@HubAPI/
       dockerfile: Tech@HubAPI/Dockerfile
