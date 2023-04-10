@@ -1,40 +1,40 @@
-import { Box, Button, TextField, Typography } from "@mui/material";
+import { Box, Button, Checkbox, TextField, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useSessionService } from "../services/SessionService";
-import { Credentials, SessionToken, login } from "../api/AuthApi";
+import { SessionToken, login } from "../api/AuthApi";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLock, faUser } from "@fortawesome/free-solid-svg-icons";
+import {
+  CreateRepositoryForm,
+  Repository,
+  createRepository,
+} from "../api/RepositoryApi";
+import { User, getMe } from "../api/UserApi";
 
-function LoginPage() {
+function CreateRepositoryPage() {
   const sessionService = useSessionService();
   const navigate = useNavigate();
-  const [loginInfo, setLoginInfo] = useState(new Credentials());
+  const [repoInfo, setRepoInfo] = useState(new CreateRepositoryForm());
 
-  useEffect(() => {
-    if (sessionService.hasSessionToken()) {
-      navigate("/");
-    }
-  }, []);
-
-  const loginHandler = async () => {
+  const createHandler = async () => {
+    let sessionToken: SessionToken = sessionService.getSessionToken();
     try {
-      // use the API to get a token
-      let sessionToken: SessionToken = await login(loginInfo);
-      // save the token to a session
-      sessionService.createSession(sessionToken);
-      // redirect to home page
-      navigate("/");
-      window.location.reload();
-    } catch (err) {
-      console.log(err);
-    }
+      // use the API to create the repo
+      let repository: Repository = await createRepository(
+        sessionToken,
+        repoInfo
+      );
+      // redirect to the repo page
+      let user: User = await getMe(sessionToken);
+      navigate(`/repository/${user.username}/${repository.name}`);
+    } catch (err) {}
   };
 
   return (
     <Box>
       <Typography sx={{ fontSize: "3rem", fontWeight: "700" }}>
-        Login
+        Create Repository
       </Typography>
       <Box sx={{ display: "flex", justifyContent: "center" }}>
         <Box
@@ -49,12 +49,12 @@ function LoginPage() {
             <FontAwesomeIcon icon={faUser} />
             <TextField
               id="standard-basic"
-              label="Username"
-              value={loginInfo.username}
+              label="Repository Name"
+              value={repoInfo.name}
               onChange={(event) => {
-                setLoginInfo({
-                  ...loginInfo,
-                  username: event.target.value,
+                setRepoInfo({
+                  ...repoInfo,
+                  name: event.target.value,
                 });
               }}
               sx={{ m: "10px" }}
@@ -63,22 +63,20 @@ function LoginPage() {
 
           <Box sx={{ display: "flex", alignItems: "center" }}>
             <FontAwesomeIcon icon={faLock} style={{}} />
-            <TextField
+            <Checkbox
               id="standard-basic"
-              label="Password"
-              type="password"
-              value={loginInfo.password}
+              value={repoInfo.isPublic}
               onChange={(event) => {
-                setLoginInfo({
-                  ...loginInfo,
-                  password: event.target.value,
+                setRepoInfo({
+                  ...repoInfo,
+                  isPublic: event.target.checked,
                 });
               }}
               sx={{ m: "10px" }}
             />
           </Box>
-          <Button variant="contained" onClick={loginHandler}>
-            Login
+          <Button variant="contained" onClick={createHandler}>
+            Create
           </Button>
         </Box>
       </Box>
@@ -86,4 +84,4 @@ function LoginPage() {
   );
 }
 
-export default LoginPage;
+export default CreateRepositoryPage;

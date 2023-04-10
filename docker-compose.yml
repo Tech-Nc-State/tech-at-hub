@@ -14,13 +14,15 @@ services:
   frontend:
     hostname: frontend
     build: ./frontend/
-    volumes:
-      - ./frontend:/frontend
+    # volumes:
+    #   - ./frontend:/frontend
 #    ports:
 #      - 3000:3000
 
   git-server:
     hostname: git-server
+    depends_on:
+      - backend
     build: ./Tech@HubGitServer/
 #    ports:
 #      - 80:80
@@ -46,6 +48,7 @@ services:
     hostname: backend
     depends_on:
       - mysql
+    restart: on-failure
     build:
       context: ./Tech@HubAPI/
       dockerfile: Tech@HubAPI/Dockerfile

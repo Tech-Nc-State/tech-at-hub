@@ -1,23 +1,17 @@
 import axios, { AxiosResponse } from "axios";
+import { getBackendServer } from "./Api";
 
 export interface SessionToken {
     token: string;
     expiration: Date;
 }
 
-export const getAuthHeader = (token: SessionToken) => {
-    return { Authorization: 'Bearer ' + token.token };
+export class Credentials {
+    username: string = "";
+    password: string = "";
 }
 
-export const login = async (username: string, password: string): Promise<AxiosResponse> => {
-    return axios.post("http://localhost:5000/auth/login", {
-        username: username,
-        password: password
-    });
+export const login = async (credentials: Credentials): Promise<SessionToken> => {
+    let resp = await axios.post(`http://${getBackendServer()}/auth/login`, credentials);
+    return resp.data as SessionToken;
 }
-
-export const getMe = async (token: SessionToken): Promise<AxiosResponse> => {
-    return axios.get("http://localhost:5000/user/me", {
-        headers: getAuthHeader(token)
-    });
-};

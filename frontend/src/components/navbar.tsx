@@ -21,8 +21,7 @@ import AdbIcon from "@mui/icons-material/Adb";
 import TechAtLogo from "./logo";
 import { useSessionService } from "../services/SessionService";
 import { useEffect, useState } from "react";
-import { getMe } from "../api/AuthApi";
-import { getProfilePicture } from "../api/UserApi";
+import { getProfilePicture, getMe } from "../api/UserApi";
 
 const pages = [{ name: "About", route: "/about" }];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
@@ -33,13 +32,10 @@ function NavBar() {
 
   useEffect(() => {
     if (sessionService.hasSessionToken()) {
-      getMe(sessionService.getSessionToken()).then((response) => {
-        getProfilePicture(response.data.username).then((response) => {
+      getMe(sessionService.getSessionToken()).then((user) => {
+        getProfilePicture(user.username).then((picture) => {
           const base64 = btoa(
-            new Uint8Array(response.data).reduce(
-              (data, byte) => data + String.fromCharCode(byte),
-              ""
-            )
+            picture.reduce((data, byte) => data + String.fromCharCode(byte), "")
           );
           setPfp(base64);
         });

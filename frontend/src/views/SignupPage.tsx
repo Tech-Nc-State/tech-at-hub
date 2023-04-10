@@ -1,7 +1,7 @@
 import { Box, Button, TextField, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useSessionService } from "../services/SessionService";
-import { SessionToken, login } from "../api/AuthApi";
+import { Credentials, SessionToken, login } from "../api/AuthApi";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -12,7 +12,6 @@ import {
   faCakeCandles,
 } from "@fortawesome/free-solid-svg-icons";
 import { SignupForm, signup } from "../api/UserApi";
-import { AxiosResponse } from "axios";
 
 function SignupPage() {
   const sessionService = useSessionService();
@@ -38,11 +37,10 @@ function SignupPage() {
       await signup(signupInfo);
 
       // login the new account
-      let sessionTokenResponse = await login(
-        signupInfo.username,
-        signupInfo.password
-      );
-      let sessionToken: SessionToken = sessionTokenResponse.data;
+      let sessionToken: SessionToken = await login({
+        username: signupInfo.username,
+        password: signupInfo.password,
+      } as Credentials);
       // save the token to a session
       sessionService.createSession(sessionToken);
       // redirect to home page
