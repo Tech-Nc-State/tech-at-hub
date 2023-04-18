@@ -28,7 +28,7 @@ namespace Tech_HubAPI.Controllers
         }
 
         [HttpGet]
-        [Route("{Username}/{RepoName}/branches")]
+        [Route("{username}/{repoName}/branches")]
         public async Task<ActionResult<List<Branch>>> GetBranches(string username, string repoName)
         {
             var repo = _dbContext.Repositories
@@ -53,13 +53,13 @@ namespace Tech_HubAPI.Controllers
         }
 
         [HttpGet]
-        [Route("{UserName}/{RepoName}/{BranchName}/{FilePath}")]
-        public ActionResult<FileContent> GetFileContent(string username, string reponame, string branchname, string filepath)
+        [Route("{username}/{repoName}/{branchName}/{filepath}")]
+        public ActionResult<FileContent> GetFileContent(string username, string repoName, string branchName, string filepath)
         {
             FileContent fc = null;
             try
             {
-                fc = _gitService.GetFileContents(username, reponame, branchname, filepath);
+                fc = _gitService.GetFileContents(username, repoName, branchName, filepath);
             }
             catch (DirectoryNotFoundException ex)
             {
@@ -73,7 +73,7 @@ namespace Tech_HubAPI.Controllers
         }
 
         [HttpGet]
-        [Route("{UserName}/{RepoName}/listing")]
+        [Route("{username}/{repoName}/listing")]
         public async Task<ActionResult<List<DirectoryEntry>>> GetDirectoryListing(
             string username,
             string repoName,
@@ -102,7 +102,7 @@ namespace Tech_HubAPI.Controllers
         }
 
         [HttpGet]
-        [Route("{Username}/{RepoName}/tags")]
+        [Route("{username}/{repoName}/tags")]
         public async Task<ActionResult<List<Tag>>> GetTags(string username, string repoName)
         {
             var repo = _dbContext.Repositories
@@ -170,7 +170,7 @@ namespace Tech_HubAPI.Controllers
         }
 
         [HttpGet]
-        [Route("{Username}/{RepoName}/{BranchName}/commits")]
+        [Route("{username}/{repoName}/{branchName}/commits")]
         public async Task<ActionResult<List<Commit>>> GetCommits(
             string username,
             string repoName,
