@@ -25,6 +25,7 @@ import {
 } from "../api/RepositoryApi";
 import { faFile, faFolder } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import React from "react";
 
 const StyledTab = styled((props: TabProps) => <Tab disableRipple {...props} />)(
   ({ theme }) => ({
@@ -87,6 +88,7 @@ function RepositoryPage() {
         <Tabs value={tab} onChange={swapTab}>
           <StyledTab label="Code" />
           <StyledTab label="Settings" />
+          <StyledTab label="Issues" />
         </Tabs>
       </Box>
     </Box>
