@@ -41,6 +41,10 @@ const router = createBrowserRouter([
         path: "new",
         element: <CreateRepositoryPage />,
       },
+      {
+        path: "repos",
+        element: <HomePage />,
+      },
     ],
   },
 ]);
