@@ -33,6 +33,17 @@ const StyledTab = styled((props: TabProps) => <Tab disableRipple {...props} />)(
   })
 );
 
+function switchTabs(tabs: number) {
+  switch(tabs) {
+    case 0:
+      return <p>Code</p>
+    case 1:
+      return <p>Settings</p>
+    case 2:
+      return <p>Issues</p>
+  }
+}
+
 function RepositoryPage() {
   const [tab, setTab] = useState(0);
   const repoInfo: any = useLoaderData();
@@ -91,6 +102,7 @@ function RepositoryPage() {
           <StyledTab label="Issues" />
         </Tabs>
       </Box>
+        {switchTabs(tab)}
     </Box>
   );
 }
