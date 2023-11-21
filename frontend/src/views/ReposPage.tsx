@@ -34,36 +34,72 @@ function ReposPage() {
         <br />
         <br />
         <br />
-        {/* <Box
+        <Box
           sx={{
             display: "flex",
             justifyContent: "center",
-            fontSize: "3rem",
-            fontWeight: "700",
-            height: "500px",
-            width: "700px",
-            backgroundColor: "#FA455D",
+            // fontSize: "3rem",
+            // fontWeight: "700",
+            // height: "500px",
+            // width: "700px",
+            // backgroundColor: "#FA455D",
+            border: "2px solid black"
           }}
-        ></Box> */}
-        <Table>
-          <TableBody>
-            {/* {listing?.map((entry) => (
-              <TableRow>
-                <TableCell>
+        >
+          <Table sx={{margin: "30px" }}>
+            <TableBody>
+              {/* {listing?.map((entry) => (
+                <TableRow>
+                  <TableCell>
+                    <Typography>Name</Typography>
+                  </TableCell>
+                </TableRow>
+              ))} */}
+              <TableRow sx={{border: "2px solid blue"}}>
+                <TableCell sx={{borderLeft: "2px solid red", borderBottom: "2px solid red", borderTop: "2px solid red"}}>
                   <Typography>Name</Typography>
                 </TableCell>
+                <TableCell sx={{textAlign: "right", borderRight: "2px solid red", borderBottom: "2px solid red", borderTop: "2px solid red"}}>
+                  <img src="/src/assets/logo.svg" style={{width: "75px", flexGrow: "0", marginRight: "10px", marginTop: "5px"}} />
+                </TableCell>
               </TableRow>
-            ))} */}
-            <TableRow>
-              <TableCell>
-                <Typography>Name</Typography>
-              </TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
+              <br />
+              <TableRow sx={{border: "2px solid blue"}}>
+                <TableCell sx={{borderLeft: "2px solid red", borderBottom: "2px solid red", borderTop: "2px solid red"}}>
+                  <Typography>Name</Typography>
+                </TableCell>
+                <TableCell sx={{textAlign: "right", borderRight: "2px solid red", borderBottom: "2px solid red", borderTop: "2px solid red"}}>
+                  <img src="/src/assets/logo.svg" style={{width: "75px", flexGrow: "0", marginRight: "10px", marginTop: "5px"}} />
+                </TableCell>
+              </TableRow>
+              <br />
+              <TableRow sx={{border: "2px solid blue"}}>
+                <TableCell sx={{borderLeft: "2px solid red", borderBottom: "2px solid red", borderTop: "2px solid red"}}>
+                  <Typography>Name</Typography>
+                </TableCell>
+                <TableCell sx={{textAlign: "right", borderRight: "2px solid red", borderBottom: "2px solid red", borderTop: "2px solid red"}}>
+                  <img src="/src/assets/logo.svg" style={{width: "75px", flexGrow: "0", marginRight: "10px", marginTop: "5px"}} />
+                </TableCell>
+              </TableRow>
+              <br />
+              <TableRow sx={{border: "2px solid blue"}}>
+                <TableCell sx={{borderLeft: "2px solid red", borderBottom: "2px solid red", borderTop: "2px solid red"}}>
+                  <Typography>Name</Typography>
+                </TableCell>
+                <TableCell sx={{textAlign: "right", borderRight: "2px solid red", borderBottom: "2px solid red", borderTop: "2px solid red"}}>
+                  <img src="/src/assets/logo.svg" style={{width: "75px", flexGrow: "0", marginRight: "10px", marginTop: "5px"}} />
+                </TableCell>
+              </TableRow>
+              
+              
+            </TableBody>
+          </Table>
+        </Box>
       </Box>
     </>
   );
 }
 
 export default ReposPage;
+
+// width: 75px; flex-grow: 0; margin-right: 10px; margin-top: 5px;
