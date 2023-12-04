@@ -6,6 +6,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import NavBar from "./components/navbar";
 import Footer from "./components/footer";
 import { GlobalServices } from "./services/GlobalServices";
+import React from "react";
 
 const theme = createTheme({
   palette: {
