@@ -2,14 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using Microsoft.Extensions.Configuration;
 using Tech_HubAPI.Models;
 using Tech_HubAPI.Models.Git;
 using Tech_HubAPI.Models.GitModels;
-using static System.Net.Mime.MediaTypeNames;
-using static System.Net.WebRequestMethods;
 
 namespace Tech_HubAPI.Services
 {
@@ -459,6 +456,7 @@ namespace Tech_HubAPI.Services
             return dateTime;
         }
 
+        /// <summary>
         /// Gets a list of <see cref="Tag">s in the given user/repo name.
         /// Will return empty list if no tags exist.
         /// </summary>
@@ -498,6 +496,34 @@ namespace Tech_HubAPI.Services
                 .ToList();
 
             return tags;
+        }
+
+        /// <summary>
+        /// Returns a list of all repos names associated with a username
+        /// </summary>
+        /// <param name="username"></param>
+        /// <returns></returns>
+        public List<string> GetRepositories(string username)
+        {
+
+            // Check if user directory exists
+            string userDirectory = _baseGitFolder + username + "/";
+            if (!Directory.Exists(userDirectory))
+            {
+                throw new DirectoryNotFoundException("User not found");
+            }
+
+            // At this point, user assumed real. 
+            // Dump their directory as repositories.
+            string[] fileEntries = Directory.GetDirectories(userDirectory);
+            List<string> repoNames = new List<string>();
+
+            foreach (string entry in fileEntries)
+            {
+                repoNames.Add(entry.Substring(0, entry.Length - 4));  // removes the .git at the end of the name
+            }
+
+            return repoNames;
         }
     }
 }

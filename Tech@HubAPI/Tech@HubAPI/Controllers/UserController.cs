@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,13 +18,15 @@ namespace Tech_HubAPI.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
+        private readonly GitService _gitService;
         private readonly DatabaseContext _dbContext;
         private readonly HashingService _hashingService;
         private readonly JwtService _jwt;
         private readonly string _defaultWorkingDirectory;
 
-        public UserController(DatabaseContext dbContext, HashingService hashingService, JwtService jwt, IConfiguration configuration)
+        public UserController(GitService gitService, DatabaseContext dbContext, HashingService hashingService, JwtService jwt, IConfiguration configuration)
         {
+            _gitService = gitService;
             _jwt = jwt;
             _dbContext = dbContext;
             _hashingService = hashingService;
@@ -203,6 +206,40 @@ namespace Tech_HubAPI.Controllers
                 }
             }
             return Conflict("Incorrect password.");
+        }
+
+
+        [HttpGet]
+        [Route("{username}/repos")]
+        public ActionResult<List<Repository>> GetRepos(string username)
+        {
+            if (username == null || username.Length == 0)
+            {
+                return BadRequest("The user is empty.");
+            }
+
+            var user = _dbContext.Users.Where(u => u.Username == username).FirstOrDefault();
+
+            if (user == null)
+            {
+                return BadRequest("The username is not found.");
+            }
+
+            List<string> repos = _gitService.GetRepositories(username);
+
+            List<Repository> repoList = new List<Repository>();
+
+            foreach (var repoName in repos)
+            {
+                var repo = _dbContext.Repositories.Where(r => r.Name == repoName).FirstOrDefault();
+                if (repo == null)
+                {
+                    continue; // do nothing
+                }
+                repoList.Add(repo);
+            }
+
+            return repoList;
         }
     }
 }
