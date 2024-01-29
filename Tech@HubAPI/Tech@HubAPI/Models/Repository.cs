@@ -23,6 +23,7 @@ namespace Tech_HubAPI.Models
             Name = name;
             OwnerId = ownerId;
             IsPublic = isPublic;
+            Permissions = new List<RepositoryPermission>();
             Issues = new List<Issue>();
         }
 
@@ -49,6 +50,9 @@ namespace Tech_HubAPI.Models
         public bool IsPublic { get; set; }
 
         /// <summary>
+        /// List of permissions associated with this repository
+        /// </summary>
+        public List<RepositoryPermission> Permissions { get; set; }
         /// Repository's list of issues.
         /// </summary>
         public List<Issue> Issues { get; set; }

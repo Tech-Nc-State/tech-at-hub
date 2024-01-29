@@ -203,5 +203,32 @@ namespace Tech_HubAPI.Controllers
                 return NotFound(ex.Message);
             }
         }
+
+        [Authorize]
+        [HttpDelete]
+        [Route("{id}")]
+        public async Task<ActionResult> DeleteRepository(int id)
+        {
+            var repo = _dbContext.Repositories
+                .Where(r => r.Id == id)
+                .FirstOrDefault();
+            if (repo == null)
+            {
+                return NotFound("A repository with that ID does not exist.");
+            }
+
+            var result = await _authorizationService.AuthorizeAsync(User, repo, "RequireAdmin");
+            
+            if (!result.Succeeded)
+            {
+                return Unauthorized("You are not authorized for this repo.");
+            }
+            
+            _gitService.DeleteRepository(repo.Name, repo.Owner.Username);
+            _dbContext.Repositories.Remove(repo);
+            _dbContext.SaveChanges();
+
+            return Ok(); 
+        }
     }
 }

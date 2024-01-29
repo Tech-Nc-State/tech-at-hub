@@ -41,14 +41,20 @@ namespace Tech_HubAPI.Models
             modelBuilder.Entity<Repository>(entity =>
             {
                 entity.HasKey(e => e.Id);
-                entity.HasOne(e => e.Owner);
+                entity.HasOne(e => e.Owner)
+                    .WithMany(u => u.Repositories)
+                    .OnDelete(DeleteBehavior.Cascade);
             });
 
             modelBuilder.Entity<RepositoryPermission>(entity =>
             {
                 entity.HasKey(e => e.Id);
-                entity.HasOne(e => e.User);
-                entity.HasOne(e => e.Repository);
+                entity.HasOne(e => e.User)
+                    .WithMany(u => u.Permissions)
+                    .OnDelete(DeleteBehavior.Cascade);
+                entity.HasOne(e => e.Repository)
+                    .WithMany(r => r.Permissions)
+                    .OnDelete(DeleteBehavior.Cascade);
             });
 
             // Issue
