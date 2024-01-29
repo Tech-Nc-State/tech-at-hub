@@ -13,4 +13,4 @@ RUN apt-get -y install nginx git-core fcgiwrap
 
 COPY nginx.conf /etc/nginx
 RUN chmod +x ./start.sh
-CMD [ "./start.sh"]
+CMD ["./start.sh"]

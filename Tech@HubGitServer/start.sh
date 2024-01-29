@@ -12,6 +12,9 @@ chown -R www-data:www-data .
 chmod -R 755 .
 cd /app
 
+# allow dubious ownership of all directories
+git config --global --add safe.directory '*'
+
 # infinite loop, this is hacky and we really should
 # try to monitor the nginx process if possible
 while true; do sleep 1000; done

@@ -1,7 +1,9 @@
+
 ﻿using System;
 using System.Collections.Generic;
 
 namespace Tech_HubAPI.Models
+
 {
     public class User
     {
@@ -17,8 +19,6 @@ namespace Tech_HubAPI.Models
             Description = description;
             ProfilePicturePath = profilePicturePath;
             BirthDate = birthDate;
-            Permissions = new List<RepositoryPermission>();
-            Repositories = new List<Repository>();
         }
 
         public int Id { get; set; }
@@ -41,8 +41,12 @@ namespace Tech_HubAPI.Models
 
         public DateTime BirthDate { get; set; }
 
+        public DateTime LastLoginAttempt { get; set; }
+
         public List<RepositoryPermission> Permissions { get; set; }
 
         public List<Repository> Repositories { get; set; }
+
+        public string? LastLoginAttemptIp { get; set; }
     }
 }

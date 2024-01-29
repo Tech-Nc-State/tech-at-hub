@@ -16,7 +16,6 @@ namespace Tech_HubAPI.Controllers
         }
 
         [HttpPut]
-        [Route("set")]
         [Authorize]
         public IActionResult SetPermission([FromQuery] int userId, [FromQuery] int repoId, [FromQuery] PermissionLevel level)
         {
@@ -36,12 +35,12 @@ namespace Tech_HubAPI.Controllers
         }
 
         [HttpDelete]
-        [Route("delete")]
         [Authorize]
         public IActionResult DeletePermissions([FromQuery] int userId, [FromQuery] int repoId)
         {
             RepositoryPermission? searchPerm = _dbContext.RepositoryPermissions
                 .Where(r => r.Id == repoId)
+                .Where(r => r.User.Id == userId)
                 .FirstOrDefault();
 
             if (searchPerm == null)
@@ -55,7 +54,6 @@ namespace Tech_HubAPI.Controllers
         }
 
         [HttpGet]
-        [Route("get")]
         public ActionResult<PermissionLevel?> GetPermissions(int repoId, int userId)
         {
             RepositoryPermission? searchPerm = _dbContext.RepositoryPermissions

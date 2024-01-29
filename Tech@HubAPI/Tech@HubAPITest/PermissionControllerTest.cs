@@ -25,17 +25,17 @@ namespace Tech_HubAPITest
         [Fact]
         public async Task TestPermissionsUnauthenticated()
         {
-            var resp = await _api.Client.PutAsync($"/permission/set", null);
+            var resp = await _api.Client.PutAsync($"/permission", null);
             resp.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
-            resp = await _api.Client.DeleteAsync($"/permission/delete");
+            resp = await _api.Client.DeleteAsync($"/permission");
             resp.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
         }
 
         [Fact]
         public async Task CreatePermissionNonexistentRepoTest()
         {
-            var user = await _apiHelper.CreateUser("bob", "passwordy");
-            string token = await _apiHelper.GetJwtResponseToken(await _apiHelper.Login("bob", "passwordy"));
+            var user = await _apiHelper.CreateUser("bob", "Passwordyy$_");
+            string token = await _apiHelper.GetJwtResponseToken(await _apiHelper.Login("bob", "Passwordyy$_"));
 
             var perm = new RepositoryPermission(user.Id, 1, PermissionLevel.Write);
 

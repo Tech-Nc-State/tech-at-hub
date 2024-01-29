@@ -21,4 +21,5 @@ WORKDIR /app
 COPY --from=publish /app/publish .
 RUN apt-get -y update
 RUN apt-get -y install git
+RUN git config --global --add safe.directory '*'
 ENTRYPOINT ["dotnet", "Tech@HubAPI.dll"]

@@ -35,6 +35,20 @@ namespace Tech_HubAPITest
         }
 
         [Fact]
+        public void TestCreateBranch()
+        {
+            _gitService.CreateNewRepository("MyRepo", "nsfogg");
+            Directory.Exists(_fileSystem.RootDirectory + "git/nsfogg/MyRepo.git").Should().BeTrue();
+
+            _gitService.CreateNewBranch("nsfogg", "MyRepo", "newBranch", "branchHash");
+            File.Exists(_fileSystem.RootDirectory + "git/nsfogg/MyRepo.git/refs/heads/newBranch").Should().BeTrue();
+
+            List<Branch> branches = _gitService.GetBranches("nsfogg", "MyRepo");
+            string[] branchNames = branches.Select(branch => branch.Name).ToArray();
+            branchNames.Should().Contain("newBranch");
+        }
+
+        [Fact]
         public void TestGetBranches()
         {
             _fileSystem.ImportFolder("./SampleGitRepos/testBranches.git", "git/testUser/testBranches.git");
@@ -55,6 +69,29 @@ namespace Tech_HubAPITest
         public void TestGetBranchesNotExisting()
         {
             Action run = () => _gitService.GetBranches("testUser", "testBranches");
+            run.Should().Throw<DirectoryNotFoundException>();
+        }
+
+        [Fact]
+        public void TestGetTags()
+        {
+            _fileSystem.ImportFolder("./SampleGitRepos/testTags.git", "git/testUser/testTags.git");
+
+            List<Tag> tags = _gitService.GetTags("testUser", "testTags");
+
+            tags.Count.Should().Be(4);
+            string[] tagNames = tags.Select(tag => tag.Name).ToArray();
+            tagNames.Should().Contain("hello");
+            tagNames.Should().Contain("howdu");
+            tagNames.Should().Contain("testtag");
+            tagNames.Should().Contain("released");
+
+        }
+
+        [Fact]
+        public void TestGetTagsNotExisting()
+        {
+            Action run = () => _gitService.GetTags("testUser", "testTags");
             run.Should().Throw<DirectoryNotFoundException>();
         }
 
@@ -123,6 +160,48 @@ namespace Tech_HubAPITest
 
             FileContent fc = _gitService.GetFileContents("testUser", "testBranches", "master", "text.txt");
             fc.Contents.Should().Be("hello\nthere");
+        }
+
+        [Fact]
+        public void TestGetCommitLog()
+        {
+            _fileSystem.ImportFolder("./SampleGitRepos/testGetCommitLog.git", "git/testUser/testGetCommitLog.git");
+
+            List<Commit> commits = _gitService.GetCommitLog("testUser", "testGetCommitLog", "master");
+
+            commits.Should().HaveCount(6);
+
+            commits[0].Hash.Should().Be("d8dce1f129397da22bb5558cc0c2410e79813009");
+            commits[0].Message.Should().Be("Added objects");
+            commits[0].Username.Should().Be("nzbennet@ncsu.edu");
+            commits[0].Parent.Should().Be(commits[1]);
+
+            commits[1].Hash.Should().Be("d7a951afe807ba119f41227f1ba749603c8c6e23");
+            commits[1].Message.Should().Be("Modified item1.txt");
+            commits[1].Username.Should().Be("nzbennet@ncsu.edu");
+            commits[1].Parent.Should().Be(commits[2]);
+
+            commits[2].Hash.Should().Be("c3d1e54122e9417fe87a66add541a3cb7d67149c");
+            commits[2].Message.Should().Be("Commit 4");
+            commits[2].Username.Should().Be("nzbennet@ncsu.edu");
+            commits[2].Parent.Should().Be(commits[3]);
+
+            commits[3].Hash.Should().Be("3097cc7fc35f27351cc8e99f2ff7b445961a62e1");
+            commits[3].Message.Should().Be("Commit 3");
+            commits[3].Username.Should().Be("nzbennet@ncsu.edu");
+            commits[3].Parent.Should().Be(commits[4]);
+
+            commits[4].Hash.Should().Be("c7326eaa7436fcd75462f62caf5f9befb05ebabf");
+            commits[4].Message.Should().Be("Commit 2");
+            commits[4].Username.Should().Be("nzbennet@ncsu.edu");
+            commits[4].Parent.Should().Be(commits[5]);
+
+            commits[5].Hash.Should().Be("69c62533d3da440af734fd9aa3d743ef150fc779");
+            commits[5].Message.Should().Be("Commit 1");
+            commits[5].Username.Should().Be("nzbennet@ncsu.edu");
+            commits[5].Parent.Should().BeNull();
+
+
         }
     }
 }

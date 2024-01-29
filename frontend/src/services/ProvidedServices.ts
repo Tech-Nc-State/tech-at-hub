@@ -1,6 +1,8 @@
 /**
- * List of services used by the application
+ * List of top level services used by the application
  */
-enum ProvidedServices { TestService }
+enum ProvidedServices {
+    SessionService
+}
 
 export default ProvidedServices;

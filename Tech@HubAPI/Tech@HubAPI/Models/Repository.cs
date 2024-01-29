@@ -24,6 +24,7 @@ namespace Tech_HubAPI.Models
             OwnerId = ownerId;
             IsPublic = isPublic;
             Permissions = new List<RepositoryPermission>();
+            Issues = new List<Issue>();
         }
 
         /// <summary>
@@ -52,5 +53,10 @@ namespace Tech_HubAPI.Models
         /// List of permissions associated with this repository
         /// </summary>
         public List<RepositoryPermission> Permissions { get; set; }
+        /// Repository's list of issues.
+        /// </summary>
+        public List<Issue> Issues { get; set; }
+
+
     }
 }

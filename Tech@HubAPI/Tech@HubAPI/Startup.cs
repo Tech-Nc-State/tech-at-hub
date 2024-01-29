@@ -30,7 +30,6 @@ namespace Tech_HubAPI
         public void ConfigureServices(IServiceCollection services)
         {
             string connectionString = Configuration.GetConnectionString("MySqlDatabase");
-
             services.AddDbContext<DatabaseContext>(options =>
             {
                 options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
@@ -98,6 +97,16 @@ namespace Tech_HubAPI
                 }
             });
             services.AddScoped<IAuthorizationHandler, RepositoryAuthHandler>();
+
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(
+                    policy =>
+                    {
+                        policy.WithOrigins("http://localhost:3000")
+                            .AllowAnyHeader();
+                    });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -121,7 +130,7 @@ namespace Tech_HubAPI
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
-
+            app.UseCors();
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

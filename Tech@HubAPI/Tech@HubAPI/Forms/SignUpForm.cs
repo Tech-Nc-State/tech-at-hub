@@ -39,9 +39,20 @@ public class SignUpForm
             throw new ArgumentException("Invalid birth data.");
         }
 
+        string pwd_capitals = @"[A-Z]+";
+        string pwd_symbols = "[^A-Za-z0-9]+";
+
         if (Password.Length < 8)
         {
             throw new ArgumentException("Password must be at least 8 characters.");
+        }
+        else if (!Regex.IsMatch(Password, pwd_capitals))
+        {
+            throw new ArgumentException("Password must include a capital letter.");
+        }
+        else if (!Regex.IsMatch(Password, pwd_symbols))
+        {
+            throw new ArgumentException("Password must include a symbol.");
         }
     }
 }

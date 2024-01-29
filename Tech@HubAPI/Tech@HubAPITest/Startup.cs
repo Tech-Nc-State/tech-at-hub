@@ -11,6 +11,7 @@ namespace Tech_HubAPITest
             var config = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json")
                 .AddJsonFile("developersecrets.json", optional: true)
+                .AddEnvironmentVariables()
                 .Build();
             services.AddSingleton<IConfiguration>(config);
             services.AddScoped<FileSystemService>();
