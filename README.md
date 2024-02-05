@@ -44,25 +44,25 @@ We use pre-commit to automatically manage our git hooks.
 
 ```json
 {
-    "ConnectionStrings": {
-        "MySqlDatabase": "server=localhost; port=3306; uid=root; password=dbpass; database=tech-at-hub;"
-    },
-    "JWT": {
-        "SecretKey": "blahblahblahblah"
-    },
-    "Environment": {
-        "Platform": "Windows",
-        "GitPath": "C:\\Program Files\\Git\\bin\\",
-        "BinPath": "C:\\Program Files\\Git\\usr\\bin\\",
-        "DefaultWorkingDirectory": "C:\\Users\\jpbre\\Documents\\NCSU\\tech-at-hub\\"
-    }
+  "ConnectionStrings": {
+    "MySqlDatabase": "server=localhost; port=3306; uid=root; password=dbpass; database=tech-at-hub;"
+  },
+  "JWT": {
+    "SecretKey": "blahblahblahblah"
+  },
+  "Environment": {
+    "Platform": "Windows",
+    "GitPath": "C:\\Program Files\\Git\\bin\\",
+    "BinPath": "C:\\Program Files\\Git\\usr\\bin\\",
+    "DefaultWorkingDirectory": "C:\\Users\\jpbre\\Documents\\NCSU\\tech-at-hub\\"
+  }
 }
 ```
 
-- ```JWT:SecretKey``` - Can be any string of at least 16 characters
-- ```Environment:GitPath``` - Path to your Git binary projects
-- ```Environment:BinPath``` - Path to your platform common executables
-- ```Environment:DefaultWorkingDirectory``` - Path to your root ```tech_at_hub``` folder
+- `JWT:SecretKey` - Can be any string of at least 16 characters
+- `Environment:GitPath` - Path to your Git binary projects
+- `Environment:BinPath` - Path to your platform common executables
+- `Environment:DefaultWorkingDirectory` - Path to your root `tech_at_hub` folder
 
 In-depth developer's guide can be found on our wiki page.
 
@@ -87,3 +87,5 @@ In-depth developer's guide can be found on our wiki page.
 17. Jude Sproul
 18. Casey Greene
 19. Siddarth Shinde
+20. Sheel Patel
+

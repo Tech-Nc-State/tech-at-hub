@@ -8,6 +8,7 @@ import LoginPage from "./views/LoginPage";
 import SignupPage from "./views/SignupPage";
 import RepositoryPage from "./views/RepositoryPage";
 import CreateRepositoryPage from "./views/CreateRepositoryPage";
+import ReposPage from "./views/ReposPage";
 
 const router = createBrowserRouter([
   {
@@ -40,6 +41,10 @@ const router = createBrowserRouter([
       {
         path: "new",
         element: <CreateRepositoryPage />,
+      },
+      {
+        path: "repos",
+        element: <ReposPage />,
       },
     ],
   },
