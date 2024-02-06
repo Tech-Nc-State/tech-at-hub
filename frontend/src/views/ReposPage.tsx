@@ -20,16 +20,8 @@ function ReposPage() {
           User's Repositories
         </Typography>
         <br />
-        <Button
-          sx={{
-            fontSize: "2rem",
-            fontWeight: "700",
-            border: "solid 2px black",
-            backgroundColor: "#FA455D",
-            color: "white",
-          }}
-        >
-          Add
+        <Button href="/new" variant="contained">
+          Create New Repository
         </Button>
         <br />
         <br />
