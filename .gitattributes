@@ -3,3 +3,5 @@
 *.sln text eol=crlf
 *.sh text eol=lf
 Dockerfile text eol=lf
+package.json text eol=lf
+*.yml text eol=lf
