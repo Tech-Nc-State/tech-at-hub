@@ -7,11 +7,11 @@ function TechAtLogo() {
       // display="flex"
       // justifyContent="start"
       // alignItems="center"
-      margin="10px"
+      margin="0px"
     >
       <img
         src={logoSvg}
-        style={{ width: "50px", flexGrow: 0, marginRight: "10px" }}
+        style={{ width: "75px", flexGrow: 0, marginRight: "10px", marginTop: "5px" }}
       />
       {/* <Typography
         variant="h6"

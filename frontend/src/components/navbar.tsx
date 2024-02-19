@@ -19,11 +19,30 @@ import { Link } from "react-router-dom";
 import MenuIcon from "@mui/icons-material/Menu";
 import AdbIcon from "@mui/icons-material/Adb";
 import TechAtLogo from "./logo";
+import { useSessionService } from "../services/SessionService";
+import { useEffect, useState } from "react";
+import { getProfilePicture, getMe } from "../api/UserApi";
 
 const pages = [{ name: "About", route: "/about" }];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 function NavBar() {
+  const sessionService = useSessionService();
+  const [pfp, setPfp] = useState<any>(null);
+
+  useEffect(() => {
+    if (sessionService.hasSessionToken()) {
+      getMe(sessionService.getSessionToken()).then((user) => {
+        getProfilePicture(user.username).then((picture) => {
+          const base64 = btoa(
+            picture.reduce((data, byte) => data + String.fromCharCode(byte), "")
+          );
+          setPfp(base64);
+        });
+      });
+    }
+  }, []);
+
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
   );
@@ -61,7 +80,7 @@ function NavBar() {
           {/* Buttons */}
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {pages.map(({ name, route }) => (
-              <Link to={route} style={{ textDecoration: "none" }}>
+              <Link key={name} to={route} style={{ textDecoration: "none" }}>
                 <Button
                   key={name}
                   onClick={handleCloseNavMenu}
@@ -106,6 +125,7 @@ function NavBar() {
             >
               {pages.map(({ name, route }) => (
                 <Link
+                  key={name}
                   to={route}
                   style={{ color: "black", textDecoration: "none" }}
                 >
@@ -126,7 +146,7 @@ function NavBar() {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="popcorn.svg" />
+                <Avatar alt="" src={`data:;base64,${pfp}`} />
               </IconButton>
             </Tooltip>
             <Menu

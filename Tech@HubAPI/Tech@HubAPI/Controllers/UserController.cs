@@ -46,11 +46,11 @@ namespace Tech_HubAPI.Controllers
             using var ms = new MemoryStream();
             image.SaveAsJpeg(ms);
 
-            var path = BitConverter.ToString(_hashingService.HashFile(ms.ToArray())).Replace("-", "");
-            image.SaveAsJpeg(_defaultWorkingDirectory + "/profile_pictures/" + path + ".jpg");
+            var path = BitConverter.ToString(_hashingService.HashFile(ms.ToArray())).Replace("-", "") + ".jpg";
+            image.SaveAsJpeg(_defaultWorkingDirectory + "/profile_pictures/" + path);
 
             var user = this.GetUser(_dbContext);
-
+            _dbContext.Users.Update(user);
             user.ProfilePicturePath = path;
             _dbContext.SaveChanges();
 
@@ -73,15 +73,19 @@ namespace Tech_HubAPI.Controllers
                 return BadRequest("The username is not found.");
             }
 
-            var path = user.ProfilePicturePath;
+            string path;
+            if (System.IO.File.Exists(user.ProfilePicturePath))
+            {
+                path = user.ProfilePicturePath;
+            }
+            else
+            {
+                path = _defaultWorkingDirectory + "/profile_pictures/" + user.ProfilePicturePath;
+            }
+
             var ext = path.Substring(path.IndexOf("."));
             var stream = System.IO.File.OpenRead(path);
             var mime = "image/jpeg";
-
-            if (ext == "png")
-            {
-                mime = "image/png";
-            }
 
             return new FileStreamResult(stream, mime);
         }
@@ -145,10 +149,7 @@ namespace Tech_HubAPI.Controllers
 
             DateTime.TryParse(form.BirthDate, out DateTime birthDate);
 
-
-
-            String randomPfpPicture = "";
-              
+            string randomPfpPicture = "";
             if (Directory.Exists("Profile_Pictures_JPG/"))
             {
                 var rand = new Random();
@@ -158,7 +159,7 @@ namespace Tech_HubAPI.Controllers
                     randomPfpPicture = files[rand.Next(files.Length)];
                 }
             }
-               
+
 
             var user = new User(form.Username, hashedPassword, salt, form.Email, form.FirstName,
                     form.LastName, "", randomPfpPicture, birthDate);

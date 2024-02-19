@@ -1,4 +1,4 @@
-import {UserService} from "./UserService";
+import {SessionService} from "./SessionService";
 
 /**
  * Services used application wide
@@ -6,8 +6,8 @@ import {UserService} from "./UserService";
  */
 export function GlobalServices({children}: any) {
     return (
-        <UserService>
+        <SessionService>
             {children}
-        </UserService>
+        </SessionService>
     );
 }

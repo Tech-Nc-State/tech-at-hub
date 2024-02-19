@@ -26,38 +26,36 @@ const theme = createTheme({
 
 function App() {
   return (
-      <GlobalServices>
-        <Box>
-          <ThemeProvider theme={theme}>
-            <CssBaseline />
-            <NavBar />
+    <GlobalServices>
+      <Box>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          <NavBar />
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              p: 3,
+            }}
+          >
             <Box
               sx={{
-                display: "flex",
+                minWidth: 700,
+                minHeight: "70vh",
                 justifyContent: "center",
                 alignItems: "center",
-                p: 3,
+                textAlign: "center",
+                p: 5,
               }}
             >
-              <Box
-                sx={{
-                  width: "70%",
-                  height: "100%",
-                  minWidth: 700,
-                  minHeight: 1000,
-                  justifyContent: "center",
-                  alignItems: "center",
-                  textAlign: "center",
-                  p: 5,
-                }}
-              >
-                <Outlet />
-              </Box>
+              <Outlet />
             </Box>
-            <Footer />
-          </ThemeProvider>
-        </Box>
-      </GlobalServices>
+          </Box>
+          <Footer />
+        </ThemeProvider>
+      </Box>
+    </GlobalServices>
   );
 }
 

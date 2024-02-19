@@ -348,6 +348,117 @@ namespace Tech_HubAPI.Services
         }
 
         /// <summary>
+        /// Returns a list of all Commits that make up the current branch.
+        /// </summary>
+        /// <param name="username"></param> the repo owner's username
+        /// <param name="repository"></param> the repo name
+        /// <param name="branch"></param> the branch to get commits of
+        /// <returns>A list of Commit objects that makes up the current branch.</returns>
+        public List<Commit> GetCommitLog(string username, string repository, string branchName)
+        {
+            string userDirectory = _baseGitFolder + username + "/";
+
+            if (!Directory.Exists(userDirectory))
+            {
+                throw new Exception("That user doesn't exist");
+            }
+
+            string repoDirectory = userDirectory + repository + _repoDirectoryPostfix + "/";
+            if (!Directory.Exists(repoDirectory))
+            {
+                throw new DirectoryNotFoundException("The repository does not exist");
+            }
+
+            string branchDirectory = repoDirectory + "/refs/heads";
+            if (!Directory.Exists(branchDirectory))
+            {
+                throw new DirectoryNotFoundException("The branch does not exist");
+            }
+
+            // Get the list of commits from the file system, make sure u find the right one if it exists
+            // Make the Commit objects into an array and return this. See GetBranches(), probably.
+
+            // Throws exception if file is not found
+            string commitHash = System.IO.File.ReadAllText(branchDirectory + "/" + branchName).Trim();
+
+            // Setup the list to be ready to go.
+            List<Commit> commitList = new List<Commit>();
+
+            // Set up the execute service
+            _executeService.ExecutableDirectory = _gitBinPath;
+            _executeService.WorkingDirectory = branchDirectory;
+
+            // Regex Strings
+            // It's not pretty but it works.
+            string infoRegex = "tree (?<tree>.+)\nparent (?<parent>.+)\nauthor (?<author>.+) <(?<authorEmail>.+)> (?<authorTimestamp>[0-9]+) (?<authorTimezone>-?[0-9]+).*\ncommitter (?<comitter>.+) <(?<committerEmail>.+)> (?<comitterTimestamp>[0-9]+) (?<comitterTimezone>-?[0-9]+)(\\s)+(?<message>(.+(\\s)*))";
+            string parentlessRegex = "tree (?<tree>.+)(\\s)author (?<author>.+) <(?<authorEmail>.+)> (?<authorTimestamp>[0-9]+) (?<authorTimezone>-?[0-9]+).*\\ncommitter (?<comitter>.+) <(?<committerEmail>.+)> (?<comitterTimestamp>[0-9]+) (?<comitterTimezone>-?[0-9]+)(\\s)+(?<message>(.+(\\s)*))";
+            string parentRegex = "parent (?<hash>.+)\n";
+
+            // Run git cat-file
+            string rawCommitData = _executeService.ExecuteProcess("git", "cat-file", "-p", commitHash); // this could just be branch name.
+            Match parentMatch = Regex.Match(rawCommitData, "parent (?<hash>.+)\n");
+            Match infoMatch = Regex.Match(rawCommitData, infoRegex);
+
+            // TODO: run cat-file -p on the commit 
+
+
+            while (parentMatch.Success)
+            {
+                // Keep trying to rematch and make new Commits to add to the list
+                // The commits will probably be added in reverse chronological order.
+                Commit newCommit = new Commit(UnixTimeStampToDateTime(double.Parse(infoMatch.Groups["authorTimestamp"].Value)),
+                    infoMatch.Groups["authorEmail"].Value,
+                    infoMatch.Groups["message"].Value,
+                    commitHash);
+
+
+                // set previous's commits parent
+                if (commitList.Count > 0)
+                {
+                    commitList.Last().Parent = newCommit;
+                }
+                
+
+                // add new commit to back.
+                commitList.Add(newCommit);
+
+                // replace current commit hash
+                commitHash = parentMatch.Groups["hash"].Value;
+
+                // get new commit data.
+                rawCommitData = _executeService.ExecuteProcess("git", "cat-file", "-p", commitHash);
+                parentMatch = Regex.Match(rawCommitData, parentRegex);
+                infoMatch = Regex.Match(rawCommitData, infoRegex);
+            }
+
+            infoMatch = Regex.Match(rawCommitData, parentlessRegex);
+            // Tack on the final commit, since it doesnt have a parent.
+            Commit lastCommit = new Commit(UnixTimeStampToDateTime(double.Parse(infoMatch.Groups["authorTimestamp"].Value)),
+                    infoMatch.Groups["authorEmail"].Value,
+                    infoMatch.Groups["message"].Value,
+                    commitHash);
+
+            // set previous's commits parent
+            if (commitList.Count > 0)
+            {
+                commitList.Last().Parent = lastCommit;
+            }
+
+            commitList.Add(lastCommit);
+
+            
+
+            return commitList; // TODO: Rework ths to return a single Commit instead of a list.
+        }
+
+        public static DateTime UnixTimeStampToDateTime(double unixTimeStamp)
+        {
+            // Unix timestamp is seconds past epoch
+            DateTime dateTime = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+            dateTime = dateTime.AddSeconds(unixTimeStamp).ToLocalTime();
+            return dateTime;
+        }
+
         /// Gets a list of <see cref="Tag">s in the given user/repo name.
         /// Will return empty list if no tags exist.
         /// </summary>
