@@ -14,18 +14,18 @@ services:
   frontend:
     hostname: frontend
     build: ./frontend/
-    # volumes:
-    #   - ./frontend:/frontend
-#    ports:
-#      - 3000:3000
+    volumes:
+      - ./frontend:/frontend
+    # ports:
+    #  - 3000:3000
 
   git-server:
     hostname: git-server
     depends_on:
       - backend
     build: ./Tech@HubGitServer/
-#    ports:
-#      - 80:80
+    # ports:
+    #  - 80:80
     volumes:
       - type: volume
         source: file-store
@@ -41,8 +41,8 @@ services:
       MYSQL_DATABASE: tech-at-hub
       MYSQL_USER: gituser
       MYSQL_PASSWORD: dbpass
-#    ports:
-#      - 3306:3306
+    # ports:
+    #   - 3306:3306
 
   backend:
     hostname: backend
@@ -52,8 +52,8 @@ services:
     build:
       context: ./Tech@HubAPI/
       dockerfile: Tech@HubAPI/Dockerfile
-#    ports:
-#      - 5000:80
+    # ports:
+    #   - 5000:80
     volumes:
       - type: volume
         source: file-store
