@@ -169,6 +169,44 @@ namespace Tech_HubAPI.Controllers
             return Ok(newRepo);
         }
 
+        [HttpGet("{username}/{repoName}/issues/{issueId}")]
+        public async Task<ActionResult<Issue>> GetIssue(string username, string repoName, int issueId)
+        {
+            var issue = await _dbContext.Issues
+                .Include(i => i.Repository)
+                .ThenInclude(repo => repo.Owner)
+                .FirstOrDefaultAsync(i => i.Id == issueId && i.Repository.Name == repoName && i.Repository.Owner.Username == username);
+
+            if (issue == null)
+            {
+                return NotFound($"Issue with ID {issueId} not found in repository {repoName}.");
+            }
+
+            return Ok(issue);
+        }
+
+        
+        [HttpPost]
+        [Route("{username}/{repoName}/issues")]
+        public async Task<ActionResult<Issue>> CreateIssue(String username, String repoName, [FromBody] Issue issue) {
+            Repository? existingRepo = _dbContext.Repositories
+                .Where(r => r.Owner.Username == username)
+                .Where(r => r.Name == repoName)
+                .FirstOrDefault();
+
+            if (existingRepo == null) {
+                return NotFound("Repo not found");
+            }
+
+            issue.RepositoryId = existingRepo.Id;
+            _dbContext.issues.Add(issue);
+            await _dbContext.SaveChangesAsync();
+
+            return CreatedAtAction(nameOf(GetIssue))
+
+            
+        }
+
         [HttpGet]
         [Route("{username}/{repoName}/{branchName}/commits")]
         public async Task<ActionResult<List<Commit>>> GetCommits(
