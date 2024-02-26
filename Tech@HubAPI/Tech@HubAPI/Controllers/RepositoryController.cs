@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Tech_HubAPI.Forms;
 using Tech_HubAPI.Models;
 using Tech_HubAPI.Models.Git;
@@ -172,10 +173,14 @@ namespace Tech_HubAPI.Controllers
         [HttpGet("{username}/{repoName}/issues/{issueId}")]
         public async Task<ActionResult<Issue>> GetIssue(string username, string repoName, int issueId)
         {
+            Repository? existingRepo = _dbContext.Repositories
+                .Where(r => r.Owner.Username == username)
+                .Where(r => r.Name == repoName)
+                .FirstOrDefault();
+
             var issue = await _dbContext.Issues
-                .Include(i => i.Repository)
-                .ThenInclude(repo => repo.Owner)
-                .FirstOrDefaultAsync(i => i.Id == issueId && i.Repository.Name == repoName && i.Repository.Owner.Username == username);
+                .Include(i => i.RepositoryId)
+                .FirstOrDefaultAsync(i => i.Id == issueId && existingRepo.Name == repoName && existingRepo.Owner.Username == username);
 
             if (issue == null)
             {
@@ -188,7 +193,7 @@ namespace Tech_HubAPI.Controllers
         
         [HttpPost]
         [Route("{username}/{repoName}/issues")]
-        public async Task<ActionResult<Issue>> CreateIssue(String username, String repoName, [FromBody] Issue issue) {
+        public async Task<ActionResult<Issue>> CreateIssue(string username, string repoName, [FromBody] Issue issue) {
             Repository? existingRepo = _dbContext.Repositories
                 .Where(r => r.Owner.Username == username)
                 .Where(r => r.Name == repoName)
@@ -199,10 +204,10 @@ namespace Tech_HubAPI.Controllers
             }
 
             issue.RepositoryId = existingRepo.Id;
-            _dbContext.issues.Add(issue);
+            _dbContext.Issues.Add(issue);
             await _dbContext.SaveChangesAsync();
 
-            return CreatedAtAction(nameOf(GetIssue))
+            return issue;
 
             
         }
