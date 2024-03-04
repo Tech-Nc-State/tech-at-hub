@@ -23,8 +23,16 @@ import { useSessionService } from "../services/SessionService";
 import { useEffect, useState } from "react";
 import { getProfilePicture, getMe } from "../api/UserApi";
 
+// These are the pages that appear as standalone buttons on the navbar.
 const pages = [{ name: "About", route: "/about" }];
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
+
+// These are the settings that appear when clicking on the user icon
+const settings = [
+  {name: "Profile", route: "/"}, // TODO
+  {name: "Account", route: "/"}, // TODO (also, what's the difference with account?)
+  {name: "Dashboard", route: "/repos"}, 
+  {name: "Logout", route: "/logout"} // TODO: Make this a POST request
+];
 
 function NavBar() {
   const sessionService = useSessionService();
@@ -170,9 +178,12 @@ function NavBar() {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
+              
+              {settings.map(({name, route}) => (
+                <MenuItem key={name} onClick={handleCloseUserMenu}>
+                  <Link key={name} to={route} style={{ textDecoration: "none" }}>
+                    <Typography textAlign="center">{name}</Typography>
+                  </Link>
                 </MenuItem>
               ))}
             </Menu>
