@@ -36,11 +36,20 @@ function RepositoryPage() {
   const [tab, setTab] = useState(0);
   const repoInfo: any = useLoaderData();
   const sessionService = useSessionService();
-  const [listing, setListing] = useState<DirectoryEntry[]>();
+  const [listing, setListing] = useState<DirectoryEntry[]>([{name: "teest", isDirectory: true} as DirectoryEntry, {name: "test", isDirectory: false} as DirectoryEntry]);
+
+
+
 
   const swapTab = (event: React.SyntheticEvent, new_value: number) => {
     setTab(new_value);
   };
+
+function ChangeFile(file: DirectoryEntry){
+    if(file.isDirectory){
+
+    }
+}
 
   useEffect(() => {
     getListing(
@@ -65,11 +74,15 @@ function RepositoryPage() {
   return (
     <Box>
       <RepositoryHeader {...repositoryProps} />
+      <Tabs value={tab} onChange={swapTab}>
+          <StyledTab label="Code" />
+          <StyledTab label="Settings" />
+        </Tabs>
       <Table>
         <TableBody>
           {listing?.map((entry) => (
             <TableRow>
-              <TableCell>
+              <TableCell onClick = {ChangeFile(entry)}>
                 <FontAwesomeIcon icon={entry.isDirectory ? faFolder : faFile} />
                 <Typography>{entry.name}</Typography>
               </TableCell>
@@ -84,10 +97,6 @@ function RepositoryPage() {
           paddingRight: "32px",
         }}
       >
-        <Tabs value={tab} onChange={swapTab}>
-          <StyledTab label="Code" />
-          <StyledTab label="Settings" />
-        </Tabs>
       </Box>
     </Box>
   );

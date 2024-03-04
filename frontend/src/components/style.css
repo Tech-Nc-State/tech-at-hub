@@ -1,0 +1,27 @@
+.topPage {
+    display: flex;
+    width: 100%;
+    align-items: flex-start;
+    box-sizing: border-box;
+    justify-content: space-between; /* Add this line */
+}
+
+.profilePic {
+    /* Your styles here */
+}
+
+.pfpImage {
+    border-radius: 50%;
+    max-width: 200px;
+    margin-left: 0;
+}
+
+.userName {
+    margin-left: 50px;
+    display: flex;
+    align-items: center;
+}
+.buttonEdit {
+    width: auto;
+    
+}

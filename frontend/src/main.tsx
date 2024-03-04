@@ -10,6 +10,9 @@ import RepositoryPage from "./views/RepositoryPage";
 import CreateRepositoryPage from "./views/CreateRepositoryPage";
 import ReposPage from "./views/ReposPage";
 
+import Profile from "./views/Profile";
+import EditProfile from "./views/EditProfile";
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -30,6 +33,14 @@ const router = createBrowserRouter([
       {
         path: "signup",
         element: <SignupPage />,
+      },
+      {
+        path: "profile",
+        element: <Profile />
+      },
+      {
+        path: "edit-profile",
+        element: <EditProfile />,
       },
       {
         path: "repository/:username/:repoName",
