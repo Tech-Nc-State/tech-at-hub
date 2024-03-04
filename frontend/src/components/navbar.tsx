@@ -29,10 +29,12 @@ const settings = ["Profile", "Account", "Dashboard", "Logout"];
 function NavBar() {
   const sessionService = useSessionService();
   const [pfp, setPfp] = useState<any>(null);
+  const [username, setUsername] = useState<any>("Not Logged In");
 
   useEffect(() => {
     if (sessionService.hasSessionToken()) {
       getMe(sessionService.getSessionToken()).then((user) => {
+        setUsername(user.username)
         getProfilePicture(user.username).then((picture) => {
           const base64 = btoa(
             picture.reduce((data, byte) => data + String.fromCharCode(byte), "")
@@ -142,7 +144,10 @@ function NavBar() {
               <TechAtLogo />
             </Link>
           </Box>
-
+          
+          <Box sx={{ margin: "10px"}}>
+            {username}
+          </Box>
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
