@@ -1,10 +1,12 @@
-FROM node:16-slim
+FROM node:18-slim
 
 WORKDIR /frontend
 
 COPY package*.json ./
 
 RUN npm install
+
+RUN npm install esbuild
 
 COPY . .
 
