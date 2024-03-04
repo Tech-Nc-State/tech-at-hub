@@ -63,7 +63,7 @@ function Profile() {
                             });
                             }
                     // let pfp = new TextDecoder().decode(await getProfilePicture(user.username));
-                    let usrname = user.username;
+                    let username = user.username;
                     let desc = user.description;
                     let userId = user.id;
 
@@ -71,7 +71,7 @@ function Profile() {
                     setProfile( prevState => ({
                         ...prevState,
                         // pfp: pfp,
-                        username: usrname,
+                        username: username,
                         id: userId,
                         description: desc
                     }));
@@ -125,7 +125,7 @@ function Profile() {
                     <Typography variant='h6'>
                             Repos
                         </Typography>
-                            TODO: add REPO stuff Sheil is working on
+                            TODO: add REPO stuff Sheel is working on
                         {/* USE REPO COMPONENT OTHER TEAM IS MAKING */}
                    </Box>
                    
