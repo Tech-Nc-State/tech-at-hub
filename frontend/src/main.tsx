@@ -46,6 +46,10 @@ const router = createBrowserRouter([
         path: "repos",
         element: <ReposPage />,
       },
+      {
+        path: "*",
+        element: <h1>404: Not Found!</h1>
+      }
     ],
   },
 ]);
