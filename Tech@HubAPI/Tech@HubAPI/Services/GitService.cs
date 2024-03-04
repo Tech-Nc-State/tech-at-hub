@@ -162,6 +162,32 @@ namespace Tech_HubAPI.Services
         }
 
         /// <summary>
+        /// Gets a repo's directory from file system
+        /// </summary>
+        /// <param name="repoName">name of the repo to get</param>
+        /// <param name="username">name of the user associated with the repo to retrieve</param>
+        /// <returns>name of the repo directory</returns>
+        /// <exception cref="DirectoryNotFoundException"></exception>
+        public string GetRepository(string repoName, string username)
+        {
+            // Check if user directory exists
+            string userDirectory = _baseGitFolder + username + "/";
+            if (!Directory.Exists(userDirectory))
+            {
+                throw new DirectoryNotFoundException("User not found");
+            }
+
+            // Check if repo directory exists
+            string repoDirectory = userDirectory + repoName + _repoDirectoryPostfix + "/";
+            if (!Directory.Exists(repoDirectory))
+            {
+                // repo no exist
+                throw new DirectoryNotFoundException("Repository not found");
+            }
+            return repoDirectory;
+        }
+
+        /// <summary>
         /// Gets the contents of a directory within a git repository.
         /// </summary>
         /// <param name="username">User who owns the repository</param>

@@ -170,6 +170,29 @@ namespace Tech_HubAPI.Controllers
             return Ok(newRepo);
         }
 
+        [Authorize]
+        [HttpGet]
+        [Route("{username}/{repoName}")]
+        public async Task<ActionResult<Repository>> GetRepository(string username, string repoName)
+        {
+            Repository? existingRepo = _dbContext.Repositories
+                .Where(r => r.Owner.Username == username)
+                .Where(r => r.Name == repoName)
+                .FirstOrDefault();
+
+            if (existingRepo == null) { 
+                return NotFound("Repository does not exist");
+            }
+
+            // TODO: This also leaks the password lmao
+            //User repoUser = _dbContext.Users.Where(u => u.Username == username).FirstOrDefault();
+            //existingRepo.Owner = repoUser;
+
+
+            return existingRepo;
+        }
+
+
         [HttpGet("{username}/{repoName}/issues/{issueId}")]
         public async Task<ActionResult<Issue>> GetIssue(string username, string repoName, int issueId)
         {

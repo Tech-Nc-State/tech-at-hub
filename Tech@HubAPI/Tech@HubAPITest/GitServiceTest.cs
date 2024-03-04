@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
 using Tech_HubAPI.Models;
@@ -203,5 +204,14 @@ namespace Tech_HubAPITest
 
 
         }
+
+        [Fact]
+        public async Task CreateIssuesTest()
+        {
+            _gitService.CreateNewRepository("MyRepository", "mkmcary");
+            Directory.Exists(_fileSystem.RootDirectory + "git/mkmcary/MyRepository.git").Should().BeTrue();
+            
+        }
+
     }
 }
