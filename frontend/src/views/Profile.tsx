@@ -94,10 +94,11 @@ function Profile() {
                 display: 'flex',
                 alignItems: 'center',
                 flexWrap: "nowrap",
+                whiteSpace:"nowrap",
                 pl: 5
                 }}>
 
-                <Box className="profilePic" sx={{width: 1}}>
+                <Box className="profilePic" sx={{width: 1, mr:10}}>
                     <Avatar alt="" src={Userprofile.pfp} sx={{width:200, height: 200}} />
                 </Box>
 
