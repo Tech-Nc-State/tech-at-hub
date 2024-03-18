@@ -231,8 +231,74 @@ namespace Tech_HubAPI.Controllers
             await _dbContext.SaveChangesAsync();
 
             return issue;
+        }
 
-            
+        [HttpPut]
+        [Route("{username}/{repoName}/issues/{issueId}")]
+        public async Task<ActionResult<Issue>> UpdateIssue(string username, string repoName, int issueId, [FromBody] Issue updatedIssue) {
+            Repository? existingRepo = _dbContext.Repositories
+                .Where(r => r.Owner.Username == username)
+                .Where(r => r.Name == repoName)
+                .FirstOrDefault();
+
+            var issue = await _dbContext.Issues
+                .Include(i => i.RepositoryId)
+                .FirstOrDefaultAsync(i => i.Id == issueId && existingRepo.Name == repoName && existingRepo.Owner.Username == username);
+
+            if (issue == null)
+            {
+                return NotFound($"Issue with ID {issueId} not found in repository {repoName}.");
+            }
+
+            if (existingRepo == null) {
+                return NotFound("Repo not found");
+            }
+
+            issue.IssueTitle = updatedIssue.IssueTitle;
+            issue.AuthorId = updatedIssue.AuthorId;
+            issue.Activity = updatedIssue.Activity;
+            issue.BuildInfo = updatedIssue.BuildInfo;
+            issue.Summary = updatedIssue.Summary;
+            issue.StepsToReproduce = updatedIssue.StepsToReproduce;
+            issue.ExpectedResults = updatedIssue.ExpectedResults;
+            issue.ActualResults = updatedIssue.ActualResults;
+            issue.Comments = updatedIssue.Comments;
+            issue.Assignees = updatedIssue.Assignees;
+            issue.Labels = updatedIssue.Labels;
+
+            issue.RepositoryId = existingRepo.Id;
+            _dbContext.Issues.Update(issue);
+            await _dbContext.SaveChangesAsync();
+
+            return issue;
+        }
+
+        [HttpDelete]
+        [Route("{username}/{repoName}/issues/{issueId}")]
+        public async Task<ActionResult<Issue>> DeleteIssue(string username, string repoName, int issueId) {
+            Repository? existingRepo = _dbContext.Repositories
+                .Where(r => r.Owner.Username == username)
+                .Where(r => r.Name == repoName)
+                .FirstOrDefault();
+
+            var issue = await _dbContext.Issues
+                .Include(i => i.RepositoryId)
+                .FirstOrDefaultAsync(i => i.Id == issueId && existingRepo.Name == repoName && existingRepo.Owner.Username == username);
+
+            if (issue == null)
+            {
+                return NotFound($"Issue with ID {issueId} not found in repository {repoName}.");
+            }
+
+            if (existingRepo == null) {
+                return NotFound("Repo not found");
+            }
+
+            issue.RepositoryId = existingRepo.Id;
+            _dbContext.Issues.Remove(issue);
+            await _dbContext.SaveChangesAsync();
+
+            return issue;
         }
 
         [HttpGet]
