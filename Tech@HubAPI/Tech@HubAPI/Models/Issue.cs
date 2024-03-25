@@ -5,7 +5,7 @@ namespace Tech_HubAPI.Models
 {
     public class Issue
     {
-        public Issue(int id, string issueTitle, int authorId, int repositoryId, string activity, string buildInfo, string summary,string stepsToReproduce,
+        public Issue(int id, string issueTitle, int authorId, int repositoryId, string activity, string buildInfo, string summary, string stepsToReproduce,
             string expectedResults, string actualResults)
         {
             Id = id;
@@ -18,9 +18,9 @@ namespace Tech_HubAPI.Models
             StepsToReproduce = stepsToReproduce;
             ExpectedResults = expectedResults;
             ActualResults = actualResults;
-            Comments = new List<Comment>();
-            Assignees = new List<User>();
-            Labels = new List<Label>();
+            Comments = new List<string>();
+            Assignees = new List<string>();
+            Labels = new List<string>();
         }
 
         public int Id { get; set; }
@@ -43,11 +43,11 @@ namespace Tech_HubAPI.Models
 
         public string ActualResults { get; set; }
 
-        public List<Comment> Comments { get; set; }
+        public List<string> Comments { get; set; }
 
-        public List<User> Assignees { get; set; }
+        public List<string> Assignees { get; set; }
 
-        public List<Label> Labels { get; set; }
+        public List<string> Labels { get; set; }
     }
 }
 
