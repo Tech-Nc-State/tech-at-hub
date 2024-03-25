@@ -51,7 +51,11 @@ namespace Tech_HubAPI.Models
             modelBuilder.Entity<Issue>(entity =>
             {
                 entity.HasKey(e => e.Id);
+                entity.HasMany(e => e.Comments);
+                entity.HasMany(e => e.Assignees);
+                entity.HasMany(e => e.Labels);
             });
+
         }
     }
 }
