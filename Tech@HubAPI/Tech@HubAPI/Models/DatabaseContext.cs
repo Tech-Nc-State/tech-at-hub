@@ -22,10 +22,6 @@ namespace Tech_HubAPI.Models
 
         public DbSet<Issue> Issues { get; set; }
 
-        public DbSet<Comment> Comments { get; set; }
-
-        public DbSet<Label> Labels { get; set; }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -53,18 +49,6 @@ namespace Tech_HubAPI.Models
 
             // Issue
             modelBuilder.Entity<Issue>(entity =>
-            {
-                entity.HasKey(e => e.Id);
-            });
-
-            // Comment
-            modelBuilder.Entity<Comment>(entity =>
-            {
-                entity.HasKey(e => e.Id);
-            });
-
-            // Label
-            modelBuilder.Entity<Label>(entity =>
             {
                 entity.HasKey(e => e.Id);
             });
