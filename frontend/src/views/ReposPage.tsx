@@ -35,6 +35,7 @@ function ReposPage() {
       let user: User = await getMe(sessionToken);
       setUser(user);
       let newRepos: Repository[] = await getRepos(sessionToken, user.username);
+
       setRepos(newRepos);
       } catch (err) {}
   };
@@ -79,7 +80,7 @@ function ReposPage() {
                   <a href={"/repository/"+user?.username+"/"+repo.name}>                    
                     <Typography>{repo.name}</Typography>
                   </a>
-                    <Typography>{""+repo.owner}</Typography>
+                    <Typography>{""+user?.username}</Typography>
                   </TableCell>
                   <TableCell sx={{ textAlign: "right", borderRight: "2px solid red", borderBottom: "2px solid red", borderTop: "2px solid red" }}>
                     <img src="/src/assets/logo.svg" style={{ width: "75px", flexGrow: "0", marginRight: "10px", marginTop: "5px" }} />
