@@ -203,5 +203,23 @@ namespace Tech_HubAPI.Controllers
                 return NotFound(ex.Message);
             }
         }
+
+        [HttpGet]
+        [Authorize]
+        [Route("{username}")]
+        public async Task<ActionResult<List<Repository>>> GetRepos(string username)
+        {
+            var repos = _dbContext.Repositories
+                .Where(r => r.Owner.Username == username);
+
+            // TODO: Does this need some sort of permission check?
+
+            if (!repos.Any())
+            {
+                return NotFound("No repos found for user " + username);
+            }
+
+            return Ok(repos);
+        }
     }
 }

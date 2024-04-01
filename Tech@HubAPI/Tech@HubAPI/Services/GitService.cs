@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -499,5 +500,30 @@ namespace Tech_HubAPI.Services
 
             return tags;
         }
+
+
+        // Unfinished Git Service/local DB implementation for getting Repo list
+        //public List<Repository> GetRepositories(string username)
+        //{
+        //    // Given a username and repoName, list all stored branch names.
+
+        //    // Check if user directory exists
+        //    string userDirectory = _baseGitFolder + username + "/";
+        //    if (!Directory.Exists(userDirectory))
+        //    {
+        //        throw new DirectoryNotFoundException("User not found");
+        //    }
+
+        //    // Get the repos under this user.
+
+        //    string[] repoNames = new DirectoryInfo(userDirectory)
+        //        .GetFiles()
+        //        .Select(f => f.Name)
+        //        .ToArray();
+
+        //    List<Repository> repositories = new List<Repository>();
+
+        //    for 
+        //}
     }
 }
