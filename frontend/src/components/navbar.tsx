@@ -30,7 +30,7 @@ const pages = [{ name: "About", route: "/about" }];
 const settings = [
   {name: "Profile", route: "/"}, // TODO
   {name: "Account", route: "/"}, // TODO (also, what's the difference with account?)
-  {name: "Dashboard", route: "/repos"}, 
+  {name: "Repositories", route: "/repos"}, 
   {name: "Logout", route: "/logout"} // TODO: Make this a POST request
 ];
 
