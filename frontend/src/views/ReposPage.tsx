@@ -11,8 +11,44 @@ import {
   TableCell,
   TableBody,
 } from "@mui/material";
+import { useSessionService } from "../services/SessionService";
+import { SessionToken, login } from "../api/AuthApi";
+import { useNavigate } from "react-router-dom";
+import {
+  CreateRepositoryForm,
+  Repository,
+  createRepository,
+  getListing,
+} from "../api/RepositoryApi";
+import { User, getMe } from "../api/UserApi";
 
 function ReposPage() {
+  const sessionService = useSessionService();
+  const navigate = useNavigate();
+  const [repositories, setRepositories] = useState(null);
+  const [repoInfo, setRepoInfo] = useState(new CreateRepositoryForm());
+
+
+  const createHandler = async () => {
+    let sessionToken: SessionToken = sessionService.getSessionToken();
+    try {
+      // use the API to create the repo
+      let repository: Repository = await createRepository(
+        sessionToken,
+        repoInfo
+      );
+      // redirect to the repo page
+      let user: User = await getMe(sessionToken);
+      navigate(`/repository/${user.username}/${repository.name}`);
+    } catch (err) {}
+  };
+
+  const repoCount = 1
+  const repos = [ ["tech@hub", "joey"], ["leetcode", "satan"]];
+  const name = "Tech@Hub"
+  const author = "joey"
+
+
   return (
     <>
       <Box>
@@ -20,17 +56,12 @@ function ReposPage() {
           User's Repositories
         </Typography>
         <br />
-        <Button
-          sx={{
-            fontSize: "2rem",
-            fontWeight: "700",
-            border: "solid 2px black",
-            backgroundColor: "#FA455D",
-            color: "white",
-          }}
-        >
-          Add
+        <Button href="/new" variant="contained">
+          Create New Repository
         </Button>
+        <Button variant="contained" onClick={createHandler}>
+            Test
+          </Button>
         <br />
         <br />
         <br />
@@ -48,50 +79,17 @@ function ReposPage() {
         >
           <Table sx={{margin: "30px" }}>
             <TableBody>
-              {/* {listing?.map((entry) => (
-                <TableRow>
-                  <TableCell>
-                    <Typography>Name</Typography>
+              {repos.map((repo) => (
+                <><TableRow sx={{ border: "2px solid blue" }}>
+                  <TableCell sx={{ borderLeft: "2px solid red", borderBottom: "2px solid red", borderTop: "2px solid red" }}>
+                    <Typography>{repo[0]}</Typography>
+                    <Typography>{repo[1]}</Typography>
                   </TableCell>
-                </TableRow>
-              ))} */}
-              <TableRow sx={{border: "2px solid blue"}}>
-                <TableCell sx={{borderLeft: "2px solid red", borderBottom: "2px solid red", borderTop: "2px solid red"}}>
-                  <Typography>Name</Typography>
-                </TableCell>
-                <TableCell sx={{textAlign: "right", borderRight: "2px solid red", borderBottom: "2px solid red", borderTop: "2px solid red"}}>
-                  <img src="/src/assets/logo.svg" style={{width: "75px", flexGrow: "0", marginRight: "10px", marginTop: "5px"}} />
-                </TableCell>
-              </TableRow>
-              <br />
-              <TableRow sx={{border: "2px solid blue"}}>
-                <TableCell sx={{borderLeft: "2px solid red", borderBottom: "2px solid red", borderTop: "2px solid red"}}>
-                  <Typography>Name</Typography>
-                </TableCell>
-                <TableCell sx={{textAlign: "right", borderRight: "2px solid red", borderBottom: "2px solid red", borderTop: "2px solid red"}}>
-                  <img src="/src/assets/logo.svg" style={{width: "75px", flexGrow: "0", marginRight: "10px", marginTop: "5px"}} />
-                </TableCell>
-              </TableRow>
-              <br />
-              <TableRow sx={{border: "2px solid blue"}}>
-                <TableCell sx={{borderLeft: "2px solid red", borderBottom: "2px solid red", borderTop: "2px solid red"}}>
-                  <Typography>Name</Typography>
-                </TableCell>
-                <TableCell sx={{textAlign: "right", borderRight: "2px solid red", borderBottom: "2px solid red", borderTop: "2px solid red"}}>
-                  <img src="/src/assets/logo.svg" style={{width: "75px", flexGrow: "0", marginRight: "10px", marginTop: "5px"}} />
-                </TableCell>
-              </TableRow>
-              <br />
-              <TableRow sx={{border: "2px solid blue"}}>
-                <TableCell sx={{borderLeft: "2px solid red", borderBottom: "2px solid red", borderTop: "2px solid red"}}>
-                  <Typography>Name</Typography>
-                </TableCell>
-                <TableCell sx={{textAlign: "right", borderRight: "2px solid red", borderBottom: "2px solid red", borderTop: "2px solid red"}}>
-                  <img src="/src/assets/logo.svg" style={{width: "75px", flexGrow: "0", marginRight: "10px", marginTop: "5px"}} />
-                </TableCell>
-              </TableRow>
-              
-              
+                  <TableCell sx={{ textAlign: "right", borderRight: "2px solid red", borderBottom: "2px solid red", borderTop: "2px solid red" }}>
+                    <img src="/src/assets/logo.svg" style={{ width: "75px", flexGrow: "0", marginRight: "10px", marginTop: "5px" }} />
+                  </TableCell>
+                </TableRow><br /></>
+              ))}          
             </TableBody>
           </Table>
         </Box>
