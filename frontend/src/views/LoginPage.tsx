@@ -10,6 +10,7 @@ function LoginPage() {
   const sessionService = useSessionService();
   const navigate = useNavigate();
   const [loginInfo, setLoginInfo] = useState(new Credentials());
+  const [errorState, setErrorState] = useState(false);
 
   useEffect(() => {
     if (sessionService.hasSessionToken()) {
@@ -27,7 +28,8 @@ function LoginPage() {
       navigate("/");
       window.location.reload();
     } catch (err) {
-      console.log(err);
+      console.log(err); // todo: stop leaking this
+      setErrorState(true);
     }
   };
 
@@ -80,6 +82,13 @@ function LoginPage() {
           <Button variant="contained" onClick={loginHandler}>
             Login
           </Button>
+
+          {errorState ?
+            <Box sx={{ color: "#FF0000"}}>Error: The username or password is incorrect.</Box>
+            :
+            ""
+          }
+
         </Box>
       </Box>
     </Box>
