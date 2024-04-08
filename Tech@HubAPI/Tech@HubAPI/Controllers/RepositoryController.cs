@@ -9,6 +9,7 @@ using Tech_HubAPI.Models;
 using Tech_HubAPI.Models.Git;
 using Tech_HubAPI.Models.GitModels;
 using Tech_HubAPI.Services;
+using Tech_HubAPI.ResponseObjects;
 
 namespace Tech_HubAPI.Controllers
 {
@@ -166,7 +167,7 @@ namespace Tech_HubAPI.Controllers
             _dbContext.RepositoryPermissions.Add(newPerms);
             _dbContext.SaveChanges();
 
-            return Ok(newRepo);
+            return Ok(new RepositoryResponse(newRepo));
         }
 
         [HttpGet]
