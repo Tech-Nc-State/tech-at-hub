@@ -45,6 +45,18 @@ export const getBranches = async (token: SessionToken | null, username: string, 
     return resp.data as Branch[];
 }
 
+export const getRepos = async (token: SessionToken | null, username: string): Promise<Repository[]> => {
+    let headers = {}
+    if (token != null) {
+        headers = getAuthHeader(token);
+    }
+
+    let resp = await axios.get(`http://${getBackendServer()}/repository/${username}`, {
+        headers: headers
+    });
+    return resp.data as Repository[];
+}
+
 export const getListing = async (token: SessionToken | null, username: string, repoName: string, branch: string, path: string): Promise<DirectoryEntry[]> => {
     let headers = {}
     if (token != null) {

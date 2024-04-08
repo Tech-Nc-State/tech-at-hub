@@ -203,5 +203,34 @@ namespace Tech_HubAPI.Controllers
                 return NotFound(ex.Message);
             }
         }
+
+        [HttpGet]
+        [Route("{username}")]
+        public async Task<ActionResult<List<Repository>>> GetRepos(string username)
+        {
+            var repos = _dbContext.Repositories
+                .Where(r => r.Owner.Username == username);
+
+            if (!repos.Any())
+            {
+                return NotFound("No repos found for user " + username);
+            }
+
+            List<Repository> goodRepos = new List<Repository>();
+            foreach (var repo in repos)
+            {
+                // Verify permission to read repo. Add to return only if good.
+                var result = await _authorizationService.AuthorizeAsync(User, repo, "RequireRead");
+
+                if (result.Succeeded)
+                {
+                    // only add good repos.
+                    goodRepos.Add(repo);
+                }
+
+            }
+
+            return Ok(goodRepos);
+        }
     }
 }

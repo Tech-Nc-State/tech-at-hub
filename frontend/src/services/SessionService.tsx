@@ -26,7 +26,12 @@ export function SessionService({children}: any) {
     const getSessionToken = (): SessionToken | null => {
         let tokenString = localStorage.getItem(TOKEN_KEY);
         if (!tokenString) return null;
-        return JSON.parse(tokenString);
+        try {
+            return JSON.parse(tokenString);
+        }
+        catch {
+            return null;
+        }
     }
 
     const hasSessionToken = (): boolean => {
