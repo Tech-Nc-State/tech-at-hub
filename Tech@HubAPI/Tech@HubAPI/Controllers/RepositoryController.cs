@@ -211,8 +211,6 @@ namespace Tech_HubAPI.Controllers
             var repos = _dbContext.Repositories
                 .Where(r => r.Owner.Username == username);
 
-            // TODO: Does this need some sort of permission check?
-
             if (!repos.Any())
             {
                 return NotFound("No repos found for user " + username);
