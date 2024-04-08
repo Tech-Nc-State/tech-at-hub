@@ -10,6 +10,7 @@ using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Processing;
 using Tech_HubAPI.Models;
 using Tech_HubAPI.Services;
+using Tech_HubAPI.ResponseObjects;
 
 namespace Tech_HubAPI.Controllers
 {
@@ -92,7 +93,7 @@ namespace Tech_HubAPI.Controllers
 
         [HttpGet]
         [Route("{ID}")]
-        public ActionResult<User> GetUserById(int ID)
+        public ActionResult<UserResponse> GetUserById(int ID)
         {
             var user = _dbContext.Users.Where(u => u.Id == ID).FirstOrDefault();
 
@@ -107,27 +108,26 @@ namespace Tech_HubAPI.Controllers
                 user.Salt = null;
                 user.BirthDate = DateTime.MinValue;
 
-                return user;
+                return new UserResponse(user);
             }
         }
 
         [HttpGet]
         [Route("me")]
-        public ActionResult<User?> GetSelf()
+        public ActionResult<UserResponse?> GetSelf()
         {
             var user = this.GetUser(_dbContext);
 
-            if (user != null)
+            if (user == null)
             {
-                user.Password = null;
-                user.Salt = null;
+                return NotFound("You are not logged in.");
             }
 
-            return user;
+            return new UserResponse(user);
         }
 
         [HttpPost]
-        public ActionResult<User> SignUp([FromBody] SignUpForm form)
+        public ActionResult<UserResponse> SignUp([FromBody] SignUpForm form)
         {
             User? existingUser = _dbContext.Users.Where(u => u.Username == form.Username).FirstOrDefault();
             if (existingUser != null)
@@ -166,10 +166,7 @@ namespace Tech_HubAPI.Controllers
             _dbContext.Users.Add(user);
             _dbContext.SaveChanges();
 
-            user.Password = null;
-            user.Salt = null;
-
-            return user;
+            return new UserResponse(user);
         }
 
         [HttpPost]
