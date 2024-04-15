@@ -9,6 +9,7 @@ import SignupPage from "./views/SignupPage";
 import RepositoryPage from "./views/RepositoryPage";
 import CreateRepositoryPage from "./views/CreateRepositoryPage";
 import ReposPage from "./views/ReposPage";
+import AboutPage from "./views/AboutPage"
 
 const router = createBrowserRouter([
   {
@@ -21,7 +22,7 @@ const router = createBrowserRouter([
       },
       {
         path: "about",
-        element: <p>Hi there!</p>,
+        element: <AboutPage />,
       },
       {
         path: "login",
